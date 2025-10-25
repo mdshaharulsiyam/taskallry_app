@@ -36,12 +36,12 @@ const TaskCard = ({
         showDetailsButton
           ? null
           : navigate("TaskDetails", {
-              params: {
-                status: tab,
-                from,
-                heading: from == "user" ? "My Tasks Details" : "Tasks Details",
-              },
-            })
+            params: {
+              status: tab,
+              from,
+              heading: from == "user" ? "My Tasks Details" : "Tasks Details",
+            },
+          })
       }
       style={{
         backgroundColor: "#FFFFFF",
@@ -123,7 +123,7 @@ const TaskCard = ({
             style={{
               width: 120,
             }}
-            text="Details"
+            text="View Details"
             handler={() =>
               navigate("TaskDetails", {
                 params: {

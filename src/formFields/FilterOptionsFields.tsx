@@ -18,7 +18,7 @@ const FilterOptionsFields = () => {
         { label: "options 3", value: "options 3" }
       ]
     },
-     {
+    {
       name: "to_be_done",
       type: FieldType.SELECT,
       placeHolder: "Select To be done",
@@ -93,7 +93,7 @@ const FilterOptionsFields = () => {
       value: "",
       required: true,
       keyboard: KeyboardType.DEFAULT,
-      max: 100,
+      max: 200,
       min: 0,
       step: 1,
     },
@@ -106,10 +106,10 @@ const FilterOptionsFields = () => {
       value: "",
       required: true,
       keyboard: KeyboardType.DEFAULT,
-      max: 100,
-      min: 0,
+      max: 5000000,
+      min: 5000,
       step: 1,
-      range: true,
+      // range: true,
     },
     {
       name: "sort",

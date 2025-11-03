@@ -5,14 +5,13 @@ export const validateFields = (
   setFields: React.Dispatch<React.SetStateAction<FieldsType[]>>
 ): boolean => {
   let isValid = true;
-
+  const fieldName = fields?.map((item: FieldsType) => item?.name)
   setFields((prev) =>
     prev.map((field) => {
-      console.log({ prev });
       let hasError = false;
 
       if (field.required) {
-        if (field.value === "" || field.value === undefined) {
+        if ((field.value === "" || field.value === undefined) && fieldName.includes(field?.name)) {
           hasError = true;
           isValid = false;
         }

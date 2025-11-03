@@ -65,6 +65,7 @@ const OptionGridInput = ({
                 borderColor: selected ? "#115E59" : "#D1D5DB",
                 flexDirection: "row",
                 alignItems: "center",
+                width: 180
               }}
               accessibilityRole="button"
               accessibilityState={{ selected }}

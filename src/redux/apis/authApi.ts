@@ -21,6 +21,77 @@ interface RegisterRequest {
   role: "user" | "service";
 }
 
+interface VerifyCodeRequest {
+  email: string;
+  verifyCode: number;
+}
+
+interface VerifyCodeResponse {
+  message: string;
+  success: boolean;
+}
+
+interface UserProfile {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  // Add other profile fields as needed
+}
+
+interface UpdateProfileRequest {
+  name?: string;
+  email?: string;
+  // Add other updatable fields as needed
+}
+
+interface UpdateProfileResponse {
+  message: string;
+  success: boolean;
+  user: UserProfile;
+}
+
+interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+interface ChangePasswordResponse {
+  message: string;
+  success: boolean;
+}
+
+interface ForgetPasswordRequest {
+  email: string;
+}
+
+interface ForgetPasswordResponse {
+  message: string;
+  success: boolean;
+}
+
+interface ResetPasswordRequest {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface ResetPasswordResponse {
+  message: string;
+  success: boolean;
+}
+
+interface VerifyResetOtpRequest {
+  email: string;
+  resetCode: number;
+}
+
+interface VerifyResetOtpResponse {
+  message: string;
+  success: boolean;
+}
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
@@ -46,8 +117,71 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Auth"],
     }),
+    verifyCode: builder.mutation<VerifyCodeResponse, VerifyCodeRequest>({
+      query: (data) => ({
+        url: "/user/verify-code",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    getMyProfile: builder.query<UserProfile, void>({
+      query: () => ({
+        url: "/user/get-my-profile",
+        method: "GET",
+      }),
+      providesTags: ["Profile"],
+    }),
+    changePassword: builder.mutation<ChangePasswordResponse, ChangePasswordRequest>({
+      query: (data) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    forgetPassword: builder.mutation<ForgetPasswordResponse, ForgetPasswordRequest>({
+      query: (data) => ({
+        url: "/auth/forget-password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    resetPassword: builder.mutation<ResetPasswordResponse, ResetPasswordRequest>({
+      query: (data) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    verifyResetOtp: builder.mutation<VerifyResetOtpResponse, VerifyResetOtpRequest>({
+      query: (data) => ({
+        url: "/auth/verify-reset-otp",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateProfile: builder.mutation<UpdateProfileResponse, UpdateProfileRequest>({
+      query: (data) => ({
+        url: "/user/update-profile",
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Profile"],
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useLogoutMutation } =
-  authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useLogoutMutation,
+  useVerifyCodeMutation,
+  useGetMyProfileQuery,
+  useChangePasswordMutation,
+  useForgetPasswordMutation,
+  useResetPasswordMutation,
+  useVerifyResetOtpMutation,
+  useUpdateProfileMutation,
+} = authApi;

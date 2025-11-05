@@ -15,12 +15,14 @@ import SafeAreaProvider from "../../../providers/SafeAreaProvider";
 import { FieldsType } from "../../../types/Types";
 import Navigate from "../../../utils/Navigate";
 import { RenderField } from "../../../utils/RenderField";
+import { useLoginMutation } from "../../../redux/apis";
 
 const Login = () => {
   const { height } = Dimensions.get("window");
   const { fields, setFields } = LoginFields();
   const { top, bottom } = useSafeAreaInsets();
   const { setRole } = useGlobalContext();
+  const [login, { isLoading }] = useLoginMutation();
   const navigate = Navigate();
   return (
     <SafeAreaProvider>
@@ -83,12 +85,12 @@ const Login = () => {
           </TouchableOpacity>
         </FlexText>
         <ButtonBG
-          text=" Log In"
+          text={`${isLoading ? "Loading..." : "Log In"}`}
           handler={() => {
-            handleSignIn(fields, setFields);
-            const email = fields[0]?.value + "";
-            setRole(email?.includes("user") ? "user" : "service");
-            navigate("TabLayout");
+            handleSignIn(fields, setFields, login,setRole,()=>navigate("TabLayout"));
+            // const email = fields[0]?.value + "";
+            // setRole(email?.includes("user") ? "user" : "service");
+            // navigate("TabLayout");
           }}
         />
       </View>

@@ -30,7 +30,7 @@ const LoginFields = () => {
       label: "Remember me",
       error: false,
       value: "",
-      required: true,
+      required: false,
       keyboard: KeyboardType.DEFAULT,
     },
   ]);

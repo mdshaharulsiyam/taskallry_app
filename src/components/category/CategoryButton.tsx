@@ -11,15 +11,18 @@ import { otherIcons } from "../../constant/images";
 import Navigate from "../../utils/Navigate";
 import FlexText from "../shered/FlexText";
 import TextSecondary from "../shered/TextSecondary";
+import { ImgUrl } from "../../redux/baseApi";
 
 const CategoryButton = ({
   style,
   name,
   width,
+  image,
 }: {
   style?: ViewStyle;
   name: string;
   width?: number;
+  image?: string;
 }) => {
   const navigate = Navigate();
   return (
@@ -58,7 +61,7 @@ const CategoryButton = ({
               height: 40,
               width: 40,
             }}
-            source={otherIcons.Category as ImageSourcePropType}
+            source={{uri: image? ImgUrl(image):"https://placehold.co/400x400.png"}}
           />
         </View>
         <TextSecondary text={name} />

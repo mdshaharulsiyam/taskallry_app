@@ -1,12 +1,32 @@
 import { baseApi } from "../baseApi";
 
-interface Task {
-  id: string;
+export interface Task {
+  _id: string;
   title: string;
-  description: string;
-  status: "pending" | "in_progress" | "completed";
-  createdAt: string;
-  userId: string;
+  category: {
+    _id: string;
+    name: string;
+  };
+  budget: number;
+  status: string;
+  isDeleted: boolean;
+  paymentStatus: string;
+  provider: string;
+  payOn: string;
+  location: {
+    type: "Point",
+    coordinates: number[]
+  },
+  address: string,
+  scheduleType: string,
+  preferredDate: string,
+  preferredTime: string,
+  description: string,
+  task_attachments: [],
+  createdAt: string,
+  updatedAt: string,
+  __v: number,
+  totalOffer: number
 }
 
 interface CreateTaskRequest {
@@ -14,36 +34,86 @@ interface CreateTaskRequest {
   description: string;
 }
 
+interface CreateTaskResponse {
+  message: string;
+  success: boolean;
+  data: Task;
+}
+
+interface GetAllTasksResponse {
+  success: boolean;
+  data: {
+    result: Task[];
+    pagination: {
+      total: number;
+      limit: number;
+      page: number;
+      pages: number;
+    };
+  };
+}
+
+interface GetSingleTaskResponse {
+  success: boolean;
+  data: Task;
+}
+
+interface DeleteTaskResponse {
+  message: string;
+  success: boolean;
+}
+
+interface AcceptOfferRequest {
+  taskId?: string;
+  offerId?: string;
+}
+
+interface AcceptOfferResponse {
+  message: string;
+  success: boolean;
+  data?: any;
+}
+
 export const taskApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getTasks: builder.query<Task[], void>({
-      query: () => "/tasks",
-      providesTags: ["Task"],
-    }),
-    getTaskById: builder.query<Task, string>({
-      query: (id) => `/tasks/${id}`,
-      providesTags: (_result, _error, id) => [{ type: "Task", id }],
-    }),
-    createTask: builder.mutation<Task, CreateTaskRequest>({
+    createTask: builder.mutation<CreateTaskResponse, CreateTaskRequest>({
       query: (task) => ({
-        url: "/tasks",
+        url: "/task/create-task",
         method: "POST",
         body: task,
       }),
       invalidatesTags: ["Task"],
     }),
-    updateTask: builder.mutation<Task, Partial<Task> & { id: string }>({
-      query: ({ id, ...patch }) => ({
-        url: `/tasks/${id}`,
-        method: "PATCH",
-        body: patch,
+    getAllTasks: builder.query<GetAllTasksResponse, { sortOrder: string, sortBy: string }>({
+      query: ({ sortOrder, sortBy }: { sortOrder: string, sortBy: string }) => ({
+        url: "/task/all-task",
+        method: "GET",
+        params: {
+          sortOrder,
+          sortBy
+        },
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: "Task", id }],
+      providesTags: ["Task"],
     }),
-    deleteTask: builder.mutation<void, string>({
+    getSingleTask: builder.query<GetSingleTaskResponse, string>({
       query: (id) => ({
-        url: `/tasks/${id}`,
+        url: `/task/single-task/${id}`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, id) => [{ type: "Task", id }],
+    }),
+    deleteTask: builder.mutation<DeleteTaskResponse, string>({
+      query: (id) => ({
+        url: `/task/delete-task/${id}`,
         method: "DELETE",
+      }),
+      invalidatesTags: ["Task"],
+    }),
+    acceptOffer: builder.mutation<AcceptOfferResponse, AcceptOfferRequest>({
+      query: (data) => ({
+        url: "/task/acceptOffer",
+        method: "PATCH",
+        body: data,
       }),
       invalidatesTags: ["Task"],
     }),
@@ -51,9 +121,9 @@ export const taskApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetTasksQuery,
-  useGetTaskByIdQuery,
   useCreateTaskMutation,
-  useUpdateTaskMutation,
+  useGetAllTasksQuery,
+  useGetSingleTaskQuery,
   useDeleteTaskMutation,
+  useAcceptOfferMutation,
 } = taskApi;

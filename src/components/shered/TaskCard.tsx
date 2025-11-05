@@ -16,17 +16,20 @@ import FlexText from "./FlexText";
 import HeaderDesign from "./HeaderDesign";
 import HeaderSecondary from "./HeaderSecondary";
 import TextPrimary from "./TextPrimary";
+import { Task } from "../../redux/apis";
 
 const TaskCard = ({
   imageStyle,
   showDetailsButton = false,
   tab,
   from,
+  task,
 }: {
   imageStyle?: ImageStyle;
   showDetailsButton?: boolean;
   tab?: string;
   from: "user" | "service";
+  task: Task;
 }) => {
   const navigate = Navigate();
   return (
@@ -59,27 +62,27 @@ const TaskCard = ({
           style={{
             fontSize: 18,
           }}
-          text="Help move a couch"
+          text={task?.title}
         />
         <HeaderDesign
           style={{
             fontSize: 18,
           }}
-          text="₦24.00"
+          text={task?.budget + ""}
         />
       </FlexText>
       {showDetailsButton && <GreenLine />}
 
       <FlexCardIcon
-        text="Los Angeles CA 90024"
+        text={task?.address}
         image={otherIcons.Location as ImageSourcePropType}
       />
       <FlexCardIcon
-        text="New York, USA"
+        text={task?.preferredDate}
         image={otherIcons.Calendar as ImageSourcePropType}
       />
       <FlexCardIcon
-        text="15 May 2020 8:00 am"
+        text={task?.preferredTime}
         image={otherIcons.Watch as ImageSourcePropType}
       />
       <FlexText
@@ -102,7 +105,7 @@ const TaskCard = ({
             style={{
               fontWeight: "700",
             }}
-            text="Marvin Fey"
+            text={task?.provider}
           />
           <FlexText>
             <TextPrimary
@@ -110,9 +113,9 @@ const TaskCard = ({
                 color: "#F97316",
                 fontWeight: "700",
               }}
-              text="Open"
+              text={task?.status}
             />
-            <TextPrimary text="• 1 offered" />
+            <TextPrimary text={task?.totalOffer + " offered"} />
           </FlexText>
         </View>
       </FlexText>

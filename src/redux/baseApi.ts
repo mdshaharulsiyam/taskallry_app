@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-export const url = "http://10.10.20.9:9000/api/v1";
+export const url = "http://10.10.20.9:9000";
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: url,
+    baseUrl: `${url}/api/v1`,
     prepareHeaders: (headers) => {
       // Add auth token or other headers here
       // const token = getState().auth.token;
@@ -16,3 +16,13 @@ export const baseApi = createApi({
   tagTypes: ["Auth", "Task", "Profile", "Service"],
   endpoints: () => ({}),
 });
+
+export const ImgUrl = (uri: string) => {
+  if (uri.startsWith("http")) {
+    return uri
+  } else if (uri.startsWith("/")) {
+    return `${url}${uri}`
+  } else {
+    return `${url}/${uri}`
+  }
+}

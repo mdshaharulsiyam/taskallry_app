@@ -16,19 +16,24 @@ import SafeAreaProvider from "../../../providers/SafeAreaProvider";
 import { FieldsType } from "../../../types/Types";
 import Navigate, { Navigation } from "../../../utils/Navigate";
 import { RenderField } from "../../../utils/RenderField";
+import { useRegisterMutation } from "../../../redux/apis";
+import { useRoute } from "@react-navigation/native";
 
 const slide = [
   {
     skip: 0,
     keep: 6,
+    field: "signup"
   },
   {
     skip: 6,
     keep: 2,
+    field: "isAddressProvided"
   },
   {
     skip: 8,
     keep: 1,
+    field: "coupon"
   },
 ];
 
@@ -48,12 +53,19 @@ const Content = [
 ];
 
 const CustomerSignUp = () => {
+  const params = useRoute().params;
+  const [register, { isLoading }] = useRegisterMutation()
   const [currentSlide, setCurrentSlide] = useState(0);
   const { height } = Dimensions.get("window");
   const { fields, setFields } = CustomerSignUpFields();
   const { top, bottom } = useSafeAreaInsets();
   const [fiels, setFiels] = useState<any>([]);
   const navigate = Navigate();
+  const [completedStep, setCompletedStep] = useState<any>({
+    signup: false,
+    isAddressProvided: false,
+    coupon: false,
+  });
   const navigation = Navigation()
   const backHandler = () => {
     if (currentSlide == 0) {
@@ -62,6 +74,7 @@ const CustomerSignUp = () => {
       setCurrentSlide((prev) => prev - 1);
     }
   }
+
   return (
     <SafeAreaProvider backButtonText="Sign Up as Customer" handler={backHandler}>
       <View
@@ -137,7 +150,7 @@ const CustomerSignUp = () => {
           style={{
             marginTop: 6,
           }}
-          text={currentSlide == 2 ? "Apply Code & Continue" : "Continue"}
+          text={isLoading ? "Loading..." : currentSlide == 2 ? "Apply Code & Continue" : "Continue"}
           handler={() => {
             const isValid = handleCustomerSignUp(
               fields?.slice(
@@ -145,7 +158,11 @@ const CustomerSignUp = () => {
                 slide[currentSlide].keep + slide[currentSlide].skip
               ),
               setFields,
-              currentSlide
+              currentSlide,
+              register,
+              (phone: string) => navigate("Verify", {
+                params: { phoneNumber: phone, from: "signup" },
+              })
             );
             if (isValid && currentSlide < 2) {
               setCurrentSlide((prev) => prev + 1);

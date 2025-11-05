@@ -1,13 +1,15 @@
 import { baseApi } from "../baseApi";
 
 interface Category {
-category_image:string
-createdAt:string
-isDeleted:boolean
-name:string
-updatedAt:string
-__v:number
-_id:string
+  category_image: string
+  createdAt: string
+  isDeleted: boolean
+  name: string
+  updatedAt: string
+  __v: number
+  _id: string
+  totalTask: number,
+  totalServices: number
 }
 
 interface CreateCategoryRequest {
@@ -30,7 +32,7 @@ interface UpdateCategoryRequest {
 interface UpdateCategoryResponse {
   message: string;
   success: boolean;
-  data: Category;
+
 }
 
 interface DeleteCategoryResponse {
@@ -40,7 +42,15 @@ interface DeleteCategoryResponse {
 
 interface GetAllCategoriesResponse {
   success: boolean;
-  data: Category[];
+  data: {
+    meta: {
+      limit: number,
+      page: number,
+      totalPage: number,
+      total: number,
+    },
+    result: Category[]
+  };
 }
 
 export const categoryApi = baseApi.injectEndpoints({

@@ -86,6 +86,7 @@ const data = [
 ];
 const Tasks = () => {
   const [tab, setTab] = useState("All Tasks");
+
   const elements = [
     <SectionHeading
       style={{

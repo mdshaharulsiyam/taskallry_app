@@ -17,7 +17,7 @@ const Category = () => {
       <FlatList
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        data={data?.data || []}
+        data={data?.data?.result || []}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.listContent}
@@ -27,6 +27,7 @@ const Category = () => {
             style={{ width: itemWidth, paddingVertical: 15 }}
             name={item.name}
             image={item?.category_image}
+            totalProviders={item?.totalServices}
           />
         )}
       />

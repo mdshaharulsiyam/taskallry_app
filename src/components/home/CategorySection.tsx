@@ -15,7 +15,7 @@ const CategorySection = () => {
     <View style={{ marginTop: 10 }}>
       <SectionHeading text="Category" handler={() => navigate("Category")} />
       <FlatList
-        data={data?.data?.slice(0, 8) || []}
+        data={data?.data?.result || []}
         numColumns={4}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.listContent}

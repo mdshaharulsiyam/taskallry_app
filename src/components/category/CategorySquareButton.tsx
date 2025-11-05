@@ -19,11 +19,13 @@ const CategorySquareButton = ({
   name,
   width,
   image,
+  totalProviders,
 }: {
   style?: ViewStyle;
   name: string;
   width?: number;
   image?: string;
+  totalProviders?: number;
 }) => {
   const navigate = Navigate();
   return (
@@ -72,7 +74,7 @@ const CategorySquareButton = ({
           style={{
             marginTop: -6,
           }}
-          text={"1754 Providers"}
+          text={`${totalProviders} Providers`}
         />
       </FlexText>
     </TouchableOpacity>

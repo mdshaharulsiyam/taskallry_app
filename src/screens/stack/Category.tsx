@@ -11,7 +11,7 @@ const Category = () => {
   const { width } = ScreenSize();
   const itemWidth = (width - 80) / 2;
   const navigate = Navigate();
-  const { data } = useGetAllCategoriesQuery();
+  const { data } = useGetAllCategoriesQuery({});
   return (
     <SafeAreaProviderNoScroll backButtonText="Tasks Categories">
       <FlatList

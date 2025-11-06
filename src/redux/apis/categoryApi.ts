@@ -61,7 +61,7 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Service"],
+      invalidatesTags: ["Category"],
     }),
     updateCategory: builder.mutation<UpdateCategoryResponse, UpdateCategoryRequest>({
       query: ({ id, ...data }) => ({
@@ -69,21 +69,25 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["Service"],
+      invalidatesTags: ["Category"],
     }),
     deleteCategory: builder.mutation<DeleteCategoryResponse, string>({
       query: (id) => ({
         url: `/category/delete-category/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Service"],
+      invalidatesTags: ["Category"],
     }),
-    getAllCategories: builder.query<GetAllCategoriesResponse, void>({
-      query: () => ({
+    getAllCategories: builder.query<GetAllCategoriesResponse, {page?: number, limit?: number}>({
+      query: ({page=1, limit=8}) => ({
         url: "/category/all-categories",
         method: "GET",
+        params: {
+          page,
+          limit,
+        }
       }),
-      providesTags: ["Service"],
+      providesTags: ["Category"],
     }),
   }),
 });

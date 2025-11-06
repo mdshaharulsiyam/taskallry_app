@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldsType, FieldType, KeyboardType } from '../types/Types';
+import { useGetAllCategoriesQuery } from '../redux/apis';
 
 const FilterOptionsFields = () => {
+  const { data } = useGetAllCategoriesQuery({ limit: 9999999 });
+
   const [fields, setFields] = useState<FieldsType[]>([
     {
       name: "category",
@@ -12,15 +15,11 @@ const FilterOptionsFields = () => {
       value: "",
       required: true,
       keyboard: KeyboardType.DEFAULT,
-      options: [
-        { label: "options 1", value: "options 1" },
-        { label: "options 2", value: "options 2" },
-        { label: "options 3", value: "options 3" }
-      ]
+      options: []
     },
     {
       name: "to_be_done",
-      type: FieldType.SELECT,
+      type: FieldType.GRIDINPUT,
       placeHolder: "Select To be done",
       label: "To be done",
       error: false,
@@ -28,50 +27,9 @@ const FilterOptionsFields = () => {
       required: true,
       keyboard: KeyboardType.DEFAULT,
       options: [
-        { label: "options 1", value: "options 1" },
-        { label: "options 2", value: "options 2" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
-        { label: "options 3", value: "options 3" },
+        { label: "in-person", value: "in-person" },
+        { label: "online", value: "online" },
+
       ]
     },
     {
@@ -128,6 +86,25 @@ const FilterOptionsFields = () => {
       ]
     },
   ]);
+  useEffect(() => {
+    if (data) {
+      const category_options = data?.data?.result?.map((item: any) => ({
+        label: item.name,
+        value: item._id,
+      }))
+      setFields((prev) => {
+        return prev.map((field) => {
+          if (field.name === "category") {
+            return {
+              ...field,
+              options: category_options,
+            }
+          }
+          return field
+        })
+      })
+    }
+  }, [data])
   return { fields, setFields };
 };
 

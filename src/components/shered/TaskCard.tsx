@@ -17,6 +17,7 @@ import HeaderDesign from "./HeaderDesign";
 import HeaderSecondary from "./HeaderSecondary";
 import TextPrimary from "./TextPrimary";
 import { Task } from "../../redux/apis";
+import moment from "moment";
 
 const TaskCard = ({
   imageStyle,
@@ -78,7 +79,7 @@ const TaskCard = ({
         image={otherIcons.Location as ImageSourcePropType}
       />
       <FlexCardIcon
-        text={task?.preferredDate}
+        text={moment(task?.preferredDate).format("DD-MM-YYYY")}
         image={otherIcons.Calendar as ImageSourcePropType}
       />
       <FlexCardIcon

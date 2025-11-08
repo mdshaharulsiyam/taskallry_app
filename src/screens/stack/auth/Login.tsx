@@ -37,7 +37,6 @@ const Login = () => {
         <HeaderDesign />
         <TextSecondary text="Log in with your credentials to access your account and manage everything from one place." />
         {fields?.map((field: FieldsType) => RenderField(field, setFields))}
-
         <TouchableOpacity
           onPress={() => navigate("Forget")}
           style={[styles.forget]}

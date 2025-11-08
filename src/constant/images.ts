@@ -57,6 +57,7 @@ import File from "../assets/svg/file.svg"
 import ProfileImage from "../assets/profilebg.png"
 import Call from "../assets/call.png"
 import At from "../assets/at.png"
+import Avater from "../assets/profile.png"
 export const TabIcons = {
   Home,
   "My Tasks": post, Chat,
@@ -76,7 +77,6 @@ export const svgIcons = {
   Camera: Camera,
   Upload: Upload,
   File: File
-
 }
 export const profileIcons = {
   Card,
@@ -126,5 +126,6 @@ export const otherIcons = Object.freeze({
   List,
   ProfileImage,
   Call,
-  At
+  At,
+  Avater
 });

@@ -21,9 +21,7 @@ const SubmitBitButt = () => {
   const [message, setMessage] = useState("");
 
   const handleSubmit = () => {
-    // TODO: handle API submit
 
-    // clear after submit
     setMessage("");
     setPrice("");
     setOpen(false);

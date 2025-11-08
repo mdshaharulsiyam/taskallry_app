@@ -18,6 +18,7 @@ import HeaderSecondary from "./HeaderSecondary";
 import TextPrimary from "./TextPrimary";
 import { Task } from "../../redux/apis";
 import moment from "moment";
+import { ImgUrl, url } from "../../redux/baseApi";
 
 const TaskCard = ({
   imageStyle,
@@ -93,7 +94,7 @@ const TaskCard = ({
         }}
       >
         <Image
-          src="https://placehold.co/400x400.png"
+          source={task?.customer?.profile_image ? { uri: ImgUrl(task?.customer?.profile_image + "") } : otherIcons.Avater as ImageSourcePropType}
           style={{
             height: showDetailsButton ? 60 : 50,
             width: showDetailsButton ? 100 : 50,
@@ -106,7 +107,7 @@ const TaskCard = ({
             style={{
               fontWeight: "700",
             }}
-            text={task?.provider}
+            text={task?.customer?.name}
           />
           <FlexText>
             <TextPrimary

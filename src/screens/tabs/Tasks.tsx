@@ -103,7 +103,7 @@ const Tasks = () => {
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
-        <TaskCard from="user" tab={tab} showDetailsButton={true} />
+        <TaskCard from="user" tab={tab} showDetailsButton={true} task={item} />
       )}
     />,
   ];

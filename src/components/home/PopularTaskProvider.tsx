@@ -3,87 +3,10 @@ import { FlatList, StyleSheet, View } from "react-native";
 import Navigate from "../../utils/Navigate";
 import ProviderCard from "../shered/ProviderCard";
 import SectionHeading from "../shered/SectionHeading";
-const data = [
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-];
+import { useGetAllServicesQuery } from "../../redux/apis";
+
 const PopularTaskProvider = () => {
+  const { data } = useGetAllServicesQuery({ page: 1, limit: 10 });
   const navigate = Navigate();
   return (
     <View style={{ marginTop: 10 }}>
@@ -97,9 +20,9 @@ const PopularTaskProvider = () => {
         text="Popular Task Provider"
       />
       <FlatList
-        data={data}
+        data={data?.data?.result}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <ProviderCard />}
+        renderItem={({ item }) => <ProviderCard item={item} />}
       />
     </View>
   );

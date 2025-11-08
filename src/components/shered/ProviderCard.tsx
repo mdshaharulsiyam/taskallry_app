@@ -9,8 +9,10 @@ import FlexText from "./FlexText";
 import HeaderDesign from "./HeaderDesign";
 import TextPrimary from "./TextPrimary";
 import TextSecondary from "./TextSecondary";
+import { Service } from "../../redux/apis";
+import { ImgUrl } from "../../redux/baseApi";
 
-const ProviderCard = () => {
+const ProviderCard = ({ item }: { item: Service }) => {
   const { width } = ScreenSize();
   const navigate = Navigate();
   return (
@@ -24,7 +26,7 @@ const ProviderCard = () => {
       }}
     >
       <Image
-        src="https://placehold.co/400x400.png"
+        src={ImgUrl(item?.images[0])}
         style={{
           height: (width - 60) / 1.5,
           width: width - 60,
@@ -39,7 +41,7 @@ const ProviderCard = () => {
       >
         <FlexCardIcon
           image={otherIcons.Location as ImageSourcePropType}
-          text="New York, USA"
+          text={item?.address}
         />
         <TextPrimary text="⭐ 4.5" />
       </FlexText>
@@ -49,7 +51,7 @@ const ProviderCard = () => {
           fontWeight: 700,
           marginVertical: 6,
         }}
-        text="Office Cleaning Service From"
+        text={item?.title}
       />
       <FlexText
         style={{
@@ -66,13 +68,13 @@ const ProviderCard = () => {
               fontSize: 18,
               fontWeight: 700,
             }}
-            text="₦24.00"
+            text={`₦${item?.price}`}
           />
           <TextSecondary
             style={{
               textDecorationLine: "line-through",
             }}
-            text="₦32.00"
+            text={`₦${item?.price}`}
           />
         </FlexText>
         <ButtonGreenOpacity30
@@ -87,7 +89,7 @@ const ProviderCard = () => {
         />
       </FlexText>
       <TextSecondary
-        text="cleaning"
+        text={item?.category}
         style={{
           color: "#115E59",
           backgroundColor: "#E6F4F1",

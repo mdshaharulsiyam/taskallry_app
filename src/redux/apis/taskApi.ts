@@ -7,6 +7,11 @@ export interface Task {
     _id: string;
     name: string;
   };
+  customer: {
+    _id: string;
+    name: string;
+    profile_image: string;
+  };
   budget: number;
   status: string;
   isDeleted: boolean;
@@ -84,13 +89,14 @@ export const taskApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
-    getAllTasks: builder.query<GetAllTasksResponse, { sortOrder: string, sortBy: string }>({
-      query: ({ sortOrder, sortBy }: { sortOrder: string, sortBy: string }) => ({
+    getAllTasks: builder.query<GetAllTasksResponse, { sortOrder: string, sortBy: string, category?: string }>({
+      query: ({ sortOrder, sortBy, category }) => ({
         url: "/task/all-task",
         method: "GET",
         params: {
           sortOrder,
-          sortBy
+          sortBy,
+          category
         },
       }),
       providesTags: ["Task"],

@@ -16,6 +16,7 @@ const FIlteredTask = () => {
     sortBy,
     sortOrder,
   } = useAppSelector((state) => state.filter);
+  
   console.log({
     category,
     to_be_done,
@@ -26,8 +27,8 @@ const FIlteredTask = () => {
     sortBy,
     sortOrder,
   })
-  const { data } = useGetAllTasksQuery({ sortOrder, sortBy })
 
+  const { data } = useGetAllTasksQuery({ sortOrder, sortBy ,category})
 
   return (
     <View style={{ marginTop: 10 }}>

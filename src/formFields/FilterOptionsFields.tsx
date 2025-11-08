@@ -81,8 +81,8 @@ const FilterOptionsFields = () => {
       options: [
         { label: "Newest First", value: "Newest First" },
         { label: "Oldest First", value: "Oldest First" },
-        { label: "Open for Bid", value: "Open for Bid" },
-        { label: "Assigned", value: "Assigned" },
+        { label: "Open for Bid", value: "OPEN_FOR_BID" },
+        { label: "Assigned", value: "IN_PROGRESS" },
       ]
     },
   ]);

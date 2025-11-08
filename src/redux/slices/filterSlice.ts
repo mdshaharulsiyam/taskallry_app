@@ -17,7 +17,7 @@ const initialState: FilterState = {
   to_be_done: "",
   work_location: "",
   distance_range: 0,
-  price_range: 0,
+  price_range: 5000000,
   sort: "",
   sortBy: "createdAt",
   sortOrder: "desc",

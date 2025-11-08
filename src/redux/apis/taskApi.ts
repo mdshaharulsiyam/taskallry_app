@@ -89,14 +89,17 @@ export const taskApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
-    getAllTasks: builder.query<GetAllTasksResponse, { sortOrder: string, sortBy: string, category?: string }>({
-      query: ({ sortOrder, sortBy, category }) => ({
+    getAllTasks: builder.query<GetAllTasksResponse, { sortOrder?: string, sortBy?: string, category?: string, status?: string, minPrice?: number, maxPrice?: number }>({
+      query: ({ sortOrder, sortBy, category, status, minPrice, maxPrice }) => ({
         url: "/task/all-task",
         method: "GET",
         params: {
           sortOrder,
           sortBy,
-          category
+          category,
+          status,
+          minPrice,
+          maxPrice
         },
       }),
       providesTags: ["Task"],

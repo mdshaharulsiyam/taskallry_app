@@ -58,6 +58,7 @@ import ProfileImage from "../assets/profilebg.png"
 import Call from "../assets/call.png"
 import At from "../assets/at.png"
 import Avater from "../assets/profile.png"
+import Empty from "../assets/empty.png"
 export const TabIcons = {
   Home,
   "My Tasks": post, Chat,
@@ -117,6 +118,7 @@ export const otherIcons = Object.freeze({
   Block,
   Info,
   ChatBlock,
+  Empty,
   Send,
   Edit,
   Share,

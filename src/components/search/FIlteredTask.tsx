@@ -42,8 +42,9 @@ const FIlteredTask = () => {
         minPrice: 5000,
         maxPrice: Number(price_range),
       };
+  console.log(queryParams)
   const { data } = useGetAllTasksQuery(queryParams)
-
+  console.log(data)
   return (
     <View style={{ marginTop: 10 }}>
       {

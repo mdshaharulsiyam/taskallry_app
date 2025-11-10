@@ -9,6 +9,7 @@ export enum FieldType {
   TEXTAREA = "textarea",
   RANGE = "range",
   GRIDINPUT = "gridinput",
+  LOCATION = "location",
 }
 
 export enum KeyboardType {

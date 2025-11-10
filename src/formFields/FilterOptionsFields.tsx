@@ -34,7 +34,7 @@ const FilterOptionsFields = () => {
     },
     {
       name: "work_location",
-      type: FieldType.STRING,
+      type: FieldType.LOCATION,
       placeHolder: "Work location",
       label: "Work location",
       error: false,

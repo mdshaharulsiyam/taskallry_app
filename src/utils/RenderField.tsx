@@ -9,6 +9,7 @@ import TimePicker from "../components/ui/inputs/TimePicker";
 import RangeSelect from "../components/ui/inputs/RangeSelect";
 import { FieldsType, FieldType, KeyboardType } from "../types/Types";
 import OptionGridInput from "../components/ui/inputs/OptionGridInput";
+import LocationInput from "../components/shered/LocationInput";
 
 export const RenderField = (
   field: FieldsType,
@@ -193,6 +194,25 @@ export const RenderField = (
         label={field?.label}
         required={field?.required}
         showLabel={field?.showLabel}
+      />
+    );
+  }
+  if (field.type == FieldType.LOCATION) {
+    return (
+      <LocationInput
+        placeHolder={field?.placeHolder}
+        error={field?.error}
+        key={field.name}
+         handler={(name, value) =>
+          console.log(name,value)
+          // setFields((prev) =>
+          //   prev.map((f) => (f.name === name ? { ...f, value, error: false } : f))
+          // )
+        }
+        label={field?.label}
+        name={field?.name}
+        value={field?.value as string}
+        required={field?.required}
       />
     );
   }

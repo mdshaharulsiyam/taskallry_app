@@ -30,7 +30,9 @@ const MyProfile = () => {
         }}
       >
         <Image
-          source={{ uri: fiels?.[0]?.uri ||  "https://placehold.co/400x400.png" }}
+          source={{
+            uri: fiels?.[0]?.uri || "https://placehold.co/400x400.png",
+          }}
           style={{
             height: 100,
             width: 100,
@@ -38,23 +40,23 @@ const MyProfile = () => {
           }}
         />
         <TouchableOpacity
-           onPress={async () => {
-                try {
-                  const pickResult = (await pick({})) as any;
-                  const file = {
-                    uri: pickResult?.[0]?.uri,
-                    name: pickResult?.[0]?.name,
-                    type: pickResult?.[0]?.type,
-                  };
-                  if (setFiels) {
-                    setFiels((prev: any) => [file,...prev]);
-                  }
-                  // const [pickResult] = await pick({mode:'import'}) // equivalent
-                  // do something with the picked file
-                } catch (err: unknown) {
-                  // see error handling
-                }
-              }}
+          onPress={async () => {
+            try {
+              const pickResult = (await pick({})) as any;
+              const file = {
+                uri: pickResult?.[0]?.uri,
+                name: pickResult?.[0]?.name,
+                type: pickResult?.[0]?.type,
+              };
+              if (setFiels) {
+                setFiels((prev: any) => [file, ...prev]);
+              }
+              // const [pickResult] = await pick({mode:'import'}) // equivalent
+              // do something with the picked file
+            } catch (err: unknown) {
+              // see error handling
+            }
+          }}
           style={{
             position: "absolute",
             right: 3,

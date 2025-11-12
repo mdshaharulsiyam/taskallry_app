@@ -1,11 +1,11 @@
 import React from "react";
 import { ImageSourcePropType, StyleSheet, View } from "react-native";
 import { otherIcons, profileIcons, TabIcons } from "../../constant/images";
-import { useGlobalContext } from '../../providers/GlobalContextProvider';
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import ProfileOptionsButton from "./ProfileOptionsButton";
 
 const ProfileOptions = () => {
-  const { role } = useGlobalContext()
+  const { role } = useGlobalContext();
   const data = [
     {
       name: "My Profile",
@@ -22,11 +22,15 @@ const ProfileOptions = () => {
       image: profileIcons.Refer,
       navigate: "ReferDiscounts",
     },
-    ...(role == "service" ? [{
-      name: "Earnings",
-      image: profileIcons.Earning,
-      navigate: "Earnings",
-    }] : []),
+    ...(role == "service"
+      ? [
+          {
+            name: "Earnings",
+            image: profileIcons.Earning,
+            navigate: "Earnings",
+          },
+        ]
+      : []),
     {
       name: "Managed Account",
       image: profileIcons.Card,
@@ -52,12 +56,13 @@ const ProfileOptions = () => {
       image: profileIcons.Question,
       navigate: "Help",
     },
-
   ];
   return (
-    <View style={{
-      paddingHorizontal: 20,
-    }}>
+    <View
+      style={{
+        paddingHorizontal: 20,
+      }}
+    >
       {data?.map((item, i) => (
         <ProfileOptionsButton
           name={item?.name}

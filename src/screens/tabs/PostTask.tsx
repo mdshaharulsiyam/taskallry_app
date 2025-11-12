@@ -47,7 +47,7 @@ const PostTask = () => {
   const navigate = Navigate();
   // backButtonText="Post Task"
   return (
-    <SafeAreaProvider >
+    <SafeAreaProvider>
       <View
         style={{
           flex: 1,
@@ -69,12 +69,18 @@ const PostTask = () => {
           <View>
             <TextPrimary text="Attachments (optional)" />
             <FlexText>
-              {
-                fiels?.length > 0 && <Image
+              {fiels?.length > 0 && (
+                <Image
                   source={{ uri: fiels?.[0]?.uri }}
-                  style={{ width: 80, height: 80, borderRadius: 8, marginRight: 8, resizeMode: "contain" }}
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 8,
+                    marginRight: 8,
+                    resizeMode: "contain",
+                  }}
                 />
-              }
+              )}
               <ImageUploader setFiels={setFiels} />
             </FlexText>
           </View>

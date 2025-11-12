@@ -15,7 +15,13 @@ interface propType {
   handler?: () => void;
   backHandler?: () => void;
 }
-const BackButton = ({ text, show = false, imageSource, handler, backHandler }: propType) => {
+const BackButton = ({
+  text,
+  show = false,
+  imageSource,
+  handler,
+  backHandler,
+}: propType) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   return (
     <View
@@ -24,7 +30,7 @@ const BackButton = ({ text, show = false, imageSource, handler, backHandler }: p
         alignItems: "center",
         gap: 10,
         justifyContent: "space-between",
-        zIndex: 9999999999
+        zIndex: 9999999999,
       }}
     >
       <CircleButton
@@ -38,7 +44,7 @@ const BackButton = ({ text, show = false, imageSource, handler, backHandler }: p
           borderWidth: 1,
         }}
         imageSource={otherIcons.ArrowLeft as ImageSourcePropType}
-        onPress={() => backHandler ? backHandler() : navigation.goBack()}
+        onPress={() => (backHandler ? backHandler() : navigation.goBack())}
       />
       <Text
         numberOfLines={1}

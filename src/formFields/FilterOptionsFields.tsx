@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { FieldsType, FieldType, KeyboardType } from '../types/Types';
-import { useGetAllCategoriesQuery } from '../redux/apis';
+import { useEffect, useState } from "react";
+import { FieldsType, FieldType, KeyboardType } from "../types/Types";
+import { useGetAllCategoriesQuery } from "../redux/apis";
 
 const FilterOptionsFields = () => {
   const { data } = useGetAllCategoriesQuery({ limit: 9999999 });
@@ -15,7 +15,7 @@ const FilterOptionsFields = () => {
       value: "",
       required: true,
       keyboard: KeyboardType.DEFAULT,
-      options: []
+      options: [],
     },
     {
       name: "to_be_done",
@@ -29,8 +29,7 @@ const FilterOptionsFields = () => {
       options: [
         { label: "in-person", value: "in-person" },
         { label: "online", value: "online" },
-
-      ]
+      ],
     },
     {
       name: "work_location",
@@ -83,7 +82,7 @@ const FilterOptionsFields = () => {
         { label: "Oldest First", value: "Oldest First" },
         { label: "Open for Bid", value: "OPEN_FOR_BID" },
         { label: "Assigned", value: "IN_PROGRESS" },
-      ]
+      ],
     },
   ]);
   useEffect(() => {
@@ -91,22 +90,21 @@ const FilterOptionsFields = () => {
       const category_options = data?.data?.result?.map((item: any) => ({
         label: item.name,
         value: item._id,
-      }))
+      }));
       setFields((prev) => {
         return prev.map((field) => {
           if (field.name === "category") {
             return {
               ...field,
               options: category_options,
-            }
+            };
           }
-          return field
-        })
-      })
+          return field;
+        });
+      });
     }
-  }, [data])
+  }, [data]);
   return { fields, setFields };
 };
 
-
-export default FilterOptionsFields
+export default FilterOptionsFields;

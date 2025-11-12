@@ -4,7 +4,7 @@ import LocationInput from "../ui/inputs/LocationInput";
 
 /**
  * Example component demonstrating how to use the LocationInput component
- * 
+ *
  * Usage:
  * 1. Import LocationInput from "../shered/LocationInput"
  * 2. Use the onLocationSelect callback to get selected location data
@@ -17,11 +17,11 @@ const LocationInputExample = () => {
   const handleLocationSelect = (data: any, details: any) => {
     console.log("Selected place data:", data);
     console.log("Selected place details:", details);
-    
+
     // Store the selected location
     setSelectedLocation(details);
     setLocationAddress(data.description);
-    
+
     // You can access various properties from the details object:
     // - details.geometry.location.lat (latitude)
     // - details.geometry.location.lng (longitude)
@@ -33,7 +33,7 @@ const LocationInputExample = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Location Autocomplete Example</Text>
-      
+
       {/* Basic Usage */}
       <View style={styles.section}>
         <LocationInput
@@ -77,9 +77,9 @@ const LocationInputExample = () => {
           }}
           showLabel={true}
           required={false}
-          style={{ 
+          style={{
             marginBottom: 20,
-            backgroundColor: "#F9FAFB" 
+            backgroundColor: "#F9FAFB",
           }}
         />
       </View>

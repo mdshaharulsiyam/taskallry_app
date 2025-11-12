@@ -8,16 +8,22 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 
 const Search = () => {
   const {
-    params: { category_id, type },
+    params: { category_id, type, search },
   } = useRoute() as {
-    params: { category_id: string; type: "Provider" | "Task" };
+    params: { category_id: string; type: "Provider" | "Task"; search: string };
   };
+  const [searchText, setSearchText] = React.useState(search);
   const elements = [
-    <FilterOptions key={1} type={type} />,
+    <FilterOptions
+      search={searchText}
+      handler={(value: string) => setSearchText(value)}
+      key={1}
+      type={type}
+    />,
     type == "Provider" ? (
       <FilteredProvider key={3} />
     ) : (
-      <FIlteredTask key={2} />
+      <FIlteredTask key={2} search={searchText} />
     ),
   ];
   return (

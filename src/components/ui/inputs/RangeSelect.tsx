@@ -19,7 +19,10 @@ const RangeSelect = ({
   label?: string;
   error?: boolean;
   name?: string;
-  handler?: (name: string, value: number | { min: number; max: number }) => void;
+  handler?: (
+    name: string,
+    value: number | { min: number; max: number }
+  ) => void;
   value?: number | { min: number; max: number };
   min?: number;
   max?: number;
@@ -29,7 +32,11 @@ const RangeSelect = ({
 }) => {
   const isRange = !!range;
   const [single, setSingle] = React.useState<number>(
-    typeof value === "number" ? value : typeof value === "object" && value ? (value as any).min ?? min : min
+    typeof value === "number"
+      ? value
+      : typeof value === "object" && value
+      ? (value as any).min ?? min
+      : min
   );
   const [low, setLow] = React.useState<number>(
     typeof value === "object" && value ? (value as any).min ?? min : min
@@ -62,8 +69,19 @@ const RangeSelect = ({
       />
 
       {!isRange ? (
-        <View style={[{ backgroundColor: "#E6F4F1", borderRadius: 6, padding: 12 }, style]}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
+        <View
+          style={[
+            { backgroundColor: "#E6F4F1", borderRadius: 6, padding: 12 },
+            style,
+          ]}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 6,
+            }}
+          >
             <TextPrimary text={`${single}`} />
             <TextPrimary text={`${min} - ${max}`} />
           </View>
@@ -80,8 +98,19 @@ const RangeSelect = ({
           />
         </View>
       ) : (
-        <View style={[{ backgroundColor: "#E6F4F1", borderRadius: 6, padding: 12 }, style]}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
+        <View
+          style={[
+            { backgroundColor: "#E6F4F1", borderRadius: 6, padding: 12 },
+            style,
+          ]}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 6,
+            }}
+          >
             <TextPrimary text={`${low} - ${high}`} />
             <TextPrimary text={`${min} - ${max}`} />
           </View>

@@ -23,17 +23,17 @@ const slide = [
   {
     skip: 0,
     keep: 6,
-    field: "signup"
+    field: "signup",
   },
   {
     skip: 6,
     keep: 2,
-    field: "isAddressProvided"
+    field: "isAddressProvided",
   },
   {
     skip: 8,
     keep: 1,
-    field: "coupon"
+    field: "coupon",
   },
 ];
 
@@ -54,7 +54,7 @@ const Content = [
 
 const CustomerSignUp = () => {
   const params = useRoute().params;
-  const [register, { isLoading }] = useRegisterMutation()
+  const [register, { isLoading }] = useRegisterMutation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const { height } = Dimensions.get("window");
   const { fields, setFields } = CustomerSignUpFields();
@@ -66,17 +66,20 @@ const CustomerSignUp = () => {
     isAddressProvided: false,
     coupon: false,
   });
-  const navigation = Navigation()
+  const navigation = Navigation();
   const backHandler = () => {
     if (currentSlide == 0) {
-      navigation.goBack()
+      navigation.goBack();
     } else {
       setCurrentSlide((prev) => prev - 1);
     }
-  }
+  };
 
   return (
-    <SafeAreaProvider backButtonText="Sign Up as Customer" handler={backHandler}>
+    <SafeAreaProvider
+      backButtonText="Sign Up as Customer"
+      handler={backHandler}
+    >
       <View
         style={{
           flex: 1,
@@ -98,12 +101,18 @@ const CustomerSignUp = () => {
           <View>
             <TextPrimary text="Address Verification Document" />
             <FlexText>
-              {
-                fiels?.length > 0 && <Image
+              {fiels?.length > 0 && (
+                <Image
                   source={{ uri: fiels?.[0]?.uri }}
-                  style={{ width: 80, height: 80, borderRadius: 8, marginRight: 8, resizeMode: "contain" }}
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 8,
+                    marginRight: 8,
+                    resizeMode: "contain",
+                  }}
                 />
-              }
+              )}
             </FlexText>
             <ImageUploader setFiels={setFiels} />
           </View>
@@ -150,7 +159,13 @@ const CustomerSignUp = () => {
           style={{
             marginTop: 6,
           }}
-          text={isLoading ? "Loading..." : currentSlide == 2 ? "Apply Code & Continue" : "Continue"}
+          text={
+            isLoading
+              ? "Loading..."
+              : currentSlide == 2
+              ? "Apply Code & Continue"
+              : "Continue"
+          }
           handler={() => {
             const isValid = handleCustomerSignUp(
               fields?.slice(
@@ -160,9 +175,10 @@ const CustomerSignUp = () => {
               setFields,
               currentSlide,
               register,
-              (phone: string) => navigate("Verify", {
-                params: { phoneNumber: phone, from: "signup" },
-              })
+              (phone: string) =>
+                navigate("Verify", {
+                  params: { phoneNumber: phone, from: "signup" },
+                })
             );
             if (isValid && currentSlide < 2) {
               setCurrentSlide((prev) => prev + 1);

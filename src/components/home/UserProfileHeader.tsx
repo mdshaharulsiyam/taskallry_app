@@ -1,5 +1,9 @@
 import React from "react";
-import { ImageSourcePropType, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  ImageSourcePropType,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { otherIcons } from "../../constant/images";
 import Navigate from "../../utils/Navigate";
 import FlexText from "../shered/FlexText";
@@ -15,10 +19,7 @@ const UserProfileHeader = () => {
         justifyContent: "space-between",
       }}
     >
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => navigate('MyProfile')}
-      >
+      <TouchableOpacity activeOpacity={1} onPress={() => navigate("MyProfile")}>
         <ImageFlex
           image={`https://placehold.co/400x400.png`}
           text="Hello Siyam"

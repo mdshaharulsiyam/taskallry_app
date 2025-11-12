@@ -1,5 +1,5 @@
-import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { ParamListBase, useNavigation } from "@react-navigation/native";
 import React from "react";
 import { ImageSourcePropType, StyleSheet } from "react-native";
 import { otherIcons } from "../../constant/images";
@@ -8,9 +8,17 @@ import FlexText from "../shered/FlexText";
 import SearchBar from "../shered/SearchBar";
 import CircleButton from "../ui/buttons/CircleButton";
 
-const FilterOptions = ({ type }: { type: "Provider" | "Task" }) => {
+const FilterOptions = ({
+  type,
+  search,
+  handler,
+}: {
+  type: "Provider" | "Task";
+  search: string;
+  handler: (value: string) => void;
+}) => {
   const navigation = Navigation();
-  const navigate = useNavigation<DrawerNavigationProp<ParamListBase>>()
+  const navigate = useNavigation<DrawerNavigationProp<ParamListBase>>();
   return (
     <FlexText
       style={{
@@ -35,6 +43,8 @@ const FilterOptions = ({ type }: { type: "Provider" | "Task" }) => {
         style={{
           width: "70%",
         }}
+        value={search}
+        onChangeText={handler}
       />
       <CircleButton
         style={{

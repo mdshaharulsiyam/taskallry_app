@@ -24,8 +24,8 @@ The filter slice manages filter options that can be used across multiple compone
   distance_range: number | string;
   price_range: number | string;
   sort: string;
-  sortBy: string;        // Auto-computed from 'sort'
-  sortOrder: string;     // Auto-computed from 'sort'
+  sortBy: string; // Auto-computed from 'sort'
+  sortOrder: string; // Auto-computed from 'sort'
 }
 ```
 
@@ -34,12 +34,12 @@ The filter slice manages filter options that can be used across multiple compone
 #### 1. Import hooks and actions
 
 ```typescript
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { 
-  setFilterCategory, 
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {
+  setFilterCategory,
   selectFilters,
-  resetFilters 
-} from '@/redux/slices/filterSlice';
+  resetFilters,
+} from "@/redux/slices/filterSlice";
 ```
 
 #### 2. Read filter state
@@ -55,13 +55,15 @@ const sortBy = useAppSelector(selectSortBy);
 const dispatch = useAppDispatch();
 
 // Update single filter
-dispatch(setFilterCategory('Cleaning'));
+dispatch(setFilterCategory("Cleaning"));
 
 // Update multiple filters
-dispatch(setAllFilters({
-  category: 'Plumbing',
-  work_location: 'New York',
-}));
+dispatch(
+  setAllFilters({
+    category: "Plumbing",
+    work_location: "New York",
+  })
+);
 
 // Reset all filters
 dispatch(resetFilters());

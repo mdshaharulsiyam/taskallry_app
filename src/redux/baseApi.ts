@@ -19,10 +19,10 @@ export const baseApi = createApi({
 
 export const ImgUrl = (uri: string) => {
   if (uri.startsWith("http")) {
-    return uri
+    return uri;
   } else if (uri.startsWith("/")) {
-    return `${url}${uri}`
+    return `${url}${uri}`;
   } else {
-    return `${url}/${uri}`
+    return `${url}/${uri}`;
   }
-}
+};

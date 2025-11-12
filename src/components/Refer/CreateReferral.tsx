@@ -39,7 +39,11 @@ const CreateReferral = () => {
           handler={() => {
             const code = "TASK-USER123";
             Clipboard.setString(code);
-            Toast.show({ type: "success", text1: "Copied", text2: `${code} copied` });
+            Toast.show({
+              type: "success",
+              text1: "Copied",
+              text2: `${code} copied`,
+            });
           }}
           text="Copy Code"
           style={{

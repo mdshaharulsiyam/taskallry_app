@@ -7,7 +7,7 @@ import SectionHeading from "../shered/SectionHeading";
 import { useGetAllCategoriesQuery } from "../../redux/apis";
 
 const CategorySection = () => {
-  const { data, isLoading } = useGetAllCategoriesQuery({})
+  const { data, isLoading } = useGetAllCategoriesQuery({});
   const { width } = ScreenSize();
   const itemWidth = (width - 80) / 4;
   const navigate = Navigate();

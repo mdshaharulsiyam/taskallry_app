@@ -61,12 +61,17 @@ const CategoryButton = ({
               height: 40,
               width: 40,
             }}
-            source={{uri: image? ImgUrl(image):"https://placehold.co/400x400.png"}}
+            source={{
+              uri: image ? ImgUrl(image) : "https://placehold.co/400x400.png",
+            }}
           />
         </View>
-        <TextSecondary style={{
-          textAlign:"center"
-        }} text={name} />
+        <TextSecondary
+          style={{
+            textAlign: "center",
+          }}
+          text={name}
+        />
       </FlexText>
     </TouchableOpacity>
   );

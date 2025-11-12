@@ -1,15 +1,15 @@
 import { baseApi } from "../baseApi";
 
 interface Category {
-  category_image: string
-  createdAt: string
-  isDeleted: boolean
-  name: string
-  updatedAt: string
-  __v: number
-  _id: string
-  totalTask: number,
-  totalServices: number
+  category_image: string;
+  createdAt: string;
+  isDeleted: boolean;
+  name: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+  totalTask: number;
+  totalServices: number;
 }
 
 interface CreateCategoryRequest {
@@ -32,7 +32,6 @@ interface UpdateCategoryRequest {
 interface UpdateCategoryResponse {
   message: string;
   success: boolean;
-
 }
 
 interface DeleteCategoryResponse {
@@ -44,18 +43,21 @@ interface GetAllCategoriesResponse {
   success: boolean;
   data: {
     meta: {
-      limit: number,
-      page: number,
-      totalPage: number,
-      total: number,
-    },
-    result: Category[]
+      limit: number;
+      page: number;
+      totalPage: number;
+      total: number;
+    };
+    result: Category[];
   };
 }
 
 export const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    createCategory: builder.mutation<CreateCategoryResponse, CreateCategoryRequest>({
+    createCategory: builder.mutation<
+      CreateCategoryResponse,
+      CreateCategoryRequest
+    >({
       query: (data) => ({
         url: "/category/create-category",
         method: "POST",
@@ -63,7 +65,10 @@ export const categoryApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Category"],
     }),
-    updateCategory: builder.mutation<UpdateCategoryResponse, UpdateCategoryRequest>({
+    updateCategory: builder.mutation<
+      UpdateCategoryResponse,
+      UpdateCategoryRequest
+    >({
       query: ({ id, ...data }) => ({
         url: `/category/update-category/${id}`,
         method: "PATCH",
@@ -78,14 +83,17 @@ export const categoryApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Category"],
     }),
-    getAllCategories: builder.query<GetAllCategoriesResponse, {page?: number, limit?: number}>({
-      query: ({page=1, limit=8}) => ({
+    getAllCategories: builder.query<
+      GetAllCategoriesResponse,
+      { page?: number; limit?: number }
+    >({
+      query: ({ page = 1, limit = 8 }) => ({
         url: "/category/all-categories",
         method: "GET",
         params: {
           page,
           limit,
-        }
+        },
       }),
       providesTags: ["Category"],
     }),

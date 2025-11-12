@@ -12,15 +12,15 @@ const Bids_Question = ({
 }: {
   from?: "user" | "service";
   status:
-  | "All Tasks"
-  | "open for bids"
-  | "in Progress"
-  | "completed"
-  | "cancelled"
-  | "dispute"
-  | "Ongoing Tasks"
-  | "Bids  Made"
-  | "Bids  Received";
+    | "All Tasks"
+    | "open for bids"
+    | "in Progress"
+    | "completed"
+    | "cancelled"
+    | "dispute"
+    | "Ongoing Tasks"
+    | "Bids  Made"
+    | "Bids  Received";
 }) => {
   const [active, setActive] = useState(tab[0]);
   const component = {

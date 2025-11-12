@@ -19,7 +19,7 @@ redux/
 ### 1. Using Query Hooks in Components
 
 ```tsx
-import { useGetTasksQuery } from '../redux/apis/taskApi';
+import { useGetTasksQuery } from "../redux/apis/taskApi";
 
 function TaskList() {
   const { data: tasks, isLoading, error } = useGetTasksQuery();
@@ -39,7 +39,7 @@ function TaskList() {
 ### 2. Using Mutation Hooks
 
 ```tsx
-import { useLoginMutation } from '../redux/apis/authApi';
+import { useLoginMutation } from "../redux/apis/authApi";
 
 function LoginScreen() {
   const [login, { isLoading, error }] = useLoginMutation();
@@ -48,10 +48,10 @@ function LoginScreen() {
     try {
       const result = await login({ email, password }).unwrap();
       // Handle successful login
-      console.log('Token:', result.token);
+      console.log("Token:", result.token);
     } catch (err) {
       // Handle error
-      console.error('Login failed:', err);
+      console.error("Login failed:", err);
     }
   };
 
@@ -94,7 +94,7 @@ export const { useGetProfileQuery, useUpdateProfileMutation } = profileApi;
 Update the `baseUrl` in `baseApi.ts`:
 
 ```tsx
-baseUrl: "https://your-api-base-url.com/api"
+baseUrl: "https://your-api-base-url.com/api";
 ```
 
 ### Authentication Headers
@@ -105,10 +105,10 @@ Add auth token to requests in `baseApi.ts`:
 prepareHeaders: (headers, { getState }) => {
   const token = (getState() as RootState).auth?.token;
   if (token) {
-    headers.set('authorization', `Bearer ${token}`);
+    headers.set("authorization", `Bearer ${token}`);
   }
   return headers;
-}
+};
 ```
 
 ## Cache Invalidation
@@ -119,6 +119,7 @@ RTK Query uses tags for automatic cache invalidation:
 - **invalidatesTags**: Defines which cache entries a mutation invalidates
 
 Example:
+
 ```tsx
 getTasks: builder.query({
   query: () => "/tasks",
@@ -136,13 +137,13 @@ createTask: builder.mutation({
 const { data, error, isError } = useGetTasksQuery();
 
 if (isError) {
-  if ('status' in error) {
+  if ("status" in error) {
     // FetchBaseQueryError
-    const errMsg = 'error' in error ? error.error : JSON.stringify(error.data);
-    console.error('API Error:', errMsg);
+    const errMsg = "error" in error ? error.error : JSON.stringify(error.data);
+    console.error("API Error:", errMsg);
   } else {
     // SerializedError
-    console.error('Error:', error.message);
+    console.error("Error:", error.message);
   }
 }
 ```
@@ -157,7 +158,7 @@ const { data } = useGetTasksQuery(undefined, {
 
 // Manual refetch
 const { refetch } = useGetTasksQuery();
-<Button onPress={refetch} title="Refresh" />
+<Button onPress={refetch} title="Refresh" />;
 ```
 
 ## Optimistic Updates

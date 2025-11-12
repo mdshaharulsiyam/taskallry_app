@@ -41,12 +41,12 @@ const TaskCard = ({
         showDetailsButton
           ? null
           : navigate("TaskDetails", {
-            params: {
-              status: tab,
-              from,
-              heading: from == "user" ? "My Tasks Details" : "Tasks Details",
-            },
-          })
+              params: {
+                status: tab,
+                from,
+                heading: from == "user" ? "My Tasks Details" : "Tasks Details",
+              },
+            })
       }
       style={{
         backgroundColor: "#FFFFFF",
@@ -94,7 +94,11 @@ const TaskCard = ({
         }}
       >
         <Image
-          source={task?.customer?.profile_image ? { uri: ImgUrl(task?.customer?.profile_image + "") } : otherIcons.Avater as ImageSourcePropType}
+          source={
+            task?.customer?.profile_image
+              ? { uri: ImgUrl(task?.customer?.profile_image + "") }
+              : (otherIcons.Avater as ImageSourcePropType)
+          }
           style={{
             height: showDetailsButton ? 60 : 50,
             width: showDetailsButton ? 100 : 50,

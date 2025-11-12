@@ -33,10 +33,10 @@ const ImageUploader = ({
       const asset = res?.assets?.[0];
       const file = asset
         ? {
-          uri: asset.uri,
-          name: asset.fileName,
-          type: asset.type,
-        }
+            uri: asset.uri,
+            name: asset.fileName,
+            type: asset.type,
+          }
         : null;
       if (file?.uri && setFiels) {
         setFiels((prev: any) => [file, ...prev]);
@@ -78,10 +78,10 @@ const ImageUploader = ({
       const asset = res?.assets?.[0];
       const file = asset
         ? {
-          uri: asset.uri,
-          name: asset.fileName,
-          type: asset.type,
-        }
+            uri: asset.uri,
+            name: asset.fileName,
+            type: asset.type,
+          }
         : null;
       if (file?.uri && setFiels) {
         setFiels((prev: any) => [file, ...prev]);
@@ -121,7 +121,12 @@ const ImageUploader = ({
           <Text>Upload Document</Text>
         </View>
       )}
-      <Modal visible={showModal} transparent animationType="fade" onRequestClose={() => setShowModal(false)}>
+      <Modal
+        visible={showModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowModal(false)}
+      >
         <View
           style={{
             flex: 1,
@@ -149,31 +154,106 @@ const ImageUploader = ({
               <TouchableOpacity
                 onPress={handlePick}
                 activeOpacity={0.8}
-                style={{ alignItems: "center", paddingVertical: 18, paddingHorizontal: 12, borderStyle: "solid", borderWidth: 1, borderBottomWidth: 1, borderColor: "#D1D5DB", marginBottom: 8, borderRadius: 8, backgroundColor: "#FFFFFF", overflow: "hidden" }}
+                style={{
+                  alignItems: "center",
+                  paddingVertical: 18,
+                  paddingHorizontal: 12,
+                  borderStyle: "solid",
+                  borderWidth: 1,
+                  borderBottomWidth: 1,
+                  borderColor: "#D1D5DB",
+                  marginBottom: 8,
+                  borderRadius: 8,
+                  backgroundColor: "#FFFFFF",
+                  overflow: "hidden",
+                }}
               >
-                <SvgIcon component={svgIcons.Upload as any} width={24}
-                  height={24} />
-                <Text style={{ marginTop: 8, fontSize: 16, color: "#111827", fontWeight: "500" }}>Photo album</Text>
+                <SvgIcon
+                  component={svgIcons.Upload as any}
+                  width={24}
+                  height={24}
+                />
+                <Text
+                  style={{
+                    marginTop: 8,
+                    fontSize: 16,
+                    color: "#111827",
+                    fontWeight: "500",
+                  }}
+                >
+                  Photo album
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handlePickFile}
                 activeOpacity={0.8}
-                style={{ alignItems: "center", paddingVertical: 18, paddingHorizontal: 12, borderStyle: "solid", borderWidth: 1, borderBottomWidth: 1, borderColor: "#D1D5DB", marginBottom: 8, borderRadius: 8, backgroundColor: "#FFFFFF", overflow: "hidden" }}
+                style={{
+                  alignItems: "center",
+                  paddingVertical: 18,
+                  paddingHorizontal: 12,
+                  borderStyle: "solid",
+                  borderWidth: 1,
+                  borderBottomWidth: 1,
+                  borderColor: "#D1D5DB",
+                  marginBottom: 8,
+                  borderRadius: 8,
+                  backgroundColor: "#FFFFFF",
+                  overflow: "hidden",
+                }}
               >
-                <SvgIcon component={svgIcons.File as any} width={24}
-                  height={24} />
-                <Text style={{ marginTop: 8, fontSize: 16, color: "#111827", fontWeight: "500" }}>Choose File</Text>
+                <SvgIcon
+                  component={svgIcons.File as any}
+                  width={24}
+                  height={24}
+                />
+                <Text
+                  style={{
+                    marginTop: 8,
+                    fontSize: 16,
+                    color: "#111827",
+                    fontWeight: "500",
+                  }}
+                >
+                  Choose File
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleCapture}
                 activeOpacity={0.8}
-                style={{ alignItems: "center", paddingVertical: 18, paddingHorizontal: 12, borderStyle: "solid", borderWidth: 1, borderBottomWidth: 1, borderColor: "#D1D5DB", marginBottom: 8, borderRadius: 8, backgroundColor: "#FFFFFF", overflow: "hidden" }}
+                style={{
+                  alignItems: "center",
+                  paddingVertical: 18,
+                  paddingHorizontal: 12,
+                  borderStyle: "solid",
+                  borderWidth: 1,
+                  borderBottomWidth: 1,
+                  borderColor: "#D1D5DB",
+                  marginBottom: 8,
+                  borderRadius: 8,
+                  backgroundColor: "#FFFFFF",
+                  overflow: "hidden",
+                }}
               >
-                <SvgIcon component={svgIcons.Camera as any} width={24}
-                  height={24} />
-                <Text style={{ marginTop: 8, fontSize: 16, color: "#111827", fontWeight: "500" }}>Open Camera</Text>
+                <SvgIcon
+                  component={svgIcons.Camera as any}
+                  width={24}
+                  height={24}
+                />
+                <Text
+                  style={{
+                    marginTop: 8,
+                    fontSize: 16,
+                    color: "#111827",
+                    fontWeight: "500",
+                  }}
+                >
+                  Open Camera
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowModal(false)} style={{ paddingVertical: 12, alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => setShowModal(false)}
+                style={{ paddingVertical: 12, alignItems: "center" }}
+              >
                 <Text style={{ color: "#6B7280", fontSize: 14 }}>Cancel</Text>
               </TouchableOpacity>
             </View>

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { FieldsType, FieldType, KeyboardType } from '../types/Types';
+import { useState } from "react";
+import { FieldsType, FieldType, KeyboardType } from "../types/Types";
 
 const AddUpdateServiceFields = () => {
   const [fields, setFields] = useState<FieldsType[]>([
@@ -35,7 +35,7 @@ const AddUpdateServiceFields = () => {
       options: [
         { label: "options 1", value: "options 1" },
         { label: "options 2", value: "options 2" },
-      ]
+      ],
     },
     {
       name: "descriptions",
@@ -49,6 +49,6 @@ const AddUpdateServiceFields = () => {
     },
   ]);
   return { fields, setFields };
-}
+};
 
-export default AddUpdateServiceFields
+export default AddUpdateServiceFields;

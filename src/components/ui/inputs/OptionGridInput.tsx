@@ -1,5 +1,11 @@
 import React from "react";
-import { ScrollView, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import HeaderSecondary from "../../shered/HeaderSecondary";
 
 type Option = {
@@ -37,7 +43,10 @@ const OptionGridInput = ({
     <View style={{ backgroundColor: "transparent", ...style }}>
       {showLabel && (
         <HeaderSecondary
-          style={{ color: required ? (false ? "red" : "#111827") : "#111827", marginBottom: 5 }}
+          style={{
+            color: required ? (false ? "red" : "#111827") : "#111827",
+            marginBottom: 5,
+          }}
           text={label}
         />
       )}
@@ -65,7 +74,7 @@ const OptionGridInput = ({
                 borderColor: selected ? "#115E59" : "#D1D5DB",
                 flexDirection: "row",
                 alignItems: "center",
-                width: 180
+                width: 180,
               }}
               accessibilityRole="button"
               accessibilityState={{ selected }}
@@ -81,7 +90,14 @@ const OptionGridInput = ({
                   marginRight: 10,
                 }}
               />
-              <Text numberOfLines={1} style={{ color: "#111827", fontSize: 15, fontWeight: selected ? "600" : "500" }}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: "#111827",
+                  fontSize: 15,
+                  fontWeight: selected ? "600" : "500",
+                }}
+              >
                 {opt.label}
               </Text>
             </TouchableOpacity>

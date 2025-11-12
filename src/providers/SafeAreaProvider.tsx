@@ -64,7 +64,9 @@ const SafeAreaProvider = ({
           paddingHorizontal: zeroPadding ? 0 : 20,
         }}
       >
-        {backButtonText && <BackButton backHandler={handler} text={backButtonText} />}
+        {backButtonText && (
+          <BackButton backHandler={handler} text={backButtonText} />
+        )}
         <KeyboardAwareScrollView
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}

@@ -132,7 +132,10 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Profile"],
     }),
-    changePassword: builder.mutation<ChangePasswordResponse, ChangePasswordRequest>({
+    changePassword: builder.mutation<
+      ChangePasswordResponse,
+      ChangePasswordRequest
+    >({
       query: (data) => ({
         url: "/auth/change-password",
         method: "POST",
@@ -140,14 +143,20 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Auth"],
     }),
-    forgetPassword: builder.mutation<ForgetPasswordResponse, ForgetPasswordRequest>({
+    forgetPassword: builder.mutation<
+      ForgetPasswordResponse,
+      ForgetPasswordRequest
+    >({
       query: (data) => ({
         url: "/auth/forget-password",
         method: "POST",
         body: data,
       }),
     }),
-    resetPassword: builder.mutation<ResetPasswordResponse, ResetPasswordRequest>({
+    resetPassword: builder.mutation<
+      ResetPasswordResponse,
+      ResetPasswordRequest
+    >({
       query: (data) => ({
         url: "/auth/reset-password",
         method: "POST",
@@ -155,14 +164,20 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Auth"],
     }),
-    verifyResetOtp: builder.mutation<VerifyResetOtpResponse, VerifyResetOtpRequest>({
+    verifyResetOtp: builder.mutation<
+      VerifyResetOtpResponse,
+      VerifyResetOtpRequest
+    >({
       query: (data) => ({
         url: "/auth/verify-reset-otp",
         method: "POST",
         body: data,
       }),
     }),
-    updateProfile: builder.mutation<UpdateProfileResponse, UpdateProfileRequest>({
+    updateProfile: builder.mutation<
+      UpdateProfileResponse,
+      UpdateProfileRequest
+    >({
       query: (data) => ({
         url: "/user/update-profile",
         method: "PATCH",

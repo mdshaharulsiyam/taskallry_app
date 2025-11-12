@@ -7,7 +7,10 @@ import { useGetAllTasksQuery } from "../../redux/apis";
 
 const RecentlyAddedTask = () => {
   const navigate = Navigate();
-  const { data } = useGetAllTasksQuery({sortOrder: "desc",sortBy: "createdAt"});
+  const { data } = useGetAllTasksQuery({
+    sortOrder: "desc",
+    sortBy: "createdAt",
+  });
   return (
     <View style={{ marginTop: 10 }}>
       <SectionHeading

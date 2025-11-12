@@ -21,7 +21,6 @@ const SubmitBitButt = () => {
   const [message, setMessage] = useState("");
 
   const handleSubmit = () => {
-
     setMessage("");
     setPrice("");
     setOpen(false);

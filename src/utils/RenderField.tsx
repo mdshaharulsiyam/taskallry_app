@@ -2,7 +2,7 @@ import React from "react";
 import DatePicker from "../components/ui/inputs/DatePicker";
 import Input from "../components/ui/inputs/Input";
 import InputCheckbox from "../components/ui/inputs/InputCheckbox";
-import LocationInput from '../components/ui/inputs/LocationInput';
+import LocationInput from "../components/ui/inputs/LocationInput";
 import OptionGridInput from "../components/ui/inputs/OptionGridInput";
 import PasswordInput from "../components/ui/inputs/PasswordInput";
 import RangeSelect from "../components/ui/inputs/RangeSelect";
@@ -175,7 +175,9 @@ export const RenderField = (
         range={field?.range}
         handler={(name, value) =>
           setFields((prev) =>
-            prev.map((f) => (f.name === name ? { ...f, value, error: false } : f))
+            prev.map((f) =>
+              f.name === name ? { ...f, value, error: false } : f
+            )
           )
         }
       />
@@ -188,7 +190,9 @@ export const RenderField = (
         value={field?.value as string}
         handler={(name, value) =>
           setFields((prev) =>
-            prev.map((f) => (f.name === name ? { ...f, value, error: false } : f))
+            prev.map((f) =>
+              f.name === name ? { ...f, value, error: false } : f
+            )
           )
         }
         name={field?.name}
@@ -206,7 +210,9 @@ export const RenderField = (
         key={field.name}
         handler={(name, value) =>
           setFields((prev) =>
-            prev.map((f) => (f.name === name ? { ...f, value, error: false } : f))
+            prev.map((f) =>
+              f.name === name ? { ...f, value, error: false } : f
+            )
           )
         }
         label={field?.label}

@@ -47,7 +47,7 @@ const Input = ({
       )}
 
       <TextInput
-        onBlur={() => onBlur?.(value+"")}
+        onBlur={() => onBlur?.(value + "")}
         value={value}
         style={{
           backgroundColor: "#E6F4F1",

@@ -65,4 +65,3 @@ const UpdateBankAccount = () => {
 };
 
 export default UpdateBankAccount;
-

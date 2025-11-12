@@ -66,7 +66,9 @@ const CategorySquareButton = ({
               height: 40,
               width: 40,
             }}
-            source={ { uri: image ? ImgUrl(image) : "https://placehold.co/400x400.png" }}
+            source={{
+              uri: image ? ImgUrl(image) : "https://placehold.co/400x400.png",
+            }}
           />
         </View>
         <TextPrimary style={{ fontWeight: 700 }} text={name} />
@@ -82,4 +84,3 @@ const CategorySquareButton = ({
 };
 
 export default CategorySquareButton;
-

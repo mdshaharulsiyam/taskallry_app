@@ -1,11 +1,17 @@
 import React from "react";
-import { FlatList, Image, ImageSourcePropType, StyleSheet, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  View,
+} from "react-native";
 import { otherIcons } from "../../constant/images";
 import { useGetAllTasksQuery } from "../../redux/apis";
 import { useAppSelector } from "../../redux/hooks";
 import TaskCard from "../shered/TaskCard";
 
-const FIlteredTask = () => {
+const FIlteredTask = ({ search }: { search: string }) => {
   const {
     category,
     to_be_done,
@@ -13,10 +19,10 @@ const FIlteredTask = () => {
     distance_range,
     price_range,
     sort,
-    sortBy,
-    sortOrder,
   } = useAppSelector((state) => state.filter);
-  const latino = work_location?.split("|")?.[1] ? JSON.parse(work_location?.split("|")?.[1]) : null
+  const latino = work_location?.split("|")?.[1]
+    ? JSON.parse(work_location?.split("|")?.[1])
+    : null;
   const isStatusFilter = sort === "OPEN_FOR_BID" || sort === "IN_PROGRESS";
 
   const queryParams: {
@@ -28,13 +34,20 @@ const FIlteredTask = () => {
     maxPrice?: number;
     latitude?: number;
     longitude?: number;
+    searchTerm?: string;
+    maxDistance?: number;
   } = isStatusFilter
       ? {
         status: sort,
         ...(category ? { category } : {}),
         ...(latino ? { latitude: latino?.lat, longitude: latino?.lng } : {}),
         minPrice: 5000,
-        maxPrice: Number(price_range),
+        maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
+        ...(search ? { searchTerm: search } : {}),
+        maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range),
+        ...(to_be_done
+          ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
+          : {}),
       }
       : {
         sortOrder: sort === "Oldest First" ? "asc" : "desc",
@@ -42,14 +55,21 @@ const FIlteredTask = () => {
         ...(category ? { category } : {}),
         ...(latino ? { latitude: latino?.lat, longitude: latino?.lng } : {}),
         minPrice: 5000,
-        maxPrice: Number(price_range),
+        maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
+        ...(search ? { searchTerm: search } : {}),
+        maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range),
+        ...(to_be_done
+          ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
+          : {}),
       };
-  console.log(to_be_done)
-  const { data } = useGetAllTasksQuery(queryParams)
+  const { data } = useGetAllTasksQuery(queryParams);
+  console.log(data?.data?.result);
+  console.log(queryParams);
   return (
     <View style={{ marginTop: 10 }}>
-      {
-        (data?.data?.result && data?.data?.result?.length < 1) || !data?.data?.result ? <>
+      {(data?.data?.result && data?.data?.result?.length < 1) ||
+        !data?.data?.result ? (
+        <>
           <Image
             source={otherIcons.Empty as ImageSourcePropType}
             style={{
@@ -57,17 +77,14 @@ const FIlteredTask = () => {
               alignSelf: "center",
             }}
           />
-        </> :
-          <FlatList
-            data={data?.data?.result || []}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => <TaskCard
-              task={item}
-              from='user'
-            />}
-          />
-      }
-
+        </>
+      ) : (
+        <FlatList
+          data={data?.data?.result || []}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => <TaskCard task={item} from="user" />}
+        />
+      )}
     </View>
   );
 };

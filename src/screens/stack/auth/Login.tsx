@@ -86,7 +86,9 @@ const Login = () => {
         <ButtonBG
           text={`${isLoading ? "Loading..." : "Log In"}`}
           handler={() => {
-            handleSignIn(fields, setFields, login,setRole,()=>navigate("TabLayout"));
+            handleSignIn(fields, setFields, login, setRole, () =>
+              navigate("TabLayout")
+            );
             // const email = fields[0]?.value + "";
             // setRole(email?.includes("user") ? "user" : "service");
             // navigate("TabLayout");

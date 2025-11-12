@@ -1,119 +1,116 @@
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
-import React, { useState } from 'react'
-import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native'
-import { otherIcons } from '../../constant/images'
-import FlexText from '../shered/FlexText'
-import HeaderDesign from '../shered/HeaderDesign'
-import HeaderSecondary from '../shered/HeaderSecondary'
-import TextPrimary from '../shered/TextPrimary'
-import Divider from '../ui/devider/Divider'
+import { TouchableOpacity } from "@gorhom/bottom-sheet";
+import React, { useState } from "react";
+import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
+import { otherIcons } from "../../constant/images";
+import FlexText from "../shered/FlexText";
+import HeaderDesign from "../shered/HeaderDesign";
+import HeaderSecondary from "../shered/HeaderSecondary";
+import TextPrimary from "../shered/TextPrimary";
+import Divider from "../ui/devider/Divider";
 const data = {
   today: {
     amount: 150,
     total_tasks: 5,
-    total_time: "6h 0m"
+    total_time: "6h 0m",
   },
   yesterday: {
     amount: 200,
     total_tasks: 7,
-    total_time: "8h 0m"
+    total_time: "8h 0m",
   },
   "this week": {
     amount: 1200,
     total_tasks: 30,
-    total_time: "40h 0m"
+    total_time: "40h 0m",
   },
   "this month": {
     amount: 4500,
     total_tasks: 110,
-    total_time: "160h 0m"
+    total_time: "160h 0m",
   },
-  "yearly": {
+  yearly: {
     amount: 4500,
     total_tasks: 110,
-    total_time: "160h 0m"
+    total_time: "160h 0m",
   },
-  "lifetime": {
+  lifetime: {
     amount: 4500,
     total_tasks: 110,
-    total_time: "160h 0m"
-  }
+    total_time: "160h 0m",
+  },
 };
 
 const EarningCard = () => {
-  const [tab, setTab] = useState("today")
+  const [tab, setTab] = useState("today");
   return (
-    <View style={{
-      padding: 20,
-      borderRadius: 10,
-      backgroundColor: "#E6F4F1"
-    }}>
+    <View
+      style={{
+        padding: 20,
+        borderRadius: 10,
+        backgroundColor: "#E6F4F1",
+      }}
+    >
       <HeaderSecondary
         style={{
-          textAlign: "center"
+          textAlign: "center",
         }}
         text={tab}
       />
       <FlexText
         style={{
           justifyContent: "space-between",
-          marginVertical: 10
+          marginVertical: 10,
         }}
       >
         <TouchableOpacity
           onPress={() => {
             switch (tab) {
               case "today":
-                setTab("lifetime")
+                setTab("lifetime");
                 break;
               case "lifetime":
-                setTab("yearly")
+                setTab("yearly");
                 break;
               case "yearly":
-                setTab("this month")
+                setTab("this month");
                 break;
               case "this month":
-                setTab("this week")
+                setTab("this week");
                 break;
               case "this week":
-                setTab("yesterday")
+                setTab("yesterday");
                 break;
               case "yesterday":
-                setTab("today")
+                setTab("today");
                 break;
             }
-          }
-          }>
-          <Image
-            source={otherIcons.ArrowLeft as ImageSourcePropType}
-          />
+          }}
+        >
+          <Image source={otherIcons.ArrowLeft as ImageSourcePropType} />
         </TouchableOpacity>
-        <HeaderDesign
-          text={"₦" + data[tab as keyof typeof data]?.amount}
-        />
+        <HeaderDesign text={"₦" + data[tab as keyof typeof data]?.amount} />
         <TouchableOpacity
           onPress={() => {
             switch (tab) {
               case "today":
-                setTab("yesterday")
+                setTab("yesterday");
                 break;
               case "yesterday":
-                setTab("this week")
+                setTab("this week");
                 break;
               case "this week":
-                setTab("this month")
+                setTab("this month");
                 break;
               case "this month":
-                setTab("yearly")
+                setTab("yearly");
                 break;
               case "yearly":
-                setTab("lifetime")
+                setTab("lifetime");
                 break;
               case "lifetime":
-                setTab("today")
+                setTab("today");
                 break;
             }
-
           }}
         >
           <Image
@@ -125,31 +122,27 @@ const EarningCard = () => {
         </TouchableOpacity>
       </FlexText>
       <Divider />
-      <FlexText style={{
-        marginTop: 10,
-        justifyContent: "space-between"
-      }}>
+      <FlexText
+        style={{
+          marginTop: 10,
+          justifyContent: "space-between",
+        }}
+      >
         <FlexText>
-          <Image
-            source={otherIcons.ArrowBoth as ImageSourcePropType}
-          />
+          <Image source={otherIcons.ArrowBoth as ImageSourcePropType} />
           <TextPrimary
             text={data[tab as keyof typeof data].total_tasks + " Tasks"}
           />
         </FlexText>
         <FlexText>
-          <Image
-            source={otherIcons.Time as ImageSourcePropType}
-          />
-          <TextPrimary
-            text={data[tab as keyof typeof data].total_time}
-          />
+          <Image source={otherIcons.Time as ImageSourcePropType} />
+          <TextPrimary text={data[tab as keyof typeof data].total_time} />
         </FlexText>
       </FlexText>
     </View>
-  )
-}
+  );
+};
 
-export default EarningCard
+export default EarningCard;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

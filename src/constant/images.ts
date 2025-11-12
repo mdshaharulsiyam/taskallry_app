@@ -43,25 +43,26 @@ import Service from "../assets/service.png";
 import Share from "../assets/Share.png";
 import StateBg from "../assets/stateBg.png";
 import Watch from "../assets/Watch.png";
-import Time from "../assets/time.png"
-import ArrowBoth from "../assets/arrowBoth.png"
-import List from "../assets/List.png"
-import HomeIcon from "../assets/svg/home.svg"
-import PostIcon from "../assets/svg/post.svg"
-import ProfileIcon from "../assets/svg/profile.svg"
-import TaskIcon from "../assets/svg/task.svg"
-import ChatIcon from "../assets/svg/chat.svg"
-import Camera from "../assets/svg/camera.svg"
-import Upload from "../assets/svg/upload.svg"
-import File from "../assets/svg/file.svg"
-import ProfileImage from "../assets/profilebg.png"
-import Call from "../assets/call.png"
-import At from "../assets/at.png"
-import Avater from "../assets/profile.png"
-import Empty from "../assets/empty.png"
+import Time from "../assets/time.png";
+import ArrowBoth from "../assets/arrowBoth.png";
+import List from "../assets/List.png";
+import HomeIcon from "../assets/svg/home.svg";
+import PostIcon from "../assets/svg/post.svg";
+import ProfileIcon from "../assets/svg/profile.svg";
+import TaskIcon from "../assets/svg/task.svg";
+import ChatIcon from "../assets/svg/chat.svg";
+import Camera from "../assets/svg/camera.svg";
+import Upload from "../assets/svg/upload.svg";
+import File from "../assets/svg/file.svg";
+import ProfileImage from "../assets/profilebg.png";
+import Call from "../assets/call.png";
+import At from "../assets/at.png";
+import Avater from "../assets/profile.png";
+import Empty from "../assets/empty.png";
 export const TabIcons = {
   Home,
-  "My Tasks": post, Chat,
+  "My Tasks": post,
+  Chat,
   Profile,
   "Post Task": task,
   "My Service": task,
@@ -77,8 +78,8 @@ export const svgIcons = {
   Chat: ChatIcon,
   Camera: Camera,
   Upload: Upload,
-  File: File
-}
+  File: File,
+};
 export const profileIcons = {
   Card,
   Setting,
@@ -89,7 +90,7 @@ export const profileIcons = {
   Logout,
   Lock,
   deleteAccount,
-  Earning
+  Earning,
 };
 export const otherIcons = Object.freeze({
   manCircle,
@@ -129,5 +130,5 @@ export const otherIcons = Object.freeze({
   ProfileImage,
   Call,
   At,
-  Avater
+  Avater,
 });

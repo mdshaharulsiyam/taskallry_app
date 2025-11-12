@@ -13,20 +13,21 @@ import TextSecondary from "../../components/shered/TextSecondary";
 import { profileIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import Navigate from "../../utils/Navigate";
-    // {
-    //   name: "Change Password",
-    //   image: profileIcons.Lock,
-    //   navigate: "ChangePassword",
-    // },
+// {
+//   name: "Change Password",
+//   image: profileIcons.Lock,
+//   navigate: "ChangePassword",
+// },
 const Profile = () => {
   const navigate = Navigate();
   const elements = [
     <ProfilePictureName key={1} />,
     <ProfileOptions key={2} />,
-    <View style={{
-      paddingHorizontal: 20,
-
-    }}>
+    <View
+      style={{
+        paddingHorizontal: 20,
+      }}
+    >
       <TouchableOpacity
         key={4}
         onPress={() => navigate("Login")}
@@ -59,8 +60,9 @@ const Profile = () => {
             />
           </FlexText>
         </FlexText>
-      </TouchableOpacity>,
-    </View>
+      </TouchableOpacity>
+      ,
+    </View>,
   ];
   return (
     <SafeAreaProviderNoScroll zeroPadding={true}>

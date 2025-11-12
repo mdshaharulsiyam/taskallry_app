@@ -60,8 +60,7 @@ const SelectInput = ({
           data={options}
           labelField="label"
           valueField="value"
-          
-          //  mode="modal"  
+          //  mode="modal"
           placeholder={placeHolder}
           value={Array.isArray(value) ? value : []}
           style={baseStyle}
@@ -69,15 +68,26 @@ const SelectInput = ({
           selectedTextStyle={styles.selectedTextStyle}
           containerStyle={[
             styles.containerStyle,
-            { zIndex: 9999, elevation: 12, paddingBottom: bottom + 16, marginBottom: 8 },
+            {
+              zIndex: 9999,
+              elevation: 12,
+              paddingBottom: bottom + 16,
+              marginBottom: 8,
+            },
           ]}
           dropdownPosition="auto"
           maxHeight={320}
           onChange={(vals: string[]) => handler?.(name as string, vals)}
           renderSelectedItem={(item, unSelect) => (
-            <TouchableOpacity style={styles.tag} onPress={() => unSelect && unSelect(item)}>
+            <TouchableOpacity
+              style={styles.tag}
+              onPress={() => unSelect && unSelect(item)}
+            >
               <Text style={styles.tagText}>{item.label}</Text>
-              <Image source={otherIcons.Close as ImageSourcePropType} style={styles.tagClose} />
+              <Image
+                source={otherIcons.Close as ImageSourcePropType}
+                style={styles.tagClose}
+              />
             </TouchableOpacity>
           )}
         />
@@ -98,7 +108,9 @@ const SelectInput = ({
           ]}
           dropdownPosition="auto"
           maxHeight={320}
-          onChange={(item: { label: string; value: string }) => handler?.(name as string, item.value)}
+          onChange={(item: { label: string; value: string }) =>
+            handler?.(name as string, item.value)
+          }
           renderRightIcon={() => (
             <Image source={otherIcons.arrowDown as ImageSourcePropType} />
           )}
@@ -138,5 +150,5 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     tintColor: "#111827",
-   },
+  },
 });

@@ -68,7 +68,9 @@ const LocationInput = ({
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
       const data = await res.json();
       if (data.status !== "OK" && data.status !== "ZERO_RESULTS") {
-        throw new Error(data.error_message || `Places API status: ${data.status}`);
+        throw new Error(
+          data.error_message || `Places API status: ${data.status}`
+        );
       }
 
       setLocationSuggestions(data.results || []);
@@ -117,10 +119,7 @@ const LocationInput = ({
       )}
 
       <TextInput
-        style={[
-          styles.textInput,
-          error && styles.textInputError,
-        ]}
+        style={[styles.textInput, error && styles.textInputError]}
         placeholder={placeHolder}
         placeholderTextColor="#9CA3AF"
         value={query?.split("|")?.[0]}

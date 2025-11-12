@@ -16,7 +16,7 @@ const initialState: FilterState = {
   category: "",
   to_be_done: "",
   work_location: "",
-  distance_range: 0,
+  distance_range: 20,
   price_range: 5000000,
   sort: "",
   sortBy: "createdAt",
@@ -67,7 +67,10 @@ export const filterSlice = createSlice({
           state.sortOrder = "desc";
       }
     },
-    setSortByAndOrder: (state, action: PayloadAction<{ sortBy: string; sortOrder: string }>) => {
+    setSortByAndOrder: (
+      state,
+      action: PayloadAction<{ sortBy: string; sortOrder: string }>
+    ) => {
       state.sortBy = action.payload.sortBy;
       state.sortOrder = action.payload.sortOrder;
     },
@@ -96,8 +99,10 @@ export const {
 export const selectFilters = (state: RootState) => state.filter;
 export const selectCategory = (state: RootState) => state.filter.category;
 export const selectToBeDone = (state: RootState) => state.filter.to_be_done;
-export const selectWorkLocation = (state: RootState) => state.filter.work_location;
-export const selectDistanceRange = (state: RootState) => state.filter.distance_range;
+export const selectWorkLocation = (state: RootState) =>
+  state.filter.work_location;
+export const selectDistanceRange = (state: RootState) =>
+  state.filter.distance_range;
 export const selectPriceRange = (state: RootState) => state.filter.price_range;
 export const selectSort = (state: RootState) => state.filter.sort;
 export const selectSortBy = (state: RootState) => state.filter.sortBy;

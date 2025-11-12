@@ -38,9 +38,9 @@ export interface FieldsType {
   required: boolean;
   options?: { label: string; value: string }[];
   multiple?: boolean; // for SELECT: allow multiple selection
-  min?: number;       // for RANGE: lower bound
-  max?: number;       // for RANGE: upper bound
-  step?: number;      // for RANGE: step size
-  range?: boolean;    // for RANGE: enable dual-thumb behavior
+  min?: number; // for RANGE: lower bound
+  max?: number; // for RANGE: upper bound
+  step?: number; // for RANGE: step size
+  range?: boolean; // for RANGE: enable dual-thumb behavior
   showLabel?: boolean;
 }

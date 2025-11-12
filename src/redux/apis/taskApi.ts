@@ -19,19 +19,19 @@ export interface Task {
   provider: string;
   payOn: string;
   location: {
-    type: "Point",
-    coordinates: number[]
-  },
-  address: string,
-  scheduleType: string,
-  preferredDate: string,
-  preferredTime: string,
-  description: string,
-  task_attachments: [],
-  createdAt: string,
-  updatedAt: string,
-  __v: number,
-  totalOffer: number
+    type: "Point";
+    coordinates: number[];
+  };
+  address: string;
+  scheduleType: string;
+  preferredDate: string;
+  preferredTime: string;
+  description: string;
+  task_attachments: [];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  totalOffer: number;
 }
 
 interface CreateTaskRequest {
@@ -89,8 +89,21 @@ export const taskApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
-    getAllTasks: builder.query<GetAllTasksResponse, { sortOrder?: string, sortBy?: string, category?: string, status?: string, minPrice?: number, maxPrice?: number }>({
-      query: ({ sortOrder, sortBy, category, status, minPrice, maxPrice }) => ({
+    getAllTasks: builder.query<
+      GetAllTasksResponse,
+      {
+        sortOrder?: string;
+        sortBy?: string;
+        category?: string;
+        status?: string;
+        minPrice?: number;
+        maxPrice?: number;
+        doneBy?: string;
+        searchTerm?: string;
+        maxDistance?: number;
+      }
+    >({
+      query: ({ sortOrder, sortBy, category, status, minPrice, maxPrice, searchTerm, maxDistance }) => ({
         url: "/task/all-task",
         method: "GET",
         params: {
@@ -99,7 +112,9 @@ export const taskApi = baseApi.injectEndpoints({
           category,
           status,
           minPrice,
-          maxPrice
+          maxPrice,
+          searchTerm,
+          maxDistance,
         },
       }),
       providesTags: ["Task"],

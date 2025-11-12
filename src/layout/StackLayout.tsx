@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import AddUpdateService from '../screens/stack/AddUpdateService';
+import AddUpdateService from "../screens/stack/AddUpdateService";
 import ChooseSignUp from "../screens/stack/auth/ChooseSignUp";
 import CustomerSignUp from "../screens/stack/auth/CustomerSignUp";
 import ForgetPassword from "../screens/stack/auth/ForgetPassword";
@@ -22,7 +22,7 @@ import RequestCancel from "../screens/stack/RequestCancel";
 import Search from "../screens/stack/Search";
 import ServiceDetails from "../screens/stack/ServiceDetails";
 import ChangePassword from "../screens/stack/settings/ChangePassword";
-import Earnings from '../screens/stack/settings/Earnings';
+import Earnings from "../screens/stack/settings/Earnings";
 import Help from "../screens/stack/settings/Help";
 import MyProfile from "../screens/stack/settings/MyProfile";
 import Notifications from "../screens/stack/settings/Notifications";
@@ -71,7 +71,7 @@ const StackLayout = () => {
     Earnings: Earnings,
     UpdateBankAccount: UpdateBankAccount,
     ViewProfile: ViewProfile,
-    AccountSetting:AccountSetting
+    AccountSetting: AccountSetting,
   };
 
   const stacks = Object.keys(screens).map((key) => ({

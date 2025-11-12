@@ -11,7 +11,7 @@ interface LocationInputProps {
   placeHolder?: string;
   required?: boolean;
   showLabel?: boolean;
-  handler?: (name: string, value:String) => void;
+  handler?: (name: string, value: String) => void;
   value?: string;
   name?: string;
   error?: boolean;
@@ -29,12 +29,15 @@ const LocationInput = ({
   error = false,
 }: LocationInputProps) => {
   const ref = useRef<any>(null);
-  
+
   // 💡 DIAGNOSTIC STATE: Use this to track the selected data and ensure logging works.
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
   useEffect(() => {
-    console.log("LocationInput MOUNTED - API Key:", CONFIG.GOOGLE_MAPS_API_KEY ? "EXISTS" : "MISSING");
+    console.log(
+      "LocationInput MOUNTED - API Key:",
+      CONFIG.GOOGLE_MAPS_API_KEY ? "EXISTS" : "MISSING"
+    );
   }, []);
 
   // ✅ ENABLED: Logic to pre-fill the input field when the 'value' prop changes.
@@ -47,11 +50,14 @@ const LocationInput = ({
   // 💡 DIAGNOSTIC HOOK: Logs the selected location whenever the state updates.
   // This helps isolate logging issues from the onPress event execution.
   useEffect(() => {
-      if (selectedLocation) {
-          console.log("✅ DIAGNOSTIC LOG (Selected Location State):", selectedLocation);
-      }
+    if (selectedLocation) {
+      console.log(
+        "✅ DIAGNOSTIC LOG (Selected Location State):",
+        selectedLocation
+      );
+    }
   }, [selectedLocation]);
-  console.log(selectedLocation)
+  console.log(selectedLocation);
   return (
     <View
       style={{
@@ -76,7 +82,7 @@ const LocationInput = ({
           // --- ORIGINAL LOGIC ---
           console.log("LOCATION SELECTED (onPress):", { data, details });
           handler?.(name as string, "");
-          
+
           // 💡 DIAGNOSTIC ADDITION: Set the local state to trigger the logging hook
           setSelectedLocation({ data, details });
         }}
@@ -103,7 +109,6 @@ const LocationInput = ({
           url: "https://maps.googleapis.com/maps/api",
           useOnPlatform: "web",
         }}
-        
         styles={{
           container: {
             flex: 0,
@@ -122,9 +127,9 @@ const LocationInput = ({
             height: 50,
             ...(error
               ? {
-                borderColor: "red",
-                borderWidth: 1,
-              }
+                  borderColor: "red",
+                  borderWidth: 1,
+                }
               : {}),
           },
           predefinedPlacesDescription: {

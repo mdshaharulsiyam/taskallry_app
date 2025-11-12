@@ -1,10 +1,9 @@
 import React from "react";
 import { FlatList, Image, ImageSourcePropType, StyleSheet, View } from "react-native";
-import TaskCard from "../shered/TaskCard";
+import { otherIcons } from "../../constant/images";
 import { useGetAllTasksQuery } from "../../redux/apis";
 import { useAppSelector } from "../../redux/hooks";
-import { selectSortBy, selectSortOrder } from "../../redux/slices/filterSlice";
-import { otherIcons } from "../../constant/images";
+import TaskCard from "../shered/TaskCard";
 
 const FIlteredTask = () => {
   const {
@@ -17,8 +16,7 @@ const FIlteredTask = () => {
     sortBy,
     sortOrder,
   } = useAppSelector((state) => state.filter);
-
-
+  const latino = work_location?.split("|")?.[1] ? JSON.parse(work_location?.split("|")?.[1]) : null
   const isStatusFilter = sort === "OPEN_FOR_BID" || sort === "IN_PROGRESS";
 
   const queryParams: {
@@ -28,10 +26,13 @@ const FIlteredTask = () => {
     status?: string;
     minPrice?: number;
     maxPrice?: number;
+    latitude?: number;
+    longitude?: number;
   } = isStatusFilter
       ? {
         status: sort,
         ...(category ? { category } : {}),
+        ...(latino ? { latitude: latino?.lat, longitude: latino?.lng } : {}),
         minPrice: 5000,
         maxPrice: Number(price_range),
       }
@@ -39,12 +40,12 @@ const FIlteredTask = () => {
         sortOrder: sort === "Oldest First" ? "asc" : "desc",
         sortBy: "createdAt",
         ...(category ? { category } : {}),
+        ...(latino ? { latitude: latino?.lat, longitude: latino?.lng } : {}),
         minPrice: 5000,
         maxPrice: Number(price_range),
       };
-  console.log(queryParams)
+  console.log(to_be_done)
   const { data } = useGetAllTasksQuery(queryParams)
-  console.log(data)
   return (
     <View style={{ marginTop: 10 }}>
       {

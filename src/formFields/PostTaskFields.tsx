@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetAllCategoriesQuery } from "../redux/apis";
 import { FieldsType, FieldType, KeyboardType } from "../types/Types";
 
 const PostTaskFields = () => {
+  const { data } = useGetAllCategoriesQuery({ limit: 9999999 });
   const [fields, setFields] = useState<FieldsType[]>([
     {
       name: "title",
@@ -19,12 +21,9 @@ const PostTaskFields = () => {
       placeHolder: "Select Task Category",
       label: "Task Category",
       error: false,
-      value: "options 1",
+      value: "options",
       required: true,
       options: [
-        { label: "options 1", value: "options 1" },
-        { label: "options 2", value: "options 2" },
-        { label: "options 3", value: "options 3" },
       ],
       keyboard: KeyboardType.DEFAULT,
     },
@@ -45,18 +44,18 @@ const PostTaskFields = () => {
       placeHolder: "How should the task be done?",
       label: "How should the task be done?",
       error: false,
-      value: "In-Person",
+      value: "IN_PERSON",
       required: true,
       options: [
-        { label: "In-Person", value: "In-Person" },
-        { label: "Online", value: "Online" },
+        { label: "In-Person", value: "IN_PERSON" },
+        { label: "Online", value: "ONLINE" },
       ],
       keyboard: KeyboardType.DEFAULT,
       showLabel: true,
     },
     {
       name: "place",
-      type: FieldType.STRING,
+      type: FieldType.LOCATION,
       placeHolder: "Where to Go to Complete the Task",
       label: "Where to Go to Complete the Task",
       error: false,
@@ -70,11 +69,11 @@ const PostTaskFields = () => {
       placeHolder: "Where to Go to Complete the Task",
       label: "Where to Go to Complete the Task",
       error: false,
-      value: "Fixed Date & Time",
+      value: "FIXED_DATE_AND_TIME",
       required: true,
       options: [
-        { label: "Fixed Date & Time", value: "Fixed Date & Time" },
-        { label: "Flexible", value: "Flexible" },
+        { label: "Fixed Date & Time", value: "FIXED_DATE_AND_TIME" },
+        { label: "Flexible", value: "FLEXIBLE" },
       ],
       keyboard: KeyboardType.DEFAULT,
     },
@@ -94,7 +93,7 @@ const PostTaskFields = () => {
       placeHolder: "Preferred Time",
       label: "Preferred Time",
       error: false,
-      value: "10-10-2002",
+      value: "02:20",
       required: true,
       keyboard: KeyboardType.DEFAULT,
     },
@@ -115,11 +114,30 @@ const PostTaskFields = () => {
       label:
         "I confirm this task complies with all platform rules and community guidelines. ",
       error: false,
-      value: " ",
+      value: true,
       required: true,
       keyboard: KeyboardType.DEFAULT,
     },
   ]);
+  useEffect(() => {
+    if (data) {
+      const category_options = data?.data?.result?.map((item: any) => ({
+        label: item.name,
+        value: item._id,
+      }));
+      setFields((prev) => {
+        return prev.map((field) => {
+          if (field.name === "task_category") {
+            return {
+              ...field,
+              options: category_options,
+            };
+          }
+          return field;
+        });
+      });
+    }
+  }, [data]);
   return { fields, setFields };
 };
 

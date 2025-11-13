@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { otherIcons, TabIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+import { useGetSingleTaskQuery } from '../../redux/apis';
 import Navigate from "../../utils/Navigate";
 import BackButton from "../shered/BackButton";
 import FlexText from "../shered/FlexText";
@@ -30,22 +31,19 @@ import TaskProgress from "./TaskProgress";
 const DetailsTask = ({
   heading,
   from,
-  status,
+  id,
 }: {
   heading?: "Tasks Details" | "My Tasks Details";
   from: "user" | "service";
-  status:
-    | "All Tasks"
-    | "open for bids"
-    | "in Progress"
-    | "completed"
-    | "cancelled"
-    | "dispute"
-    | "Ongoing Tasks"
-    | "Bids  Made"
-    | "Bids  Received";
+  id: string;
 }) => {
-  console.log(heading, from, status);
+  const [status, setStatus] = React.useState<
+    "All Tasks" | "open for bids" | "in Progress" | "completed" | "cancelled" | "dispute" | "Ongoing Tasks" | "Bids  Made" | "Bids  Received"
+  >("open for bids");
+  // console.log(heading, from, status);
+  console.log(id)
+  const { data } = useGetSingleTaskQuery(id)
+  console.log(data)
   const elements = [
     <ButtonGreenOpacity30
       key={1}
@@ -176,7 +174,7 @@ const DetailsTask = ({
                 width: "auto",
               }}
               text="Remove the task."
-              handler={() => {}}
+              handler={() => { }}
             />
           </FlexText>
         </FlexText>
@@ -198,9 +196,9 @@ const DetailsTask = ({
     ),
 
     status == "All Tasks" ||
-    status == "open for bids" ||
-    from == "service" ||
-    status == "Bids  Made" ? (
+      status == "open for bids" ||
+      from == "service" ||
+      status == "Bids  Made" ? (
       <Bids_Question from={from} status={status} key={10} />
     ) : (
       <></>

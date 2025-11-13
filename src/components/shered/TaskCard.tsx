@@ -1,3 +1,4 @@
+import moment from "moment";
 import React from "react";
 import {
   Image,
@@ -8,6 +9,8 @@ import {
   View,
 } from "react-native";
 import { otherIcons } from "../../constant/images";
+import { Task } from "../../redux/apis";
+import { ImgUrl } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
 import ButtonBG from "../ui/buttons/ButtonBG";
 import GreenLine from "../ui/line/GreenLine";
@@ -16,9 +19,6 @@ import FlexText from "./FlexText";
 import HeaderDesign from "./HeaderDesign";
 import HeaderSecondary from "./HeaderSecondary";
 import TextPrimary from "./TextPrimary";
-import { Task } from "../../redux/apis";
-import moment from "moment";
-import { ImgUrl, url } from "../../redux/baseApi";
 
 const TaskCard = ({
   imageStyle,
@@ -41,12 +41,12 @@ const TaskCard = ({
         showDetailsButton
           ? null
           : navigate("TaskDetails", {
-              params: {
-                status: tab,
-                from,
-                heading: from == "user" ? "My Tasks Details" : "Tasks Details",
-              },
-            })
+            params: {
+              id: task?._id,
+              from,
+              heading: from == "user" ? "My Tasks Details" : "Tasks Details",
+            },
+          })
       }
       style={{
         backgroundColor: "#FFFFFF",

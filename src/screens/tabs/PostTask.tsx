@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlexText from "../../components/shered/FlexText";
 import SectionHeading from "../../components/shered/SectionHeading";
+import TextPrimary from "../../components/shered/TextPrimary";
 import ButtonBG from "../../components/ui/buttons/ButtonBG";
 import ButtonTransparentBG from "../../components/ui/buttons/ButtonTransparentBG";
 import ImageUploader from "../../components/ui/file/ImageUploader";
 import PostTaskFields from "../../formFields/PostTaskFields";
 import { handlePostTask } from "../../handler/postTask";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
+import { useCreateTaskMutation } from '../../redux/apis';
 import { FieldsType } from "../../types/Types";
 import Navigate from "../../utils/Navigate";
 import { RenderField } from "../../utils/RenderField";
 import ScreenSize from "../../utils/ScreenSize";
-import TextPrimary from "../../components/shered/TextPrimary";
 const slide = [
   {
     skip: 0,
@@ -39,6 +40,7 @@ const slide = [
 const title = ["Task Overview", "Task Details", "Date & Time", "Budget "];
 
 const PostTask = () => {
+  const [create, isLoading] = useCreateTaskMutation()
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fiels, setFiels] = useState<any>([]);
   const { height } = ScreenSize();
@@ -111,14 +113,18 @@ const PostTask = () => {
                   slide[currentSlide].keep + slide[currentSlide].skip
                 ),
                 setFields,
-                currentSlide
+                currentSlide,
+                fields,
+                create,
+                fiels
               );
-              console.log(isValid);
+
               if (isValid && currentSlide < 3) {
                 setCurrentSlide((prev) => prev + 1);
-              } else if (currentSlide == 3) {
-                navigate("Task");
               }
+              // else if (currentSlide == 3) {
+              //   navigate("Task");
+              // }
               //  else if (currentSlide == 2) {
               //   navigate("Verify", {
               //     params: { phoneNumber: "", from: "signup" },

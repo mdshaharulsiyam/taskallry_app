@@ -1,37 +1,42 @@
 import { baseApi } from "../baseApi";
 
 export interface Task {
-  _id: string;
-  title: string;
-  category: {
-    _id: string;
-    name: string;
-  };
-  customer: {
-    _id: string;
-    name: string;
-    profile_image: string;
-  };
-  budget: number;
-  status: string;
-  isDeleted: boolean;
-  paymentStatus: string;
-  provider: string;
-  payOn: string;
-  location: {
-    type: "Point";
-    coordinates: number[];
-  };
-  address: string;
-  scheduleType: string;
-  preferredDate: string;
-  preferredTime: string;
-  description: string;
-  task_attachments: [];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  totalOffer: number;
+  "location": {
+    "type": "Point",
+    "coordinates": [string, string]
+  },
+  "_id": string,
+  "title": string,
+  "category": {
+    "_id": string,
+    "name": string,
+    "category_image": string,
+    "isDeleted": boolean,
+    "createdAt": string,
+    "updatedAt": string,
+    "__v": number
+  },
+  "budget": number,
+  "status": string,
+  "isDeleted": boolean,
+  "paymentStatus": string,
+  "customer": {
+    "_id": string,
+    "name": string,
+    "profile_image": string
+  },
+  "payOn": string,
+  "doneBy": string,
+  "address": string,
+  "city": string,
+  "scheduleType": string,
+  "preferredDate": string,
+  "preferredTime": string,
+  "description": string,
+  "task_attachments": string[],
+  "totalOffer": number,
+  "createdAt": string,
+  "updatedAt": string,
 }
 
 interface CreateTaskRequest {

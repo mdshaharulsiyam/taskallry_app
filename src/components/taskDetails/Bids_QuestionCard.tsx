@@ -1,6 +1,7 @@
 import React from "react";
 import { ImageSourcePropType, StyleSheet, View } from "react-native";
 import { TabIcons } from "../../constant/images";
+import { Bid } from '../../redux/apis';
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
 import ImageFlex from "../shered/ImageFlex";
@@ -12,10 +13,12 @@ const Bids_QuestionCard = ({
   type,
   from = "service",
   status,
+  item,
 }: {
   type: "bids" | "question";
   from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
+  item?: Bid;
 }) => {
   return (
     <View
@@ -28,8 +31,8 @@ const Bids_QuestionCard = ({
     >
       <ImageFlex
         showText1={type == "bids"}
-        text="Ronald Richards"
-        text1="⭐ 4.5 (149 Reviews)"
+        text={item?.provider?.name}
+        text1={`⭐ ${item?.provider?.avgRating} (${item?.provider?.totalRatingCount} Reviews)`}
       />
       {type == "bids" && (
         <FlexText
@@ -44,7 +47,7 @@ const Bids_QuestionCard = ({
         >
           <View>
             <TextSecondary text="Offered Price " />
-            <HeaderDesign text="₦24.00" />
+            <HeaderDesign text={`₦${item?.price}`} />
           </View>
           <ButtonBG
             style={{
@@ -55,7 +58,7 @@ const Bids_QuestionCard = ({
           />
         </FlexText>
       )}
-      <TextSecondary text="I was a bit nervous to be buying a secondhand phone from Amazon, but I couldn’t be happier with my purchase!! I have a pre-paid data plan so I was worried that this phone wouldn’t connect with my data plan, since the new phones don’t have the physical Sim tray anymore." />
+      <TextSecondary text={item?.details} />
       {from == "user" && type == "question" && (
         <IconButtonTransparent
           style={{

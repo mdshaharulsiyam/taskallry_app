@@ -13,14 +13,15 @@ const Bids = ({
   id: string;
 }) => {
   const { data } = useGetBidsByTaskIdQuery(id)
+  console.log(data)
   return (
     <View
       style={{
         marginTop: 10,
       }}
     >
-      {[...Array(5).keys()]?.map((item) => (
-        <Bids_QuestionCard type="bids" from={from} status={status} />
+      {data?.data?.result?.map((item) => (
+        <Bids_QuestionCard type="bids" from={from} status={status} item={item} />
       ))}
     </View>
   );

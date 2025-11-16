@@ -30,12 +30,28 @@ interface CreateBidResponse {
 
 interface GetAllBidsResponse {
   success: boolean;
-  data: Bid[];
+  data: {
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPage: number;
+    },
+    result: Bid[]
+  };
 }
 
 interface GetBidsByTaskIdResponse {
   success: boolean;
-  data: Bid[];
+  data: {
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPage: number;
+    },
+    result: Bid[]
+  };
 }
 
 interface DeleteBidResponse {

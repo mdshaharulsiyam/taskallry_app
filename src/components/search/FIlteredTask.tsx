@@ -44,7 +44,7 @@ const FIlteredTask = ({ search }: { search: string }) => {
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
         ...(search ? { searchTerm: search } : {}),
-        maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range),
+        // maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range),
         ...(to_be_done
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),
@@ -57,14 +57,12 @@ const FIlteredTask = ({ search }: { search: string }) => {
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
         ...(search ? { searchTerm: search } : {}),
-        maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range),
+        // maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range),
         ...(to_be_done
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),
       };
   const { data } = useGetAllTasksQuery(queryParams);
-  console.log(data?.data?.result);
-  console.log(queryParams);
   return (
     <View style={{ marginTop: 10 }}>
       {(data?.data?.result && data?.data?.result?.length < 1) ||

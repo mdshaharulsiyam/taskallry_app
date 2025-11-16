@@ -8,22 +8,7 @@ export interface IStatusData {
   date?: string;
   status: "complete" | "pending";
 }
-// const dummy: IStatusData[] = [
-//   {
-//     name: "Offered",
-//     date: "Feb 21, 2023",
-//     status: "complete",
-//   },
-//   {
-//     name: "In Progress",
-//     date: "Feb 21, 2023",
-//     status: "complete",
-//   },
-//   {
-//     name: "Completed on",
-//     status: "pending",
-//   },
-// ];
+
 
 const ProgressBar = ({ data }: { data: IStatusData[] }) => {
   return (

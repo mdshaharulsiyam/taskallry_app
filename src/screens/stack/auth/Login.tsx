@@ -1,6 +1,7 @@
 import React from "react";
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 import FlexText from "../../../components/shered/FlexText";
 import HeaderDesign from "../../../components/shered/HeaderDesign";
 import HeaderSecondary from "../../../components/shered/HeaderSecondary";
@@ -12,10 +13,12 @@ import LoginFields from "../../../formFields/LoginFields";
 import { handleSignIn } from "../../../handler/signIn";
 import { useGlobalContext } from "../../../providers/GlobalContextProvider";
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
+import { useLoginMutation } from "../../../redux/apis";
+import { setToken } from "../../../redux/slices/authSlice";
+import type { AppDispatch } from "../../../redux/store";
 import { FieldsType } from "../../../types/Types";
 import Navigate from "../../../utils/Navigate";
 import { RenderField } from "../../../utils/RenderField";
-import { useLoginMutation } from "../../../redux/apis";
 
 const Login = () => {
   const { height } = Dimensions.get("window");
@@ -23,6 +26,7 @@ const Login = () => {
   const { top, bottom } = useSafeAreaInsets();
   const { setRole } = useGlobalContext();
   const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = Navigate();
   return (
     <SafeAreaProvider>
@@ -86,8 +90,13 @@ const Login = () => {
         <ButtonBG
           text={`${isLoading ? "Loading..." : "Log In"}`}
           handler={() => {
-            handleSignIn(fields, setFields, login, setRole, () =>
-              navigate("TabLayout")
+            handleSignIn(
+              fields,
+              setFields,
+              login,
+              setRole,
+              () => navigate("TabLayout"),
+              (token) => dispatch(setToken(token))
             );
             // const email = fields[0]?.value + "";
             // setRole(email?.includes("user") ? "user" : "service");

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from "react";
 import {
   FlatList,
@@ -6,21 +7,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from 'react-redux';
 import ProfileOptions from "../../components/profile/ProfileOptions";
 import ProfilePictureName from "../../components/profile/ProfilePictureName";
 import FlexText from "../../components/shered/FlexText";
 import TextSecondary from "../../components/shered/TextSecondary";
 import { profileIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
-import Navigate from "../../utils/Navigate";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// {
-//   name: "Change Password",
-//   image: profileIcons.Lock,
-//   navigate: "ChangePassword",
-// },
+import { clearToken } from '../../redux/slices/authSlice';
+import { AppDispatch } from '../../redux/store';
+import Navigate, { Navigation } from "../../utils/Navigate";
 const Profile = () => {
-  const navigate = Navigate();
+  const navigate = Navigation();
+  const dispatch = useDispatch<AppDispatch>();
   const elements = [
     <ProfilePictureName key={1} />,
     <ProfileOptions key={2} />,
@@ -33,14 +32,16 @@ const Profile = () => {
         key={4}
         onPress={async () => {
           await AsyncStorage.removeItem("token");
-
-          navigate("Login");
+          dispatch(clearToken());
+          navigate.reset({
+            index: 0,
+            routes: [{ name: "Login" }],
+          });
         }}
         style={{
           marginTop: 10,
           padding: 10,
           borderRadius: 10,
-          // backgroundColor: "#E6F4F1"
           borderWidth: 1,
           paddingVertical: 14,
         }}

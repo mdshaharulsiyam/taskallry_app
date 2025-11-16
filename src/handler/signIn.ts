@@ -9,7 +9,8 @@ export const handleSignIn = (
   setFields: React.Dispatch<React.SetStateAction<FieldsType[]>>,
   login: any,
   setRole: React.Dispatch<React.SetStateAction<"user" | "service" | null>>,
-  sucessHandler?: () => void
+  sucessHandler?: () => void,
+  setTokenCb?: (token: string | null) => void
 ) => {
   const isValid = validateFields(fields, setFields);
   if (!isValid) {
@@ -35,6 +36,7 @@ export const handleSignIn = (
       });
       await AsyncStorage.setItem("token", res?.data?.accessToken);
       await AsyncStorage.setItem("role", res?.data?.role);
+      setTokenCb?.(res?.data?.accessToken || null);
       sucessHandler?.();
     })
     .catch((err: any) => {

@@ -195,7 +195,7 @@ const DetailsTask = ({
       </FlexText>
     ),
     data?.data?.status == "OPEN_FOR_BID" ? (
-      <Bids_Question from={from} status={status} key={10} />
+      <Bids_Question from={from} status={data?.data?.status} key={10} id={id} />
     ) : (
       <></>
     ),

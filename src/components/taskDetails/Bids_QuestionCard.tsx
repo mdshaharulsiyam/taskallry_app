@@ -15,16 +15,7 @@ const Bids_QuestionCard = ({
 }: {
   type: "bids" | "question";
   from?: "user" | "service";
-  status:
-    | "All Tasks"
-    | "open for bids"
-    | "in Progress"
-    | "completed"
-    | "cancelled"
-    | "dispute"
-    | "Ongoing Tasks"
-    | "Bids  Made"
-    | "Bids  Received";
+  status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
 }) => {
   return (
     <View
@@ -40,7 +31,7 @@ const Bids_QuestionCard = ({
         text="Ronald Richards"
         text1="⭐ 4.5 (149 Reviews)"
       />
-      {from == "user" && type == "bids" && (
+      {type == "bids" && (
         <FlexText
           key={9}
           style={{
@@ -59,8 +50,8 @@ const Bids_QuestionCard = ({
             style={{
               width: "auto",
             }}
-            text={status == "Bids  Made" ? "Update Offer" : "Accept"}
-            handler={() => {}}
+            text={from == "user" ? "Accept" : "Update Offer"}
+            handler={() => { }}
           />
         </FlexText>
       )}

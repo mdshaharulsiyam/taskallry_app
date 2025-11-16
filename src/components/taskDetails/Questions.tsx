@@ -6,18 +6,11 @@ import QuestionForm from "./QuestionForm";
 const Questions = ({
   from = "service",
   status,
+  id,
 }: {
   from?: "user" | "service";
-  status:
-    | "All Tasks"
-    | "open for bids"
-    | "in Progress"
-    | "completed"
-    | "cancelled"
-    | "dispute"
-    | "Ongoing Tasks"
-    | "Bids  Made"
-    | "Bids  Received";
+  status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE",
+  id: string;
 }) => {
   return (
     <View

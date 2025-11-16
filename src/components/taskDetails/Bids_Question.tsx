@@ -9,23 +9,16 @@ const tab = ["Bids", "Questions"];
 const Bids_Question = ({
   from = "service",
   status,
+  id,
 }: {
   from?: "user" | "service";
-  status:
-    | "All Tasks"
-    | "open for bids"
-    | "in Progress"
-    | "completed"
-    | "cancelled"
-    | "dispute"
-    | "Ongoing Tasks"
-    | "Bids  Made"
-    | "Bids  Received";
+  status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
+  id: string;
 }) => {
   const [active, setActive] = useState(tab[0]);
   const component = {
-    Bids: <Bids from={from} status={status} />,
-    Questions: <Questions from={from} status={status} />,
+    Bids: <Bids from={from} status={status} id={id} />,
+    Questions: <Questions from={from} status={status} id={id} />,
   };
   return (
     <View

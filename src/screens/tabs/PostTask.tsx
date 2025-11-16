@@ -37,6 +37,7 @@ const slide = [
     keep: 1,
   },
 ];
+
 const title = ["Task Overview", "Task Details", "Date & Time", "Budget "];
 
 const PostTask = () => {
@@ -94,6 +95,7 @@ const PostTask = () => {
         >
           {currentSlide != 0 && (
             <ButtonTransparentBG
+              disabled={isLoading}
               style={{
                 width: "auto",
               }}

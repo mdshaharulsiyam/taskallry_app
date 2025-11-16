@@ -36,10 +36,23 @@ const DatePicker = ({
   const [show, setShow] = useState(false);
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
+    // Close picker on Android after selection, keep it open on iOS
+    if (Platform.OS === "android") {
+      setShow(false);
+    } else {
+      setShow(true);
+    }
     setDate(currentDate);
-    console.log(currentDate);
-    // handler?.(name as string, currentDate)
+    console.log(event);
+
+    // Propagate selected date to parent as a formatted string
+    if (selectedDate && handler && name) {
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+      const day = String(selectedDate.getDate()).padStart(2, "0");
+      const formatted = `${year}-${month}-${day}`;
+      handler(name, formatted);
+    }
   };
   return (
     <View
@@ -67,9 +80,9 @@ const DatePicker = ({
             borderRadius: 8,
             ...(error
               ? {
-                  borderColor: "red",
-                  borderWidth: 1,
-                }
+                borderColor: "red",
+                borderWidth: 1,
+              }
               : {}),
             ...inputStyle,
           }}

@@ -146,6 +146,18 @@ export const taskApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
+    getMyTask: builder.query<GetAllTasksResponse, {
+      status?: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
+    }>({
+      query: ({ status }) => ({
+        url: "/task/my-task",
+        method: "GET",
+        params: {
+          status,
+        },
+      }),
+      providesTags: ["Task"],
+    }),
   }),
 });
 
@@ -155,4 +167,5 @@ export const {
   useGetSingleTaskQuery,
   useDeleteTaskMutation,
   useAcceptOfferMutation,
+  useGetMyTaskQuery,
 } = taskApi;

@@ -1,91 +1,55 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import SectionHeading from "../../components/shered/SectionHeading";
 import TaskCard from "../../components/shered/TaskCard";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
-const data = [
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-  {
-    title: "Help move a couch",
-    price: "₦24.00",
-    location_address: "Los Angeles CA 90024",
-    location_city: "New York, USA",
-    date: "15 May 2020 8:00 am",
-    user: {
-      name: "Marvin Fey",
-      status: "Open",
-      offers: "1 offered",
-    },
-    image: "",
-  },
-];
+import { useGetMyTaskQuery } from "../../redux/apis/taskApi";
+
 const Tasks = () => {
   const [tab, setTab] = useState("All Tasks");
+
+  const getStatusFromTab = (currentTab: string) => {
+    switch (currentTab) {
+      case "open for bids":
+        return "OPEN_FOR_BID" as const;
+      case "in Progress":
+        return "IN_PROGRESS" as const;
+      case "completed":
+        return "COMPLETED" as const;
+      case "cancelled":
+        return "CANCELLED" as const;
+      case "dispute":
+        return "DISPUTE" as const;
+      default:
+        return undefined;
+    }
+  };
+
+  const status = getStatusFromTab(tab);
+
+  const { data, isLoading, isFetching } = useGetMyTaskQuery(
+    status ? { status } : {}
+  );
+
+  const tasks = data?.data?.result || [];
+
+  if (isLoading || isFetching) {
+    return (
+      <SafeAreaProviderNoScroll>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            height: 200,
+          }}
+        >
+          <ActivityIndicator size="large" color="#115E59" />
+        </View>
+      </SafeAreaProviderNoScroll>
+    );
+  }
 
   const elements = [
     <SectionHeading
@@ -96,12 +60,13 @@ const Tasks = () => {
       showViewButton={false}
       key={1}
     />,
+
     <TabButton handler={(tab) => setTab(tab)} key={2} />,
 
     <FlatList
       key={3}
-      data={data}
-      keyExtractor={(item, index) => index.toString()}
+      data={tasks}
+      keyExtractor={(_item, index) => index.toString()}
       renderItem={({ item }) => (
         <TaskCard from="user" tab={tab} showDetailsButton={true} task={item} />
       )}

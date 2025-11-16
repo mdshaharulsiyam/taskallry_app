@@ -6,15 +6,18 @@ const ButtonBG = ({
   text,
   handler,
   textStyle,
+  disabled,
 }: {
   style?: ViewStyle;
   textStyle?: TextStyle;
   text?: string;
   handler: () => void;
+  disabled?: boolean;
 }) => {
   return (
     <TouchableOpacity
       onPress={() => {
+        if (disabled) return;
         handler?.();
       }}
       activeOpacity={0.7}

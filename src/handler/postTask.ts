@@ -1,6 +1,6 @@
 import React from "react";
 import Toast from 'react-native-toast-message';
-import { FieldsType } from "../types/Types";
+import { FieldsType, KeyboardType } from "../types/Types";
 import { validateFields } from "../utils/formValidate";
 
 export const handlePostTask = (
@@ -9,17 +9,18 @@ export const handlePostTask = (
   currentSlide: number,
   allFields: FieldsType[],
   create: any,
-  files: any
+  files: any,
+  successFn: () => void,
 ) => {
   const isValid = validateFields(fields, setFields);
   if (!isValid || currentSlide != 3) {
     return isValid;
   }
   const values = allFields.reduce((acc, field) => {
-    acc[field.name] = field.value;
+    acc[field.name] = field?.keyboard == KeyboardType.NUMERIC ? Number(field.value) : field.value;
     return acc;
   }, {} as any);
-  console.log({ values, isValid, files });
+
   const latino = values?.place?.split("|")?.[1]
     ? JSON.parse(values?.place?.split("|")?.[1])
     : { lat: 0, lng: 0 };
@@ -50,8 +51,8 @@ export const handlePostTask = (
         text1: "Task created successfully",
         text2: res?.message || `Task created successfully`,
       });
-
-
+      successFn();
+      setFields(allFields.map((field) => ({ ...field, value: "" })));
     })
     .catch((err: any) => {
       Toast.show({

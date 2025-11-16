@@ -40,7 +40,7 @@ const slide = [
 const title = ["Task Overview", "Task Details", "Date & Time", "Budget "];
 
 const PostTask = () => {
-  const [create, isLoading] = useCreateTaskMutation()
+  const [create, { isLoading }] = useCreateTaskMutation()
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fiels, setFiels] = useState<any>([]);
   const { height } = ScreenSize();
@@ -102,10 +102,11 @@ const PostTask = () => {
             />
           )}
           <ButtonBG
+            disabled={isLoading}
             style={{
               width: "auto",
             }}
-            text={currentSlide == 3 ? "Post" : "Continue"}
+            text={currentSlide == 3 ? isLoading ? "loading..." : "Post" : "Continue"}
             handler={() => {
               const isValid = handlePostTask(
                 fields?.slice(
@@ -116,7 +117,12 @@ const PostTask = () => {
                 currentSlide,
                 fields,
                 create,
-                fiels
+                fiels,
+                () => {
+                  navigate("Task");
+                  setCurrentSlide(0);
+                  setFiels([]);
+                }
               );
 
               if (isValid && currentSlide < 3) {

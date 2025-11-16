@@ -25,7 +25,7 @@ const handleUpdateProfile = (
     street: values.street,
   };
   const formData = new FormData();
-  formData.append("data", JSON.stringify(values));
+  formData.append("data", JSON.stringify(payload));
   formData.append("profile_image", imageFile);
 
   updateProfile(formData)

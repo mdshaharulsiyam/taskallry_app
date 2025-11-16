@@ -147,13 +147,17 @@ export const taskApi = baseApi.injectEndpoints({
       invalidatesTags: ["Task"],
     }),
     getMyTask: builder.query<GetAllTasksResponse, {
-      status?: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
+      status?: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE",
+      sortOrder?: string,
+      sortBy?: string,
     }>({
-      query: ({ status }) => ({
+      query: ({ status, sortOrder, sortBy }) => ({
         url: "/task/my-task",
         method: "GET",
         params: {
           status,
+          sortOrder,
+          sortBy,
         },
       }),
       providesTags: ["Task"],

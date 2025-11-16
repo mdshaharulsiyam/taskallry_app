@@ -136,10 +136,9 @@ const TaskCard = ({
             handler={() =>
               navigate("TaskDetails", {
                 params: {
-                  status: tab,
+                  id: task?._id,
                   from,
-                  heading:
-                    from == "user" ? "My Tasks Details" : "Tasks Details",
+                  heading: from == "user" ? "My Tasks Details" : "Tasks Details",
                 },
               })
             }

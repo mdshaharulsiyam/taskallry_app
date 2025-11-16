@@ -10,6 +10,8 @@ import {
 import { otherIcons, TabIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 
+import { useGetSingleTaskQuery } from '../../redux/apis';
+import { ImgUrl } from '../../redux/baseApi';
 import Navigate from "../../utils/Navigate";
 import BackButton from "../shered/BackButton";
 import FlexText from "../shered/FlexText";
@@ -29,7 +31,6 @@ import CancelRefundRequest from "./CancelRefundRequest";
 import FeedbackStatusButton from "./FeedbackStatusButton";
 import SubmitBitButt from "./SubmitBitButt";
 import TaskProgress from "./TaskProgress";
-import { useGetSingleTaskQuery } from '../../redux/apis';
 
 const DetailsTask = ({
   heading,
@@ -72,7 +73,7 @@ const DetailsTask = ({
     heading == "My Tasks Details" ? (
       <Image
         key={5}
-        src="https://placehold.co/400x400.png"
+        source={{ uri: ImgUrl(data?.data?.customer?.profile_image + "") }}
         style={{
           width: 200,
           height: 120,
@@ -144,9 +145,7 @@ const DetailsTask = ({
     />,
 
     heading == "My Tasks Details" ? (
-      status != "All Tasks" ? (
-        <></>
-      ) : (
+      data?.data?.status != "IN_PROGRESS" ? (
         <FlexText
           key={9}
           style={{
@@ -159,8 +158,8 @@ const DetailsTask = ({
             borderRadius: 5,
           }}
         >
-          <TextSecondary text="Task budget " />
-          <HeaderDesign text="₦24.00" />
+          <TextSecondary text="Task budget" />
+          <HeaderDesign text={`₦${data?.data?.budget}`} />
           <FlexText>
             <ButtonTransparentBG
               style={{
@@ -177,6 +176,8 @@ const DetailsTask = ({
             />
           </FlexText>
         </FlexText>
+      ) : (
+        <></>
       )
     ) : (
       <FlexText

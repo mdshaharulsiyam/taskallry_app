@@ -8,12 +8,12 @@ import FlexText from "./FlexText";
 
 const SearchBar = ({
   style,
-  value,
+  value = "",
   onChangeText,
 }: {
   style?: ViewStyle;
-  value: string;
-  onChangeText: (value: string) => void;
+  value?: string;
+  onChangeText?: (value: string) => void;
 }) => {
   const navigate = Navigate();
   const [search, setSearch] = React.useState(value);
@@ -39,7 +39,7 @@ const SearchBar = ({
         value={search}
         handler={(name, value) => {
           setSearch(value);
-          onChangeText(value);
+          onChangeText?.(value);
         }}
         style={{
           width: "86%",

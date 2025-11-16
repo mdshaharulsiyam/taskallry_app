@@ -62,13 +62,13 @@ const DetailsTask = ({
       activeOpacity={1}
       text={data?.data?.status}
       style={{
-        backgroundColor: color[data?.data?.status as keyof typeof color].backgroundColor,
+        backgroundColor: color[data?.data?.status as keyof typeof color]?.backgroundColor,
         width: 200,
         borderRadius: 8,
         marginVertical: 10,
       }}
       textStyle={{
-        color: color[data?.data?.status as keyof typeof color].color,
+        color: color[data?.data?.status as keyof typeof color]?.color,
         fontWeight: 700,
       }}
     />,
@@ -100,7 +100,7 @@ const DetailsTask = ({
       />
     ),
 
-    data?.data?.status == "IN_PROGRESS" ? (
+    data?.data?.status != "OPEN_FOR_BID" ? (
       <FlexText
         style={{
           justifyContent: "space-between",
@@ -108,9 +108,9 @@ const DetailsTask = ({
       >
         <ImageFlex
           key={4}
-          image={`https://placehold.co/400x400.png`}
+          image={data?.data?.provider?.profile_image}
           text="Assigned To"
-          text1="Marvin Fey"
+          text1={data?.data?.provider?.name}
         />
         <IconButtonTransparent
           text="Chat"
@@ -156,7 +156,7 @@ const DetailsTask = ({
     />,
 
     heading == "My Tasks Details" ? (
-      data?.data?.status != "IN_PROGRESS" ? (
+      data?.data?.status == "OPEN_FOR_BID" ? (
         <FlexText
           key={9}
           style={{
@@ -212,7 +212,7 @@ const DetailsTask = ({
     ),
     data?.data?.status != "OPEN_FOR_BID" && from == "user" ? (
       <>
-        <TaskProgress key={11} />
+        <TaskProgress data={data?.data} key={11} />
         {data?.data?.status == "DISPUTE" && (
           <>
             <CancelRefundRequest />

@@ -1,20 +1,17 @@
 import { baseApi } from "../baseApi";
-
+export interface statusWithDate {
+  "status": string,
+  "date": string,
+  "_id": string,
+  "createdAt": string,
+  "updatedAt": string
+}
 export interface Task {
-  "location": {
-    "type": "Point",
-    "coordinates": [string, string]
-  },
   "_id": string,
   "title": string,
   "category": {
     "_id": string,
-    "name": string,
-    "category_image": string,
-    "isDeleted": boolean,
-    "createdAt": string,
-    "updatedAt": string,
-    "__v": number
+    "name": string
   },
   "budget": number,
   "status": "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE",
@@ -26,7 +23,10 @@ export interface Task {
     "profile_image": string
   },
   "payOn": string,
-  "doneBy": string,
+  "location": {
+    "type": "Point",
+    "coordinates": string[]
+  },
   "address": string,
   "city": string,
   "scheduleType": string,
@@ -34,9 +34,16 @@ export interface Task {
   "preferredTime": string,
   "description": string,
   "task_attachments": string[],
-  "totalOffer": number,
   "createdAt": string,
   "updatedAt": string,
+  "__v": number,
+  "provider": {
+    "_id": string,
+    "name": string,
+    "profile_image": string
+  },
+  "statusWithDate": statusWithDate[],
+  "totalOffer": 1
 }
 
 interface CreateTaskRequest {

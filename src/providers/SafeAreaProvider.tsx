@@ -40,7 +40,6 @@ const SafeAreaProvider = ({
   const route = useRoute();
   const { role } = useGlobalContext();
   useEffect(() => {
-
     const currentRoute = route.name.toLowerCase();
     if (!withoutLog.includes(currentRoute) && !role) {
       navigation.dispatch(
@@ -49,14 +48,17 @@ const SafeAreaProvider = ({
           routes: [{ name: "Login" }],
         })
       );
-    } else {
+    }
+  }, [role, route.name]);
+  useEffect(() => {
+    const currentRoute = route.name.toLowerCase();
+    if (withoutLog.includes(currentRoute) && role) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
           routes: [{ name: "TabLayout" }],
         })
       );
-
     }
   }, [role, route.name]);
   return (

@@ -35,7 +35,7 @@ export const handleSignIn = (
         text2: res?.message || `${res?.data?.role} logged in successfully`,
       });
       await AsyncStorage.setItem("token", res?.data?.accessToken);
-      await AsyncStorage.setItem("role", res?.data?.role);
+      await AsyncStorage.setItem("role", res?.data?.role === "customer" ? "user" : "service");
       setTokenCb?.(res?.data?.accessToken || null);
       sucessHandler?.();
     })

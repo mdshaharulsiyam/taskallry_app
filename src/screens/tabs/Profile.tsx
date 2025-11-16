@@ -13,13 +13,15 @@ import ProfilePictureName from "../../components/profile/ProfilePictureName";
 import FlexText from "../../components/shered/FlexText";
 import TextSecondary from "../../components/shered/TextSecondary";
 import { profileIcons } from "../../constant/images";
+import { useGlobalContext } from '../../providers/GlobalContextProvider';
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { clearToken } from '../../redux/slices/authSlice';
 import { AppDispatch } from '../../redux/store';
-import Navigate, { Navigation } from "../../utils/Navigate";
+import { Navigation } from "../../utils/Navigate";
 const Profile = () => {
   const navigate = Navigation();
   const dispatch = useDispatch<AppDispatch>();
+  const { setRole } = useGlobalContext();
   const elements = [
     <ProfilePictureName key={1} />,
     <ProfileOptions key={2} />,
@@ -31,6 +33,7 @@ const Profile = () => {
       <TouchableOpacity
         key={4}
         onPress={async () => {
+          setRole(null);
           await AsyncStorage.removeItem("token");
           dispatch(clearToken());
           navigate.reset({

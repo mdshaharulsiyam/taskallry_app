@@ -32,23 +32,32 @@ interface VerifyCodeResponse {
 }
 
 interface UserProfile {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  // Add other profile fields as needed
+  "_id": string,
+  "user": string,
+  "name": string,
+  "email": string,
+  "phone": string,
+  "address_document": string,
+  "isAddressProvided": true,
+  "createdAt": string,
+  "updatedAt": string,
+  "city": string,
+  "street": string,
+  "profile_image": string
 }
 
 interface UpdateProfileRequest {
   name?: string;
   email?: string;
-  // Add other updatable fields as needed
+  city?: string;
+  street?: string;
+  profile_image?: string;
 }
 
 interface UpdateProfileResponse {
   message: string;
   success: boolean;
-  user: UserProfile;
+  data: UserProfile;
 }
 
 interface ChangePasswordRequest {
@@ -125,7 +134,7 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Auth"],
     }),
-    getMyProfile: builder.query<UserProfile, void>({
+    getMyProfile: builder.query<UpdateProfileResponse, void>({
       query: () => ({
         url: "/user/get-my-profile",
         method: "GET",

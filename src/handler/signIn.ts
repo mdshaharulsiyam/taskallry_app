@@ -1,8 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
+import Toast from "react-native-toast-message";
 import { FieldsType } from "../types/Types";
 import { validateFields } from "../utils/formValidate";
-import Toast from "react-native-toast-message";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const handleSignIn = (
   fields: FieldsType[],

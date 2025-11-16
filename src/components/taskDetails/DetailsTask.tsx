@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { otherIcons, TabIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
-import { useGetSingleTaskQuery } from '../../redux/apis';
+
 import Navigate from "../../utils/Navigate";
 import BackButton from "../shered/BackButton";
 import FlexText from "../shered/FlexText";
@@ -29,6 +29,7 @@ import CancelRefundRequest from "./CancelRefundRequest";
 import FeedbackStatusButton from "./FeedbackStatusButton";
 import SubmitBitButt from "./SubmitBitButt";
 import TaskProgress from "./TaskProgress";
+import { useGetSingleTaskQuery } from '../../redux/apis';
 
 const DetailsTask = ({
   heading,

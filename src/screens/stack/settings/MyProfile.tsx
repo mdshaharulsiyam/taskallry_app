@@ -1,3 +1,4 @@
+import { pick } from "@react-native-documents/picker";
 import React, { useState } from "react";
 import {
   Image,
@@ -9,14 +10,18 @@ import {
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
 import { otherIcons } from "../../../constant/images";
 import profileUpdateFields from "../../../formFields/profileUpdateFields";
+import handleUpdateProfile from '../../../handler/profile';
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
+import { useGetMyProfileQuery, useUpdateProfileMutation } from '../../../redux/apis';
+import { ImgUrl } from '../../../redux/baseApi';
 import { FieldsType } from "../../../types/Types";
 import { RenderField } from "../../../utils/RenderField";
-import { pick } from "@react-native-documents/picker";
 
 const MyProfile = () => {
+  const { data } = useGetMyProfileQuery();
   const { fields, setFields } = profileUpdateFields();
-  const [fiels, setFiels] = useState<any>([]);
+  const [fiels, setFiels] = useState<any | null>(null);
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   return (
     <SafeAreaProvider backButtonText="My Profile">
       <View
@@ -30,9 +35,13 @@ const MyProfile = () => {
         }}
       >
         <Image
-          source={{
-            uri: fiels?.[0]?.uri || "https://placehold.co/400x400.png",
-          }}
+          source={
+            fiels?.uri
+              ? { uri: fiels.uri }
+              : data?.data?.profile_image
+                ? { uri: ImgUrl(data?.data?.profile_image + "") }
+                : (otherIcons.Avater as ImageSourcePropType)
+          }
           style={{
             height: 100,
             width: 100,
@@ -49,7 +58,7 @@ const MyProfile = () => {
                 type: pickResult?.[0]?.type,
               };
               if (setFiels) {
-                setFiels((prev: any) => [file, ...prev]);
+                setFiels(file);
               }
               // const [pickResult] = await pick({mode:'import'}) // equivalent
               // do something with the picked file
@@ -74,8 +83,11 @@ const MyProfile = () => {
         style={{
           marginTop: 10,
         }}
-        text="Update"
-        handler={() => {}}
+        text={isLoading ? "Updating..." : "Update"}
+        handler={() =>
+          handleUpdateProfile(fields, setFields, updateProfile, fiels)
+        }
+        disabled={isLoading}
       />
     </SafeAreaProvider>
   );

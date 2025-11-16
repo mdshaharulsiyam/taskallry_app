@@ -1,39 +1,42 @@
 import React from "react";
 import {
   Image,
-  StyleSheet,
-  View,
-  Text,
   ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
+import BackButton from "../../../components/shered/BackButton";
 import { otherIcons, TabIcons } from "../../../constant/images";
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
-import BackButton from "../../../components/shered/BackButton";
+import { useGetMyProfileQuery } from '../../../redux/apis';
+import { ImgUrl } from '../../../redux/baseApi';
 import Navigate from "../../../utils/Navigate";
 
 const ViewProfile = () => {
   const navigate = Navigate();
+  const { data } = useGetMyProfileQuery()
   const items = [
     {
       key: "name",
       icon: TabIcons.Profile,
-      text: "Jenny Wilson",
+      text: data?.data?.name,
     },
     {
       key: "phone",
       icon: otherIcons.Call,
-      text: "(480) 555-0103",
+      text: data?.data?.phone,
     },
     {
       key: "email",
       icon: otherIcons.At,
-      text: "debra.holt@example.com",
+      text: data?.data?.email,
     },
     {
       key: "address",
       icon: otherIcons.Location,
-      text: "2118 Thornridge Cir. Syracuse, Connecticut...",
+      text: data?.data?.street + " " + data?.data?.city,
     },
   ];
   return (
@@ -46,7 +49,10 @@ const ViewProfile = () => {
       />
       <View style={styles.avatarWrap}>
         <Image
-          source={{ uri: "https://placehold.co/400x400.png" }}
+          source={
+            data?.data?.profile_image ? { uri: ImgUrl(data?.data?.profile_image + "") }
+              : (otherIcons.Avater as ImageSourcePropType)
+          }
           style={styles.avatar}
         />
       </View>
@@ -84,6 +90,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 100,
+    backgroundColor: "#F9FAFB",
   },
   listWrap: {
     gap: 12,

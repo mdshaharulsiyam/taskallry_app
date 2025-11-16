@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from "react";
 import {
   FlatList,
@@ -22,6 +23,7 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 import ButtonGreenOpacity30 from "../ui/buttons/ButtonGreenOpacity30";
 import ButtonTransparentBG from "../ui/buttons/ButtonTransparentBG";
 import IconButtonTransparent from "../ui/buttons/IconButtonTransparent";
+import Loader from '../ui/loader/Loader';
 import Bids_Question from "./Bids_Question";
 import CancelRefundRequest from "./CancelRefundRequest";
 import FeedbackStatusButton from "./FeedbackStatusButton";
@@ -40,19 +42,15 @@ const DetailsTask = ({
   const [status, setStatus] = React.useState<
     "All Tasks" | "open for bids" | "in Progress" | "completed" | "cancelled" | "dispute" | "Ongoing Tasks" | "Bids  Made" | "Bids  Received"
   >("open for bids");
-  // console.log(heading, from, status);
-  console.log(id)
-  const { data } = useGetSingleTaskQuery(id)
-  console.log(data)
+  const { data, isLoading, isFetching } = useGetSingleTaskQuery(id)
   const elements = [
     <ButtonGreenOpacity30
       key={1}
       activeOpacity={1}
-      text={status}
+      text={data?.data?.status}
       style={{
         backgroundColor: "#FFEDD5",
         width: 200,
-
         borderRadius: 8,
         marginVertical: 10,
       }}
@@ -66,7 +64,7 @@ const DetailsTask = ({
       style={{
         marginBottom: 10,
       }}
-      text="Task ID #1233"
+      text={`Task ID #${data?.data?._id}`}
       key={3}
     />,
 
@@ -83,13 +81,13 @@ const DetailsTask = ({
     ) : (
       <ImageFlex
         key={4}
-        image={`https://placehold.co/400x400.png`}
+        image={data?.data?.customer?.profile_image}
         text="Posted by"
-        text1="Marvin Fey"
+        text1={data?.data?.customer?.name}
       />
     ),
 
-    status == "in Progress" || status == "Ongoing Tasks" ? (
+    data?.data?.status == "IN_PROGRESS" ? (
       <FlexText
         style={{
           justifyContent: "space-between",
@@ -121,15 +119,15 @@ const DetailsTask = ({
       }
       key={5}
       text="Location"
-      text1="New York, USA"
+      text1={data?.data?.address}
     />,
     <ImageFlex
       component={
         <BlueBadgeOpacity30 icon={otherIcons.Calendar as ImageSourcePropType} />
       }
       key={6}
-      text="to be done on  "
-      text1="15 May 2020 8:00 am"
+      text="to be done on"
+      text1={moment(data?.data?.preferredDate).format("DD MMM YYYY h:mm A")}
     />,
 
     <HeaderSecondary
@@ -141,7 +139,7 @@ const DetailsTask = ({
     />,
     <TextPrimary
       key={8}
-      text="I'm after 2 palettes that are sold out online but available from 2 specific stores.  They meed to be sent out to you in the US and then forwarded to me in Sydney in 1 package for convenience. For more information please direct message me! Paid!"
+      text={data?.data?.description}
     />,
 
     heading == "My Tasks Details" ? (
@@ -188,25 +186,21 @@ const DetailsTask = ({
         }}
       >
         <View>
-          <TextSecondary text="Task budget " />
-          <HeaderDesign text="₦24.00" />
+          <TextSecondary text="Task budget" />
+          <HeaderDesign text={`₦${data?.data?.budget}`} />
         </View>
-        <SubmitBitButt />
+        <SubmitBitButt id={id} />
       </FlexText>
     ),
-
-    status == "All Tasks" ||
-      status == "open for bids" ||
-      from == "service" ||
-      status == "Bids  Made" ? (
+    data?.data?.status == "OPEN_FOR_BID" ? (
       <Bids_Question from={from} status={status} key={10} />
     ) : (
       <></>
     ),
-    status != "All Tasks" && status != "open for bids" && from == "user" ? (
+    data?.data?.status != "OPEN_FOR_BID" && from == "user" ? (
       <>
         <TaskProgress key={11} />
-        {status == "dispute" && (
+        {data?.data?.status == "DISPUTE" && (
           <>
             <CancelRefundRequest />
             <FeedbackStatusButton status={status} />
@@ -217,8 +211,10 @@ const DetailsTask = ({
       <></>
     ),
   ];
-  console.log();
   const navigate = Navigate();
+  if (isLoading || isFetching) {
+    return <Loader />
+  }
   return (
     <SafeAreaProviderNoScroll>
       <BackButton

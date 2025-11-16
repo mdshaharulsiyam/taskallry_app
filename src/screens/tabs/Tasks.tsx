@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import SectionHeading from "../../components/shered/SectionHeading";
 import TaskCard from "../../components/shered/TaskCard";
+import Loader from '../../components/ui/loader/Loader';
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useGetMyTaskQuery } from "../../redux/apis/taskApi";
 
@@ -36,18 +37,7 @@ const Tasks = () => {
 
   if (isLoading || isFetching) {
     return (
-      <SafeAreaProviderNoScroll>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            height: 200,
-          }}
-        >
-          <ActivityIndicator size="large" color="#115E59" />
-        </View>
-      </SafeAreaProviderNoScroll>
+      <Loader />
     );
   }
 

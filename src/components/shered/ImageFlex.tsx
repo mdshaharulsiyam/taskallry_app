@@ -6,12 +6,14 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { otherIcons } from '../../constant/images';
+import { ImgUrl } from '../../redux/baseApi';
 import FlexText from "./FlexText";
 import HeaderSecondary from "./HeaderSecondary";
 import TextSecondary from "./TextSecondary";
 
 const ImageFlex = ({
-  image = "https://placehold.co/400x400.png",
+  image,
   text1 = "text 1",
   text = "text",
   component,
@@ -35,7 +37,10 @@ const ImageFlex = ({
         component
       ) : (
         <Image
-          src={image as string}
+          source={
+            image ? { uri: ImgUrl(image + "") }
+              : (otherIcons.Avater as ImageSourcePropType)
+          }
           style={{
             height: 50,
             width: 50,

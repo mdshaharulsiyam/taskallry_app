@@ -13,15 +13,15 @@ const FeedbackStatusButton = ({
   status,
 }: {
   status:
-    | "All Tasks"
-    | "open for bids"
-    | "in Progress"
-    | "completed"
-    | "cancelled"
-    | "dispute"
-    | "Ongoing Tasks"
-    | "Bids  Made"
-    | "Bids  Received";
+  | "All Tasks"
+  | "open for bids"
+  | "in Progress"
+  | "completed"
+  | "cancelled"
+  | "dispute"
+  | "Ongoing Tasks"
+  | "Bids  Made"
+  | "Bids  Received";
 }) => {
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);

@@ -17,7 +17,7 @@ export interface Task {
     "__v": number
   },
   "budget": number,
-  "status": string,
+  "status": "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE",
   "isDeleted": boolean,
   "paymentStatus": string,
   "customer": {
@@ -62,11 +62,11 @@ interface GetAllTasksResponse {
     };
   };
 }
-
 interface GetSingleTaskResponse {
   success: boolean;
-  data: Task;
+  data: Task
 }
+
 
 interface DeleteTaskResponse {
   message: string;

@@ -31,7 +31,6 @@ const Help = () => {
   return (
     <SafeAreaProviderNoScroll backButtonText="Help / Support">
       <View style={styles.container}>
-        {/* FAQs */}
         <Text style={styles.sectionTitle}>FAQs</Text>
         {faqs.map((faq) => (
           <View key={faq.id} style={styles.faqItem}>
@@ -51,8 +50,6 @@ const Help = () => {
             )}
           </View>
         ))}
-
-        {/* Need More Help */}
         <Text style={[styles.sectionTitle, { marginTop: 20 }]}>
           Need More Help?
         </Text>

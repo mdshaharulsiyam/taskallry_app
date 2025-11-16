@@ -13,6 +13,7 @@ import TextSecondary from "../../components/shered/TextSecondary";
 import { profileIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import Navigate from "../../utils/Navigate";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // {
 //   name: "Change Password",
 //   image: profileIcons.Lock,
@@ -30,7 +31,11 @@ const Profile = () => {
     >
       <TouchableOpacity
         key={4}
-        onPress={() => navigate("Login")}
+        onPress={async () => {
+          await AsyncStorage.removeItem("token");
+
+          navigate("Login");
+        }}
         style={{
           marginTop: 10,
           padding: 10,

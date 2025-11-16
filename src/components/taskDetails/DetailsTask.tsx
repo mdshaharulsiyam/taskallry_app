@@ -32,6 +32,17 @@ import FeedbackStatusButton from "./FeedbackStatusButton";
 import SubmitBitButt from "./SubmitBitButt";
 import TaskProgress from "./TaskProgress";
 
+const color = {
+  "OPEN_FOR_BID": {
+    backgroundColor: "#FFEDD5",
+    color: "#F97316",
+  },
+  "IN_PROGRESS": {
+    backgroundColor: "#E0F2FE",
+    color: "#0EA5E9",
+  },
+}
+
 const DetailsTask = ({
   heading,
   from,
@@ -51,13 +62,13 @@ const DetailsTask = ({
       activeOpacity={1}
       text={data?.data?.status}
       style={{
-        backgroundColor: "#FFEDD5",
+        backgroundColor: color[data?.data?.status as keyof typeof color].backgroundColor,
         width: 200,
         borderRadius: 8,
         marginVertical: 10,
       }}
       textStyle={{
-        color: "#F97316",
+        color: color[data?.data?.status as keyof typeof color].color,
         fontWeight: 700,
       }}
     />,

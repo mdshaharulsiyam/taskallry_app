@@ -1,7 +1,7 @@
 import React from "react";
 import { ImageSourcePropType, StyleSheet, View } from "react-native";
 import { TabIcons } from "../../constant/images";
-import { Bid } from '../../redux/apis';
+import { Bid, Question } from '../../redux/apis';
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
 import ImageFlex from "../shered/ImageFlex";
@@ -14,11 +14,13 @@ const Bids_QuestionCard = ({
   from = "service",
   status,
   item,
+  question,
 }: {
   type: "bids" | "question";
   from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
   item?: Bid;
+  question?: Question;
 }) => {
   return (
     <View
@@ -31,7 +33,7 @@ const Bids_QuestionCard = ({
     >
       <ImageFlex
         showText1={type == "bids"}
-        text={item?.provider?.name}
+        text={item?.provider?.name || question?.provider?.name}
         text1={`⭐ ${item?.provider?.avgRating} (${item?.provider?.totalRatingCount} Reviews)`}
       />
       {type == "bids" && (
@@ -58,7 +60,7 @@ const Bids_QuestionCard = ({
           />
         </FlexText>
       )}
-      <TextSecondary text={item?.details} />
+      <TextSecondary text={item?.details || question?.details} />
       {from == "user" && type == "question" && (
         <IconButtonTransparent
           style={{

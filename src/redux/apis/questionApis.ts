@@ -1,17 +1,17 @@
 import { baseApi } from "../baseApi";
 
 export interface Question {
-  _id: string;
-  task: string;
-  user: {
-    _id: string;
-    name: string;
-    profile_image?: string;
-  };
-  question: string;
-  answer?: string;
-  createdAt: string;
-  updatedAt: string;
+  "_id": string,
+  "provider": {
+    "_id": string,
+    "name": string,
+    "profile_image": string
+  },
+  "task": string,
+  "details": string,
+  "question_image": string,
+  "createdAt": string,
+  "updatedAt": string,
 }
 
 export interface CreateQuestionRequest {

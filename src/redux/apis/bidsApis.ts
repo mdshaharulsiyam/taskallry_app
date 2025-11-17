@@ -17,9 +17,9 @@ export interface Bid {
 }
 
 export interface CreateBidRequest {
-  taskId: string;
-  price: number;
-  description?: string;
+  task: string,
+  price: number,
+  details: string,
 }
 
 interface CreateBidResponse {

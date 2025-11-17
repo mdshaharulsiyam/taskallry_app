@@ -40,7 +40,7 @@ const FIlteredTask = ({ search }: { search: string }) => {
       ? {
         status: sort,
         ...(category ? { category } : {}),
-        ...(latino ? { latitude: latino?.lat, longitude: latino?.lng } : {}),
+        ...(latino ? { latitude: latino?.lat, longitude: latino?.lng, maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range) } : {}),
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
         ...(search ? { searchTerm: search } : {}),
@@ -53,11 +53,10 @@ const FIlteredTask = ({ search }: { search: string }) => {
         sortOrder: sort === "Oldest First" ? "asc" : "desc",
         sortBy: "createdAt",
         ...(category ? { category } : {}),
-        ...(latino ? { latitude: latino?.lat, longitude: latino?.lng } : {}),
+        ...(latino ? { latitude: latino?.lat, longitude: latino?.lng, maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range) } : {}),
         minPrice: 5000,
-        maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
+        maxPrice: Number(price_range) < 5000 ? 500000 : Number(price_range),
         ...(search ? { searchTerm: search } : {}),
-        // maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range),
         ...(to_be_done
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),

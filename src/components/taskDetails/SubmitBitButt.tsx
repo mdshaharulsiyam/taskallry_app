@@ -7,6 +7,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import Toast from 'react-native-toast-message';
+import { useCreateBidMutation } from '../../redux/apis';
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
@@ -14,16 +16,36 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 import Input from "../ui/inputs/Input";
 import TextArea from "../ui/inputs/TextArea";
 
+
 const SubmitBitButt = ({ id }: { id: string }) => {
   const { height, width } = ScreenSize();
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState("");
   const [message, setMessage] = useState("");
-
+  const [createBid, { isLoading, }] = useCreateBidMutation()
   const handleSubmit = () => {
-    setMessage("");
-    setPrice("");
-    setOpen(false);
+    const body = {
+      task: id,
+      price: Number(price),
+      details: message,
+    };
+    console.log(body)
+    createBid(body).unwrap()
+      .then((res) => {
+        Toast.show({
+          type: "success",
+          text1: "Bid created successfully",
+        })
+        setMessage("");
+        setPrice("");
+        setOpen(false);
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: error?.data?.message,
+        })
+      })
   };
 
   return (
@@ -55,23 +77,25 @@ const SubmitBitButt = ({ id }: { id: string }) => {
                 </FlexText>
 
                 <Input
-                  handler={(text) => setPrice(text)}
+                  handler={(_, text) => setPrice(text)}
                   placeHolder="Enter your offer price"
                   value={price}
+                  name='price'
                   label="Bid Amount"
-                  keyboard="default"
+                  keyboard="numeric"
                 />
 
                 <TextArea
-                  handler={(text) => setMessage(text)}
+                  handler={(_, text) => setMessage(text)}
                   placeHolder="Message"
                   value={message}
+                  name='message'
                   label="Message (optional)"
                   keyboard="default"
                 />
 
                 <ButtonBG
-                  text="Submit"
+                  text={isLoading ? "Loading..." : "Submit"}
                   handler={handleSubmit}
                   style={{ marginTop: 16 }}
                 />

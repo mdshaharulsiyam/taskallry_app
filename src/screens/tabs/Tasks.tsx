@@ -35,11 +35,6 @@ const Tasks = () => {
 
   const tasks = data?.data?.result || [];
 
-  if (isLoading || isFetching) {
-    return (
-      <Loader />
-    );
-  }
 
   const elements = [
     <SectionHeading
@@ -52,15 +47,15 @@ const Tasks = () => {
     />,
 
     <TabButton handler={(tab) => setTab(tab)} key={2} />,
-
-    <FlatList
-      key={3}
-      data={tasks}
-      keyExtractor={(_item, index) => index.toString()}
-      renderItem={({ item }) => (
-        <TaskCard from="user" tab={tab} showDetailsButton={true} task={item} />
-      )}
-    />,
+    (isLoading || isFetching) ? <Loader /> :
+      <FlatList
+        key={3}
+        data={tasks}
+        keyExtractor={(_item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <TaskCard from="user" tab={tab} showDetailsButton={true} task={item} />
+        )}
+      />,
   ];
   return (
     <SafeAreaProviderNoScroll>

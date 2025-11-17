@@ -15,8 +15,11 @@ export interface Question {
 }
 
 export interface CreateQuestionRequest {
-  taskId: string;
-  question: string;
+  data: {
+    "task": string,
+    "details": string
+  };
+  question_image?: any;
 }
 
 interface CreateQuestionResponse {
@@ -43,11 +46,19 @@ interface DeleteQuestionResponse {
 export const questionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createQuestion: builder.mutation<CreateQuestionResponse, CreateQuestionRequest>({
-      query: (body) => ({
-        url: "/question/create",
-        method: "POST",
-        body,
-      }),
+      query: ({ data, question_image }) => {
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(data));
+        if (question_image) {
+          formData.append("question_image", question_image as any);
+        }
+
+        return {
+          url: "/question/create",
+          method: "POST",
+          body: formData,
+        };
+      },
       invalidatesTags: ["Question", "Task"],
     }),
     getMyQuestions: builder.query<GetMyQuestionsResponse, void>({

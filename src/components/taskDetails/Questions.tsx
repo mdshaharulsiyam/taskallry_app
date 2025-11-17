@@ -20,7 +20,7 @@ const Questions = ({
         marginTop: from == "service" ? 0 : 10,
       }}
     >
-      {from == "service" && <QuestionForm />}
+      {from == "service" && <QuestionForm taskId={id} />}
       {data?.data?.map((item) => (
         <Bids_QuestionCard type="question" status={status} from={from} question={item} />
       ))}

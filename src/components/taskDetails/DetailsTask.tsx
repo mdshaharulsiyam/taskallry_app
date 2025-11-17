@@ -4,8 +4,7 @@ import {
   FlatList,
   Image,
   ImageSourcePropType,
-  StyleSheet,
-  View,
+  View
 } from "react-native";
 import { otherIcons, TabIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
@@ -250,4 +249,3 @@ const DetailsTask = ({
 
 export default DetailsTask;
 
-const styles = StyleSheet.create({});

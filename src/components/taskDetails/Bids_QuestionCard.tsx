@@ -1,13 +1,17 @@
-import React from "react";
-import { ImageSourcePropType, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { ImageSourcePropType, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { TabIcons } from "../../constant/images";
-import { Bid, Question } from '../../redux/apis';
+import { Bid, Question, useUpdateBidMutation } from '../../redux/apis';
+import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
 import ImageFlex from "../shered/ImageFlex";
 import TextSecondary from "../shered/TextSecondary";
 import ButtonBG from "../ui/buttons/ButtonBG";
 import IconButtonTransparent from "../ui/buttons/IconButtonTransparent";
+import Input from "../ui/inputs/Input";
+import TextArea from "../ui/inputs/TextArea";
 
 const Bids_QuestionCard = ({
   type,
@@ -22,6 +26,44 @@ const Bids_QuestionCard = ({
   item?: Bid;
   question?: Question;
 }) => {
+  const { height, width } = ScreenSize();
+  const [open, setOpen] = useState(false);
+  const [price, setPrice] = useState(item?.price ? String(item.price) : "");
+  const [message, setMessage] = useState(item?.details || "");
+  const [updateBid, { isLoading }] = useUpdateBidMutation();
+
+  const handleOpenUpdate = () => {
+    if (item) {
+      setPrice(String(item.price));
+      setMessage(item.details || "");
+    }
+    setOpen(true);
+  };
+
+  const handleUpdateSubmit = () => {
+    if (!item?._id) return;
+    const body = {
+      bidId: item._id,
+      price: Number(price),
+      details: message,
+    };
+    updateBid(body)
+      .unwrap()
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Bid updated successfully",
+        });
+        setOpen(false);
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: error?.data?.message || "Failed to update bid",
+        });
+      });
+  };
+
   return (
     <View
       style={{
@@ -56,7 +98,7 @@ const Bids_QuestionCard = ({
               width: "auto",
             }}
             text={from == "user" ? "Accept" : "Update Offer"}
-            handler={() => { }}
+            handler={from == "user" ? () => { } : handleOpenUpdate}
           />
         </FlexText>
       )}
@@ -72,10 +114,77 @@ const Bids_QuestionCard = ({
           icon={TabIcons.Chat as ImageSourcePropType}
         />
       )}
+      <Modal
+        visible={open}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setOpen(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setOpen(false)}>
+          <View style={styles.backdrop}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContainer}>
+                <FlexText
+                  style={{
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <HeaderDesign text="Update Your Offer" />
+                  <TouchableOpacity onPress={() => setOpen(false)}>
+                    <Text style={{ fontSize: 16, color: "red" }}>✕</Text>
+                  </TouchableOpacity>
+                </FlexText>
+
+                <Input
+                  handler={(_, text) => setPrice(text)}
+                  placeHolder="Enter your offer price"
+                  value={price}
+                  name="price"
+                  label="Bid Amount"
+                  keyboard="numeric"
+                />
+
+                <TextArea
+                  handler={(_, text) => setMessage(text)}
+                  placeHolder="Message"
+                  value={message}
+                  name="message"
+                  label="Message (optional)"
+                  keyboard="default"
+                />
+
+                <ButtonBG
+                  text={isLoading ? "Loading..." : "Update Offer"}
+                  handler={handleUpdateSubmit}
+                  style={{ marginTop: 16 }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 };
 
 export default Bids_QuestionCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  backdrop: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContainer: {
+    width: "85%",
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 20,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+});

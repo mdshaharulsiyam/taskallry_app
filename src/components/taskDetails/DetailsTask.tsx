@@ -224,7 +224,7 @@ const DetailsTask = ({
     ),
   ];
   const navigate = Navigate();
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <Loader />
   }
   return (

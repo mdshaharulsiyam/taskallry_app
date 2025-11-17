@@ -83,6 +83,14 @@ export const bidsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Bid"],
     }),
+    updateBid: builder.mutation<CreateBidResponse, { bidId: string; price: number; details: string }>({
+      query: ({ bidId, price, details }) => ({
+        url: `/bid/update-bid/${bidId}`,
+        method: "PATCH",
+        body: { price, details },
+      }),
+      invalidatesTags: ["Bid", "Task"],
+    }),
     deleteBid: builder.mutation<DeleteBidResponse, string>({
       query: (bidId) => ({
         url: `/bid/delete-bid/${bidId}`,
@@ -97,6 +105,7 @@ export const {
   useCreateBidMutation,
   useGetAllBidsQuery,
   useGetBidsByTaskIdQuery,
+  useUpdateBidMutation,
   useDeleteBidMutation,
 } = bidsApi;
 

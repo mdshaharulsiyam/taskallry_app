@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetAllCategoriesQuery, useGetMyServicesQuery } from "../redux/apis";
 import { FieldsType, FieldType, KeyboardType } from "../types/Types";
 
 const AddUpdateServiceFields = () => {
@@ -9,7 +10,7 @@ const AddUpdateServiceFields = () => {
       placeHolder: "Enter Service Title",
       label: "Service Title",
       error: false,
-      value: "user@gmail.com",
+      value: "",
       required: true,
       keyboard: KeyboardType.DEFAULT,
     },
@@ -19,7 +20,7 @@ const AddUpdateServiceFields = () => {
       placeHolder: "Enter Starting Price",
       label: "Starting Price",
       error: false,
-      value: "123456",
+      value: "",
       required: true,
       keyboard: KeyboardType.NUMERIC,
     },
@@ -43,11 +44,59 @@ const AddUpdateServiceFields = () => {
       placeHolder: "Enter Service Description",
       label: "Service Description",
       error: false,
-      value: "user@gmail.com",
+      value: "",
       required: true,
       keyboard: KeyboardType.DEFAULT,
     },
   ]);
+
+  const { data } = useGetMyServicesQuery();
+  const { data: categoryData } = useGetAllCategoriesQuery({ limit: 9999999 });
+
+  useEffect(() => {
+    if (!data?.data) return;
+
+    const service = data.data as any;
+
+    setFields((prev) =>
+      prev.map((field) => {
+        if (field.name === "title") {
+          return { ...field, value: service.title ?? "" };
+        }
+        if (field.name === "price") {
+          return { ...field, value: service.price?.toString() ?? "" };
+        }
+        if (field.name === "category") {
+          return {
+            ...field,
+            value: service.category?._id ?? "",
+          };
+        }
+        if (field.name === "descriptions") {
+          return {
+            ...field,
+            value: service.description ?? "",
+          };
+        }
+        return field;
+      })
+    );
+  }, [data]);
+
+  useEffect(() => {
+    if (!categoryData?.data?.result) return;
+
+    const options = categoryData.data.result.map((cat: any) => ({
+      label: cat.name,
+      value: cat._id,
+    }));
+
+    setFields((prev) =>
+      prev.map((field) =>
+        field.name === "category" ? { ...field, options } : field
+      )
+    );
+  }, [categoryData]);
   return { fields, setFields };
 };
 

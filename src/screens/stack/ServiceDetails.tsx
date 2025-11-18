@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { View } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import FlexImages from "../../components/providerDetails/FlexImages";
 import Review from "../../components/providerDetails/Review";
@@ -10,9 +10,42 @@ import SectionHeading from "../../components/shered/SectionHeading";
 import TextPrimary from "../../components/shered/TextPrimary";
 import TextSecondary from "../../components/shered/TextSecondary";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
+import { useGetMyServicesQuery } from "../../redux/apis";
 
 const ServiceDetails = () => {
   const [tab, setTab] = useState("Description");
+  const { data, isLoading, isError } = useGetMyServicesQuery();
+  const service = data?.data || null;
+
+  if (isLoading) {
+    return (
+      <SafeAreaProvider backButtonText="My Service Details">
+        <View style={{ padding: 16 }}>
+          <TextSecondary text="Loading service details..." />
+        </View>
+      </SafeAreaProvider>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaProvider backButtonText="My Service Details">
+        <View style={{ padding: 16 }}>
+          <TextSecondary text="Failed to load service details" />
+        </View>
+      </SafeAreaProvider>
+    );
+  }
+
+  if (!service) {
+    return (
+      <SafeAreaProvider backButtonText="My Service Details">
+        <View style={{ padding: 16 }}>
+          <TextSecondary text="Service not found" />
+        </View>
+      </SafeAreaProvider>
+    );
+  }
 
   return (
     <SafeAreaProvider backButtonText="My Service Details">
@@ -27,16 +60,16 @@ const ServiceDetails = () => {
         style={{
           color: "#115E59",
           backgroundColor: "#E6F4F1",
-          width: 100,
+          width: 150,
           textAlign: "center",
           padding: 5,
           borderRadius: 10,
           marginTop: 10,
         }}
-        text="Cleaning"
+        text={service.category?.name || "Service"}
       />
-      <HeaderDesign text="Office Cleaning Service" />
-      <FlexImages />
+      <HeaderDesign text={service.title || "My Service"} />
+      <FlexImages images={service.images || []} />
       <FlexText
         style={{
           padding: 20,
@@ -47,18 +80,17 @@ const ServiceDetails = () => {
         }}
       >
         <TextSecondary text="Starting Price" />
-        <HeaderDesign text="₦24.00" />
+        <HeaderDesign text={`₦${service.price ?? 0}`} />
       </FlexText>
 
       <TabButton
         handler={(tab) => setTab(tab)}
         tab={["Description", "Reviews"]}
       />
-      {tab == "Description" ? <Description /> : <Review />}
+      {tab == "Description" ? <Description service={service} /> : <Review />}
     </SafeAreaProvider>
   );
 };
 
 export default ServiceDetails;
 
-const styles = StyleSheet.create({});

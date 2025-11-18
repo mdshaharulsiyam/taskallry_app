@@ -7,7 +7,16 @@ import HeaderSecondary from "../shered/HeaderSecondary";
 import TextSecondary from "../shered/TextSecondary";
 import IconButtonTransparent from "../ui/buttons/IconButtonTransparent";
 
-const Description = () => {
+const Description = ({
+  service
+}: {
+  service?: any;
+}) => {
+  const data = [
+    `Certified & Verified: ✅`,
+    `Customer Rating: ⭐ ${service?.averageRating}(${service?.totalRating} + Reviews)`,
+    `Price Range: Starting from ₦${service?.price}`,
+  ];
   const navigate = Navigate();
   const elem = [
     <View
@@ -18,19 +27,13 @@ const Description = () => {
     >
       <HeaderSecondary text="Description  :- " />
       <TextSecondary
-        text={`─Delivering professional, reliable, and efficient service in your area, this provider brings a strong reputation and years of experience. Whether it's home maintenance, repairs, or skilled labor, you'll benefit from clean execution, attention to detail, and a commitment to customer satisfaction.
-📋 Service Details
-Category: Home Cleaning & Maintenance
-Experience: 5+ Years
-Location: Manhattan, New York
-Availability: 7 Days a Week
-On-Site Support: Yes
-Tools Provided: Yes
-Certified & Verified: ✅
-Customer Rating: ⭐ 4.8 (320+ Reviews)
-Languages Spoken: English, Spanish
-Price Range: Starting from ₦50`}
+        text={service?.description}
       />
+      {
+        data.map((item, index) => (
+          <TextSecondary key={index} text={item} />
+        ))
+      }
       <FlexText>
         <IconButtonTransparent
           style={{

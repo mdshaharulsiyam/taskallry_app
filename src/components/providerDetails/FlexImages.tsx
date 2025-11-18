@@ -1,9 +1,14 @@
 import React from "react";
 import { Image } from "react-native";
+import { ImgUrl } from '../../redux/baseApi';
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 
-const FlexImages = () => {
+const FlexImages = ({
+  images
+}: {
+  images: string[];
+}) => {
   const { width } = ScreenSize();
   return (
     <FlexText
@@ -18,7 +23,7 @@ const FlexImages = () => {
           height: 150,
           borderRadius: 4,
         }}
-        src="https://placehold.co/600x400.png"
+        source={{ uri: ImgUrl(images[0]) }}
       />
       <FlexText
         style={{
@@ -28,14 +33,15 @@ const FlexImages = () => {
           justifyContent: "flex-start",
         }}
       >
-        {[...Array(4).keys()].map((item) => (
+        {[...Array(images.length - 1).keys()].map((item) => (
           <Image
+            key={item}
             style={{
               width: (width - 70) / 4,
               height: 70,
               borderRadius: 4,
             }}
-            src="https://placehold.co/600x400.png"
+            source={{ uri: ImgUrl(images[item + 1]) }}
           />
         ))}
       </FlexText>

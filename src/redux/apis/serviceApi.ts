@@ -29,6 +29,7 @@ export interface Service {
   updatedAt: string;
   __v: number;
   averageRating: number;
+  totalRating: number;
 }
 
 
@@ -86,7 +87,7 @@ interface DeleteServiceResponse {
 interface GetMyServicesResponse {
   success: boolean;
   message: string;
-  data: Service[];
+  data: Service;
 }
 export const serviceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

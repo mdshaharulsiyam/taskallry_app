@@ -14,10 +14,7 @@ const PostService = () => {
   const { width } = ScreenSize();
   const navigate = Navigate();
   const { data, isLoading, isError } = useGetMyServicesQuery();
-  const firstServiceData = data?.data;
-  const service = Array.isArray(firstServiceData)
-    ? firstServiceData[0]
-    : firstServiceData;
+  const service = data?.data || null;
 
   if (isLoading) {
     return (
@@ -126,7 +123,7 @@ const PostService = () => {
               width: "auto",
             }}
             text="View  Details"
-            handler={() => navigate("ServiceDetails", { id: service._id })}
+            handler={() => navigate("ServiceDetails")}
           />
         </FlexText>
       </View>

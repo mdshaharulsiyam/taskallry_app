@@ -2,7 +2,12 @@ import { baseApi } from "../baseApi";
 
 export interface Service {
   _id: string;
-  category: string;
+  category: {
+    _id: string;
+    name: string;
+    category_image: string;
+    isDeleted: boolean;
+  };
   title: string;
   images: [string];
   provider: string;
@@ -25,6 +30,7 @@ export interface Service {
   __v: number;
   averageRating: number;
 }
+
 
 interface CreateServiceRequest {
   name: string;
@@ -77,7 +83,11 @@ interface DeleteServiceResponse {
   message: string;
   success: boolean;
 }
-
+interface GetMyServicesResponse {
+  success: boolean;
+  message: string;
+  data: Service[];
+}
 export const serviceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllServices: builder.query<
@@ -130,6 +140,23 @@ export const serviceApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Service"],
     }),
+    getMyServices: builder.query<GetMyServicesResponse, void>({
+      query: () => ({
+        url: "/service/my-service",
+        method: "GET",
+      }),
+      providesTags: ["Service"],
+    }),
+    toggleServiceStatus: builder.mutation<
+      UpdateServiceResponse,
+      { id: string }
+    >({
+      query: ({ id }) => ({
+        url: `/service/active-inactive/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Service"],
+    }),
   }),
 });
 
@@ -139,4 +166,6 @@ export const {
   useCreateServiceMutation,
   useUpdateServiceMutation,
   useDeleteServiceMutation,
+  useGetMyServicesQuery,
+  useToggleServiceStatusMutation,
 } = serviceApi;

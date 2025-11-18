@@ -6,12 +6,57 @@ import TextPrimary from "../../components/shered/TextPrimary";
 import TextSecondary from "../../components/shered/TextSecondary";
 import ButtonBG from "../../components/ui/buttons/ButtonBG";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+import { useGetMyServicesQuery } from "../../redux/apis";
 import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
 
 const PostService = () => {
-  const { width, height } = ScreenSize();
+  const { width } = ScreenSize();
   const navigate = Navigate();
+  const { data, isLoading, isError } = useGetMyServicesQuery();
+  const firstServiceData = data?.data;
+  const service = Array.isArray(firstServiceData)
+    ? firstServiceData[0]
+    : firstServiceData;
+
+  if (isLoading) {
+    return (
+      <SafeAreaProviderNoScroll backButtonText="My Service">
+        <View style={{ padding: 16 }}>
+          <TextSecondary text="Loading service..." />
+        </View>
+      </SafeAreaProviderNoScroll>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SafeAreaProviderNoScroll backButtonText="My Service">
+        <View style={{ padding: 16 }}>
+          <TextSecondary text="Failed to load service" />
+        </View>
+      </SafeAreaProviderNoScroll>
+    );
+  }
+
+  if (!service) {
+    return (
+      <SafeAreaProviderNoScroll backButtonText="My Service">
+        <View style={{ padding: 16 }}>
+          <TextSecondary text="No service found" />
+          <ButtonBG
+            style={{
+              width: "auto",
+              marginTop: 10,
+            }}
+            text="Create Service"
+            handler={() => navigate("CreateService")}
+          />
+        </View>
+      </SafeAreaProviderNoScroll>
+    );
+  }
+
   return (
     <SafeAreaProviderNoScroll backButtonText="My Service">
       <View
@@ -24,7 +69,7 @@ const PostService = () => {
         }}
       >
         <Image
-          src="https://placehold.co/400x400/png"
+          src={service.images?.[0] || "https://placehold.co/400x400/png"}
           style={{
             width: width - 60,
             height: (width / 3) * 1.7,
@@ -32,7 +77,7 @@ const PostService = () => {
           }}
         />
         <TextSecondary
-          text="Cleaning"
+          text={service.category?.name || "Service"}
           style={{
             backgroundColor: "#FFF",
             padding: 6,
@@ -43,7 +88,7 @@ const PostService = () => {
           }}
         />
         <TextSecondary
-          text="⭐ 4.5"
+          text={`⭐ ${service.averageRating ?? 0}`}
           style={{
             backgroundColor: "#FFF",
             padding: 6,
@@ -53,30 +98,14 @@ const PostService = () => {
             borderRadius: 6,
           }}
         />
-        <HeaderDesign text="Cleaning Service" />
-        <FlexText
-          style={{
-            justifyContent: "space-between",
-          }}
-        >
-          <TextPrimary text="Email   :" />
-          <TextSecondary text="Marvin@gmail.com" />
-        </FlexText>
-        <FlexText
-          style={{
-            justifyContent: "space-between",
-          }}
-        >
-          <TextPrimary text="Contact Number :" />
-          <TextSecondary text="(603) 555-0123" />
-        </FlexText>
+        <HeaderDesign text={service.title || "My Service"} />
         <FlexText
           style={{
             justifyContent: "space-between",
           }}
         >
           <TextPrimary text="Starting Price :" />
-          <TextSecondary text="₦24.00" />
+          <TextSecondary text={`₦${service.price ?? 0}`} />
         </FlexText>
         <FlexText
           style={{
@@ -88,7 +117,7 @@ const PostService = () => {
             style={{
               width: 150,
             }}
-            text="2715 Ash Dr. San Jose, South Dakota 83475"
+            text={service.address || ""}
           />
         </FlexText>
         <FlexText style={{}}>
@@ -97,7 +126,7 @@ const PostService = () => {
               width: "auto",
             }}
             text="View  Details"
-            handler={() => navigate("ServiceDetails")}
+            handler={() => navigate("ServiceDetails", { id: service._id })}
           />
         </FlexText>
       </View>

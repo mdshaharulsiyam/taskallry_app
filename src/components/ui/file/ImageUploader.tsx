@@ -1,31 +1,39 @@
+import { pick } from "@react-native-documents/picker";
 import React, { ReactNode } from "react";
 import {
   Image,
   ImageSourcePropType,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   ViewStyle,
-  Modal,
 } from "react-native";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import { pick } from "@react-native-documents/picker";
 import { otherIcons, svgIcons } from "../../../constant/images";
 import SvgIcon from "../SvgIcon";
 const ImageUploader = ({
   style,
   component,
   setFiels,
+  maxFiles,
+  currentCount = 0,
 }: {
   style?: ViewStyle;
   component?: ReactNode;
   setFiels?: React.Dispatch<React.SetStateAction<any[]>>;
+  maxFiles?: number;
+  currentCount?: number;
 }) => {
   const [showModal, setShowModal] = React.useState(false);
 
   const handlePick = async () => {
     try {
+      if (maxFiles !== undefined && currentCount >= maxFiles) {
+        setShowModal(false);
+        return;
+      }
       const res: any = await launchImageLibrary({
         mediaType: "photo",
         selectionLimit: 1,
@@ -33,10 +41,10 @@ const ImageUploader = ({
       const asset = res?.assets?.[0];
       const file = asset
         ? {
-            uri: asset.uri,
-            name: asset.fileName,
-            type: asset.type,
-          }
+          uri: asset.uri,
+          name: asset.fileName,
+          type: asset.type,
+        }
         : null;
       if (file?.uri && setFiels) {
         setFiels((prev: any) => [file, ...prev]);
@@ -50,14 +58,18 @@ const ImageUploader = ({
 
   const handlePickFile = async () => {
     try {
+      if (maxFiles !== undefined && currentCount >= maxFiles) {
+        setShowModal(false);
+        return;
+      }
       const res: any = await pick({});
       const first = res?.[0];
       const file = first
         ? {
-            uri: first.uri,
-            name: first.name,
-            type: first.type,
-          }
+          uri: first.uri,
+          name: first.name,
+          type: first.type,
+        }
         : null;
       if (file?.uri && setFiels) {
         setFiels((prev: any) => [file, ...prev]);
@@ -71,6 +83,10 @@ const ImageUploader = ({
 
   const handleCapture = async () => {
     try {
+      if (maxFiles !== undefined && currentCount >= maxFiles) {
+        setShowModal(false);
+        return;
+      }
       const res: any = await launchCamera({
         mediaType: "photo",
         saveToPhotos: true,
@@ -78,10 +94,10 @@ const ImageUploader = ({
       const asset = res?.assets?.[0];
       const file = asset
         ? {
-            uri: asset.uri,
-            name: asset.fileName,
-            type: asset.type,
-          }
+          uri: asset.uri,
+          name: asset.fileName,
+          type: asset.type,
+        }
         : null;
       if (file?.uri && setFiels) {
         setFiels((prev: any) => [file, ...prev]);

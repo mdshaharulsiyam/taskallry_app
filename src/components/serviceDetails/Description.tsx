@@ -39,7 +39,7 @@ const Description = ({
           style={{
             width: "auto",
           }}
-          handler={() => navigate("AddUpdateService")}
+          handler={() => navigate("AddUpdateService", { id: service?._id })}
           icon={otherIcons.Edit as ImageSourcePropType}
           text="Update Details"
         />

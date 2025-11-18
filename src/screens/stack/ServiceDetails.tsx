@@ -88,7 +88,7 @@ const ServiceDetails = () => {
         handler={(tab) => setTab(tab)}
         tab={["Description", "Reviews"]}
       />
-      {tab == "Description" ? <Description service={service} /> : <Review />}
+      {tab == "Description" ? <Description service={service} /> : <Review service={service} />}
     </SafeAreaProvider>
   );
 };

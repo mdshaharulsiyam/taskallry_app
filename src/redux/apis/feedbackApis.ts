@@ -1,13 +1,16 @@
 import { baseApi } from "../baseApi";
 
 export interface Feedback {
-  _id: string;
-  task: string;
-  user: string;
-  rating: number;
-  comment?: string;
-  createdAt: string;
-  updatedAt: string;
+  "_id": string,
+  "task": string,
+  "provider": string,
+  "customer": {
+    "_id": string,
+    "name": string,
+    "profile_image": string
+  },
+  "rating": number,
+  "details": string,
 }
 
 export interface CreateFeedbackRequest {

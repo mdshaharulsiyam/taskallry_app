@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList, ImageSourcePropType, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { otherIcons } from "../../constant/images";
-import { useToggleServiceStatusMutation } from "../../redux/apis";
+import { Service, useToggleServiceStatusMutation } from "../../redux/apis";
 import Navigate from "../../utils/Navigate";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
@@ -12,7 +12,7 @@ import IconButtonTransparent from "../ui/buttons/IconButtonTransparent";
 const Description = ({
   service
 }: {
-  service?: any;
+  service?: Service;
 }) => {
   const data = [
     `Certified & Verified: ✅`,

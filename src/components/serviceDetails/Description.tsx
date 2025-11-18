@@ -1,6 +1,8 @@
 import React from "react";
 import { FlatList, ImageSourcePropType, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { otherIcons } from "../../constant/images";
+import { useToggleServiceStatusMutation } from "../../redux/apis";
 import Navigate from "../../utils/Navigate";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
@@ -18,6 +20,7 @@ const Description = ({
     `Price Range: Starting from ₦${service?.price}`,
   ];
   const navigate = Navigate();
+  const [toggleServiceStatus, { isLoading }] = useToggleServiceStatusMutation();
   const elem = [
     <View
       style={{
@@ -47,11 +50,25 @@ const Description = ({
           icon={otherIcons.Block as ImageSourcePropType}
           style={{
             width: "auto",
-            borderColor: "red",
+            borderColor: service?.isActive ? "red" : "green",
           }}
-          color="red"
-          handler={() => console.log("")}
-          text="Make Inactive"
+          color={service?.isActive ? "red" : "green"}
+          handler={async () => {
+            if (isLoading || !service?._id) return;
+            try {
+              await toggleServiceStatus({ id: service._id }).unwrap();
+              Toast.show({
+                type: "success",
+                text1: "Service status updated",
+              });
+            } catch (error: any) {
+              Toast.show({
+                type: "error",
+                text1: error?.data?.message || "Failed to update status",
+              });
+            }
+          }}
+          text={isLoading ? "Updating..." : service?.isActive ? "Make Inactive" : "Make Active"}
         />
       </FlexText>
     </View>,

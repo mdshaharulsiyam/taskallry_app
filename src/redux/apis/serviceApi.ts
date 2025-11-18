@@ -25,6 +25,7 @@ export interface Service {
   languages: [string];
   price: number;
   status: string;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
   __v: number;

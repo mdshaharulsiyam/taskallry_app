@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import React from "react";
 import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,6 +10,7 @@ import ButtonGreenOpacity30 from "../../components/ui/buttons/ButtonGreenOpacity
 import ExtendDateFields from "../../formFields/ExtendDateFields";
 import { handleExtendDate } from "../../handler/extendDate";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
+import { useCreateExtensionRequestMutation } from "../../redux/apis";
 import { FieldsType } from "../../types/Types";
 import { Navigation } from "../../utils/Navigate";
 import { RenderField } from "../../utils/RenderField";
@@ -18,6 +20,12 @@ const ExtendDate = () => {
   const { fields, setFields } = ExtendDateFields();
   const { top, bottom } = useSafeAreaInsets();
   const navigation = Navigation();
+  const { params: { id } } = useRoute() as {
+    params: {
+      id: string;
+    };
+  };
+  const [createExtensionRequest, { isLoading }] = useCreateExtensionRequestMutation();
   return (
     <SafeAreaProvider backButtonText=" ">
       {/* <View
@@ -54,9 +62,10 @@ const ExtendDate = () => {
             marginTop: 10,
             width: "auto",
           }}
-          text="Submit"
+          text={isLoading ? "Submitting..." : "Submit"}
+          disabled={isLoading}
           handler={() => {
-            handleExtendDate(fields, setFields);
+            handleExtendDate(fields, setFields, id, createExtensionRequest, navigation);
           }}
         />
       </FlexText>

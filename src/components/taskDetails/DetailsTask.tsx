@@ -232,7 +232,7 @@ const DetailsTask = ({
       <BackButton
         text={heading}
         show={data?.data?.status == "IN_PROGRESS"}
-        handler={() => navigate("RegulationsCenter")}
+        handler={() => navigate("RegulationsCenter", { id: data?.data?._id })}
       />
       <FlatList
         keyExtractor={(item, index) => index.toString()}

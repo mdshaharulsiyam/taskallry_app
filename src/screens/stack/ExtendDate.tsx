@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlexText from "../../components/shered/FlexText";
 import HeaderDesign from "../../components/shered/HeaderDesign";
@@ -20,47 +20,47 @@ const ExtendDate = () => {
   const navigation = Navigation();
   return (
     <SafeAreaProvider backButtonText=" ">
-      <View
+      {/* <View
         style={{
           flex: 1,
           gap: 6,
           justifyContent: "center",
           minHeight: height - top - bottom,
         }}
+      > */}
+      <HeaderDesign text="Request Change of Task Completion Date" />
+      <TextSecondary text="Submit a request to update the agreed completion date." />
+
+      {fields?.map((field: FieldsType) => RenderField(field, setFields))}
+
+      <FlexText
+        style={{
+          justifyContent: "flex-start",
+          paddingBottom: 20,
+        }}
       >
-        <HeaderDesign text="Request Change of Task Completion Date" />
-        <TextSecondary text="Submit a request to update the agreed completion date." />
-
-        {fields?.map((field: FieldsType) => RenderField(field, setFields))}
-
-        <FlexText
+        <ButtonGreenOpacity30
           style={{
-            justifyContent: "flex-start",
-            paddingBottom: 20,
+            marginTop: 10,
+            width: "auto",
+            borderWidth: 1,
+            borderColor: "#115E59",
           }}
-        >
-          <ButtonGreenOpacity30
-            style={{
-              marginTop: 10,
-              width: "auto",
-              borderWidth: 1,
-              borderColor: "#115E59",
-            }}
-            text="Cancel"
-            handler={() => navigation.goBack()}
-          />
-          <ButtonBG
-            style={{
-              marginTop: 10,
-              width: "auto",
-            }}
-            text="Submit"
-            handler={() => {
-              handleExtendDate(fields, setFields);
-            }}
-          />
-        </FlexText>
-      </View>
+          text="Cancel"
+          handler={() => navigation.goBack()}
+        />
+        <ButtonBG
+          style={{
+            marginTop: 10,
+            width: "auto",
+          }}
+          text="Submit"
+          handler={() => {
+            handleExtendDate(fields, setFields);
+          }}
+        />
+      </FlexText>
+      {/* </View> */}
     </SafeAreaProvider>
   );
 };

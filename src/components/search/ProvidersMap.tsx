@@ -8,7 +8,7 @@ import { useAppSelector } from "../../redux/hooks";
 const ProvidersMap = () => {
   const hasApiKey = !!CONFIG.GOOGLE_MAPS_API_KEY;
 
-  // Reuse the same filter logic as FIlteredTask to keep results in sync
+
   const {
     category,
     to_be_done,
@@ -74,8 +74,6 @@ const ProvidersMap = () => {
 
   const { data } = useGetAllTasksQuery(queryParams);
   const tasks = data?.data?.result || [];
-
-  // Extract coordinates from tasks (GeoJSON: [lng, lat])
   const markers = tasks
     .map((task) => {
       const coords = task.location?.coordinates || [];
@@ -83,9 +81,25 @@ const ProvidersMap = () => {
       const lng = Number(coords[0]);
       const lat = Number(coords[1]);
       if (!isFinite(lat) || !isFinite(lng)) return null;
-      return { lat, lng };
+
+      const image =
+        Array.isArray(task.task_attachments) && task.task_attachments.length > 0
+          ? task.task_attachments[0]
+          : null;
+
+      return {
+        lat,
+        lng,
+        title: task.title,
+        image,
+      };
     })
-    .filter(Boolean) as { lat: number; lng: number }[];
+    .filter(Boolean) as {
+      lat: number;
+      lng: number;
+      title?: string;
+      image?: string | null;
+    }[];
 
   if (!hasApiKey) {
     return (
@@ -131,9 +145,27 @@ const ProvidersMap = () => {
 
             const markers = ${markersJson};
             markers.forEach((m) => {
-              new google.maps.Marker({
+              const marker = new google.maps.Marker({
                 position: { lat: m.lat, lng: m.lng },
                 map,
+              });
+
+              const content =
+                '<div style="max-width:200px;">' +
+                '<strong>' + (m.title || '') + '</strong><br/>' +
+                (m.image
+                  ? '<img src="' +
+                    m.image +
+                    '" style="width:100px;height:80px;object-fit:cover;margin-top:4px;" />'
+                  : '') +
+                '</div>';
+
+              const infoWindow = new google.maps.InfoWindow({
+                content,
+              });
+
+              marker.addListener('click', () => {
+                infoWindow.open(map, marker);
               });
             });
           }

@@ -231,7 +231,7 @@ const DetailsTask = ({
     <SafeAreaProviderNoScroll>
       <BackButton
         text={heading}
-        show={status == "in Progress"}
+        show={data?.data?.status == "IN_PROGRESS"}
         handler={() => navigate("RegulationsCenter")}
       />
       <FlatList

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from "react";
 import Toast from 'react-native-toast-message';
 import { FieldsType, KeyboardType } from "../types/Types";
@@ -31,14 +32,19 @@ export const handlePostTask = (
     "payOn": "completion",
     "location": {
       "type": "Point",
-      "coordinates": [latino?.lat, latino?.lng]
+      "coordinates": [latino?.lng, latino?.lat]
     },
     "doneBy": "ONLINE",
     "address": values?.place?.split("|")?.[0],
     "scheduleType": values?.flexible,
     "preferredDate": values?.date,
     "preferredTime": values?.time,
-    "description": values?.desc
+    "description": values?.desc,
+    "preferredDeliveryDateTime": moment(
+      `${values?.date} ${values?.time}`,
+      "YYYY-MM-DD HH:mm"
+    ).utc()
+      .toISOString()
   }
   const formData = new FormData();
   formData.append("data", JSON.stringify(data));
@@ -55,6 +61,7 @@ export const handlePostTask = (
       setFields(allFields.map((field) => ({ ...field, value: "" })));
     })
     .catch((err: any) => {
+      console.log(err);
       Toast.show({
         type: "error",
         text1: "Failed to create task",

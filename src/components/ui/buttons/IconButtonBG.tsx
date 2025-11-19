@@ -3,6 +3,7 @@ import {
   ImageSourcePropType,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
@@ -13,11 +14,13 @@ const IconButtonBG = ({
   icon,
   text,
   handler,
+  textStyle,
 }: {
   style?: ViewStyle;
   icon?: ImageSourcePropType;
   text?: string;
   handler: () => void;
+  textStyle?: TextStyle;
 }) => {
   return (
     <TouchableOpacity
@@ -49,6 +52,7 @@ const IconButtonBG = ({
       <Text
         style={{
           color: "#FFFFFF",
+          ...textStyle,
         }}
       >
         {text ? text : "Map View"}

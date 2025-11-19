@@ -10,6 +10,7 @@ export interface FilterState {
   sort: string;
   sortBy: string;
   sortOrder: string;
+  viewMode: "list" | "map";
 }
 
 const initialState: FilterState = {
@@ -21,6 +22,7 @@ const initialState: FilterState = {
   sort: "",
   sortBy: "createdAt",
   sortOrder: "desc",
+  viewMode: "list",
 };
 
 export const filterSlice = createSlice({
@@ -67,6 +69,9 @@ export const filterSlice = createSlice({
           state.sortOrder = "desc";
       }
     },
+    setViewMode: (state, action: PayloadAction<"list" | "map">) => {
+      state.viewMode = action.payload;
+    },
     setSortByAndOrder: (
       state,
       action: PayloadAction<{ sortBy: string; sortOrder: string }>
@@ -93,6 +98,7 @@ export const {
   setSortByAndOrder,
   resetFilters,
   setAllFilters,
+  setViewMode,
 } = filterSlice.actions;
 
 // Selectors
@@ -107,5 +113,6 @@ export const selectPriceRange = (state: RootState) => state.filter.price_range;
 export const selectSort = (state: RootState) => state.filter.sort;
 export const selectSortBy = (state: RootState) => state.filter.sortBy;
 export const selectSortOrder = (state: RootState) => state.filter.sortOrder;
+export const selectViewMode = (state: RootState) => state.filter.viewMode;
 
 export default filterSlice.reducer;

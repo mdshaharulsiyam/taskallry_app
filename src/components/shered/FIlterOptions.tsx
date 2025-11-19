@@ -3,6 +3,18 @@ import { ImageSourcePropType, View } from "react-native";
 import { otherIcons } from "../../constant/images";
 import FilterOptionsFields from "../../formFields/FilterOptionsFields";
 import { useGlobalContext } from "../../providers/GlobalContextProvider";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  resetFilters,
+  selectFilters,
+  setFilterCategory,
+  setFilterDistanceRange,
+  setFilterPriceRange,
+  setFilterSort,
+  setFilterToBeDone,
+  setFilterWorkLocation,
+  setViewMode,
+} from "../../redux/slices/filterSlice";
 import { FieldsType } from "../../types/Types";
 import Navigate from "../../utils/Navigate";
 import { RenderField } from "../../utils/RenderField";
@@ -10,17 +22,6 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 import ButtonGreenOpacity30 from "../ui/buttons/ButtonGreenOpacity30";
 import IconButtonBG from "../ui/buttons/IconButtonBG";
 import FlexText from "./FlexText";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import {
-  setFilterCategory,
-  setFilterToBeDone,
-  setFilterWorkLocation,
-  setFilterDistanceRange,
-  setFilterPriceRange,
-  setFilterSort,
-  resetFilters,
-  selectFilters,
-} from "../../redux/slices/filterSlice";
 
 const FIlterOptions = (props: any) => {
   const { fields, setFields } = FilterOptionsFields();
@@ -95,17 +96,28 @@ const FIlterOptions = (props: any) => {
         <IconButtonBG
           style={{
             width: "auto",
+            backgroundColor:
+              filterState.viewMode === "map" ? "#115E59" : "#38a19cff",
+
           }}
+          // textStyle={{
+          //   color: filterState.viewMode === "map" ? "white" : "black",
+          // }}
           text="Map View"
-          handler={() => {}}
+          handler={() => dispatch(setViewMode("map"))}
         />
         <IconButtonBG
           icon={otherIcons.List as ImageSourcePropType}
           style={{
             width: "auto",
+            backgroundColor:
+              filterState.viewMode === "list" ? "#115E59" : "#38a19cff",
           }}
+          // textStyle={{
+          //   color: filterState.viewMode === "list" ? "white" : "black",
+          // }}
           text="List View"
-          handler={() => {}}
+          handler={() => dispatch(setViewMode("list"))}
         />
       </FlexText>
       <ButtonBG text="Apply" handler={handleApply} />

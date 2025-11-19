@@ -1,6 +1,8 @@
 import React from "react";
 import { Image, ImageSourcePropType, View } from "react-native";
 import { otherIcons } from "../../constant/images";
+import { Service } from "../../redux/apis";
+import { ImgUrl } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
 import ButtonGreenOpacity30 from "../ui/buttons/ButtonGreenOpacity30";
@@ -9,8 +11,6 @@ import FlexText from "./FlexText";
 import HeaderDesign from "./HeaderDesign";
 import TextPrimary from "./TextPrimary";
 import TextSecondary from "./TextSecondary";
-import { Service } from "../../redux/apis";
-import { ImgUrl } from "../../redux/baseApi";
 
 const ProviderCard = ({ item }: { item: Service }) => {
   const { width } = ScreenSize();
@@ -85,11 +85,11 @@ const ProviderCard = ({ item }: { item: Service }) => {
           style={{
             width: "auto",
           }}
-          handler={() => navigate("ProviderDetails")}
+          handler={() => navigate("ProviderDetails", { id: item?._id })}
         />
       </FlexText>
       <TextSecondary
-        text={item?.category}
+        text={item?.category?.name}
         style={{
           color: "#115E59",
           backgroundColor: "#E6F4F1",

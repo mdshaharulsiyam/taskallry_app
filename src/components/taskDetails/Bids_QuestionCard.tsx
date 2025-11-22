@@ -19,12 +19,14 @@ const Bids_QuestionCard = ({
   status,
   item,
   question,
+  role,
 }: {
   type: "bids" | "question";
   from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
   item?: Bid;
   question?: Question;
+  role?: "user" | "service";
 }) => {
   const { height, width } = ScreenSize();
   const [open, setOpen] = useState(false);

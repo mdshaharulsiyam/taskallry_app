@@ -30,6 +30,7 @@ export interface Task {
   "address": string,
   "city": string,
   "scheduleType": string,
+  "doneBy"?: string,
   "preferredDate": string,
   "preferredTime": string,
   "description": string,

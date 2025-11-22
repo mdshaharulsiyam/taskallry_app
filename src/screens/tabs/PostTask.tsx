@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlexText from "../../components/shered/FlexText";
@@ -10,7 +11,7 @@ import ImageUploader from "../../components/ui/file/ImageUploader";
 import PostTaskFields from "../../formFields/PostTaskFields";
 import { handlePostTask } from "../../handler/postTask";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
-import { useCreateTaskMutation } from '../../redux/apis';
+import { Task, useCreateTaskMutation } from '../../redux/apis';
 import { FieldsType } from "../../types/Types";
 import Navigate from "../../utils/Navigate";
 import { RenderField } from "../../utils/RenderField";
@@ -41,6 +42,8 @@ const slide = [
 const title = ["Task Overview", "Task Details", "Date & Time", "Budget "];
 
 const PostTask = () => {
+  const route = useRoute() as any;
+  const task = route?.params?.task as Task | undefined;
   const [create, { isLoading }] = useCreateTaskMutation()
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fiels, setFiels] = useState<any>([]);
@@ -48,6 +51,37 @@ const PostTask = () => {
   const { fields, setFields } = PostTaskFields();
   const { top, bottom } = useSafeAreaInsets();
   const navigate = Navigate();
+  const isEditMode = !!task;
+
+  useEffect(() => {
+    if (!task) return;
+    setFields((prev: FieldsType[]) =>
+      prev.map((field) => {
+        switch (field.name) {
+          case "title":
+            return { ...field, value: task.title || "" };
+          case "task_category":
+            return { ...field, value: task.category?._id || "" };
+          case "desc":
+            return { ...field, value: task.description || "" };
+          case "type":
+            return { ...field, value: task.doneBy || "" };
+          case "place":
+            return { ...field, value: task.address || "" };
+          case "flexible":
+            return { ...field, value: task.scheduleType || "" };
+          case "date":
+            return { ...field, value: task.preferredDate || "" };
+          case "time":
+            return { ...field, value: task.preferredTime || "" };
+          case "offer":
+            return { ...field, value: String(task.budget ?? "") };
+          default:
+            return field;
+        }
+      })
+    );
+  }, [task, setFields]);
   // backButtonText="Post Task"
   return (
     <SafeAreaProvider>

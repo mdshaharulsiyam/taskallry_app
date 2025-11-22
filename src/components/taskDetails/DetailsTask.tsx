@@ -1,15 +1,18 @@
 import moment from 'moment';
 import React from "react";
 import {
+  Alert,
   FlatList,
   Image,
   ImageSourcePropType,
   View
 } from "react-native";
+import Toast from "react-native-toast-message";
 import { otherIcons, TabIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 
-import { useGetSingleTaskQuery } from '../../redux/apis';
+import { useGlobalContext } from '../../providers/GlobalContextProvider';
+import { useDeleteTaskMutation, useGetSingleTaskQuery } from '../../redux/apis';
 import { ImgUrl } from '../../redux/baseApi';
 import Navigate from "../../utils/Navigate";
 import BackButton from "../shered/BackButton";
@@ -51,10 +54,48 @@ const DetailsTask = ({
   from: "user" | "service";
   id: string;
 }) => {
-  const [status, setStatus] = React.useState<
-    "All Tasks" | "open for bids" | "in Progress" | "completed" | "cancelled" | "dispute" | "Ongoing Tasks" | "Bids  Made" | "Bids  Received"
-  >("open for bids");
+  const { role } = useGlobalContext();
   const { data, isLoading, isFetching } = useGetSingleTaskQuery(id)
+  const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
+  const navigate = Navigate();
+
+  const handleRemoveTask = () => {
+    Alert.alert(
+      "Remove Task",
+      "Are you sure you want to remove this task?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: () => {
+            deleteTask(id)
+              .unwrap()
+              .then((res: any) => {
+                Toast.show({
+                  type: "success",
+                  text1: "Task removed",
+                  text2: res?.message || "Task has been removed successfully",
+                });
+                navigate("TabLayout", {
+                  screen: "Task",
+                })
+              })
+              .catch((err: any) => {
+                Toast.show({
+                  type: "error",
+                  text1: "Failed to remove task",
+                  text2: err?.data?.message || "Something went wrong",
+                });
+              });
+          },
+        },
+      ]
+    );
+  };
   const elements = [
     <ButtonGreenOpacity30
       key={1}
@@ -176,20 +217,29 @@ const DetailsTask = ({
                 width: "auto",
               }}
               text="Edit Task"
+              handler={() =>
+                navigate("TabLayout", {
+                  screen: "PostTask",
+                  params: {
+                    task: data?.data,
+                  },
+                })
+              }
             />
             <ButtonBG
               style={{
                 width: "auto",
               }}
-              text="Remove the task."
-              handler={() => { }}
+              text={isDeleting ? "Removing..." : "Remove the task."}
+              handler={handleRemoveTask}
+              disabled={isDeleting}
             />
           </FlexText>
         </FlexText>
       ) : (
         <></>
       )
-    ) : (
+    ) : role != "user" ? (
       <FlexText
         key={9}
         style={{
@@ -203,9 +253,11 @@ const DetailsTask = ({
         </View>
         <SubmitBitButt id={id} />
       </FlexText>
+    ) : (
+      <></>
     ),
     data?.data?.status == "OPEN_FOR_BID" ? (
-      <Bids_Question from={from} status={data?.data?.status} key={10} id={id} />
+      <Bids_Question from={from} status={data?.data?.status} key={10} id={id} role={role as "user" | "service"} />
     ) : (
       <></>
     ),
@@ -215,7 +267,7 @@ const DetailsTask = ({
         {data?.data?.status == "DISPUTE" && (
           <>
             <CancelRefundRequest />
-            <FeedbackStatusButton status={status} />
+            <FeedbackStatusButton status={data?.data?.status as any} />
           </>
         )}
       </>
@@ -223,7 +275,6 @@ const DetailsTask = ({
       <></>
     ),
   ];
-  const navigate = Navigate();
   if (isLoading) {
     return <Loader />
   }

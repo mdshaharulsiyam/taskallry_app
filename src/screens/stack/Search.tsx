@@ -12,13 +12,12 @@ import { selectFilters } from "../../redux/slices/filterSlice";
 
 const Search = () => {
   const {
-    params: { category_id, search },
+    params: { category_id, search, type },
   } = useRoute() as {
-    params: { category_id: string; search: string };
+    params: { category_id: string; search: string, type?: "Task" | "Provider" };
   };
   const { role } = useGlobalContext();
-  const type = role === "user" ? "Task" : "Provider";
-
+  const combinedType = type ? type : role === "user" ? "Provider" : "Task";
   const [searchText, setSearchText] = React.useState(search);
   const filterState = useAppSelector(selectFilters);
 
@@ -27,13 +26,13 @@ const Search = () => {
       search={searchText}
       handler={(value: string) => setSearchText(value)}
       key={1}
-      type={type}
+      type={combinedType}
     />,
     filterState?.viewMode === "map" ?
       <ProvidersMap key={3} /> :
-      type == "Provider" ?
-        <FilteredProvider key={3} />
-        : <FIlteredTask key={2} search={searchText} />,
+      combinedType == "Provider" ?
+        <FilteredProvider key={3} /> :
+        <FIlteredTask key={2} search={searchText} />
   ];
   return (
     <SafeAreaProviderNoScroll>

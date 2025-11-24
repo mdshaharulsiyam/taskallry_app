@@ -3,7 +3,7 @@ import { ImageSourcePropType, Modal, StyleSheet, Text, TouchableOpacity, Touchab
 import Toast from "react-native-toast-message";
 import { TabIcons } from "../../constant/images";
 import { useGlobalContext } from '../../providers/GlobalContextProvider';
-import { Bid, Question, useGetMyProfileQuery, useUpdateBidMutation } from '../../redux/apis';
+import { Bid, Question, useAcceptByCustomerMutation, useGetMyProfileQuery, useUpdateBidMutation } from '../../redux/apis';
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
@@ -33,16 +33,39 @@ const Bids_QuestionCard = ({
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState(item?.price ? String(item.price) : "");
   const [message, setMessage] = useState(item?.details || "");
-  const [updateBid, { isLoading }] = useUpdateBidMutation();
+  const [updateBid, { isLoading: isUpdating }] = useUpdateBidMutation();
+  const [acceptOffer, { isLoading: isAccepting }] = useAcceptByCustomerMutation();
   const { data } = useGetMyProfileQuery()
   const { role } = useGlobalContext()
-  console.log(data)
   const handleOpenUpdate = () => {
     if (item) {
       setPrice(String(item.price));
       setMessage(item.details || "");
     }
     setOpen(true);
+  };
+
+  const handleAcceptOffer = () => {
+    if (!item?._id || !item?.task) return;
+
+    const body = {
+      bidID: item._id,
+    };
+
+    acceptOffer(body)
+      .unwrap()
+      .then((res) => {
+        Toast.show({
+          type: "success",
+          text1: res?.message || "Offer accepted successfully",
+        });
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: error?.data?.message || "Failed to accept offer",
+        });
+      });
   };
 
   const handleUpdateSubmit = () => {
@@ -100,13 +123,15 @@ const Bids_QuestionCard = ({
             <HeaderDesign text={`₦${item?.price}`} />
           </View>
           {
-            (data?.data?._id == item?.provider?._id || customer == data?.data?._id) && <ButtonBG
-              style={{
-                width: "auto",
-              }}
-              text={role == "user" ? "Accept" : "Update Offer"}
-              handler={role == "user" ? () => { } : handleOpenUpdate}
-            />
+            (data?.data?._id == item?.provider?._id || customer == data?.data?._id) && (
+              <ButtonBG
+                style={{
+                  width: "auto",
+                }}
+                text={role == "user" ? (isAccepting ? "Accepting..." : "Accept") : "Update Offer"}
+                handler={role == "user" ? handleAcceptOffer : handleOpenUpdate}
+              />
+            )
           }
 
         </FlexText>
@@ -163,7 +188,7 @@ const Bids_QuestionCard = ({
                 />
 
                 <ButtonBG
-                  text={isLoading ? "Loading..." : "Update Offer"}
+                  text={isUpdating ? "Loading..." : "Update Offer"}
                   handler={handleUpdateSubmit}
                   style={{ marginTop: 16 }}
                 />

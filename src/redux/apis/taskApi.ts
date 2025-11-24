@@ -85,6 +85,9 @@ interface AcceptOfferRequest {
   taskId?: string;
   offerId?: string;
 }
+interface AcceptByCustomerRequest {
+  bidID?: string;
+}
 
 interface AcceptOfferResponse {
   message: string;
@@ -154,6 +157,14 @@ export const taskApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
+    acceptByCustomer: builder.mutation<AcceptOfferResponse, AcceptByCustomerRequest>({
+      query: (data) => ({
+        url: "/task/accept-TaskBy-Customer",
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Task"],
+    }),
     getMyTask: builder.query<GetAllTasksResponse, {
       status?: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE",
       sortOrder?: string,
@@ -180,4 +191,5 @@ export const {
   useDeleteTaskMutation,
   useAcceptOfferMutation,
   useGetMyTaskQuery,
+  useAcceptByCustomerMutation
 } = taskApi;

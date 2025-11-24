@@ -47,11 +47,9 @@ const color = {
 
 const DetailsTask = ({
   heading,
-  from,
   id,
 }: {
   heading?: "Tasks Details" | "My Tasks Details";
-  from: "user" | "service";
   id: string;
 }) => {
   const { role } = useGlobalContext();
@@ -266,7 +264,7 @@ const DetailsTask = ({
     ) : (
       <></>
     ),
-    data?.data?.status != "OPEN_FOR_BID" && from == "user" ? (
+    data?.data?.status != "OPEN_FOR_BID" && role == "user" ? (
       <>
         <TaskProgress data={data?.data} key={11} />
         {data?.data?.status == "DISPUTE" && (

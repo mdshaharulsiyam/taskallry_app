@@ -264,11 +264,13 @@ const DetailsTask = ({
       <></>
     ),
     data?.data?.status != "OPEN_FOR_BID" &&
-    (profileData?.data?._id == data?.data?.provider?._id ||
-      profileData?.data?._id == data?.data?.customer?._id) ? (
+      (profileData?.data?._id == data?.data?.provider?._id ||
+        profileData?.data?._id == data?.data?.customer?._id) ? (
       <>
         <TaskProgress data={data?.data} key={11} />
-        <FeedbackStatusButton status={data?.data?.status as any} id={id} />
+        {
+          role == "service" && <FeedbackStatusButton status={data?.data?.status as any} id={id} />
+        }
         {data?.data?.status == "DISPUTE" && (
           <>
             <CancelRefundRequest />

@@ -8,14 +8,17 @@ import TextPrimary from "../shered/TextPrimary";
 import TextSecondary from "../shered/TextSecondary";
 
 const TaskProgress = ({ data }: { data: Task | undefined }) => {
-  console.log(data);
   const progress_data: IStatusData[] =
     data?.statusWithDate?.map((item: statusWithDate) => ({
       name: item?.status,
       status: "complete",
       date: moment(item?.date).format("MMM DD, YYYY"),
     })) || [];
-
+  progress_data.push({
+    name: "COMPLETE",
+    status: "pending",
+    date: "",
+  });
   return (
     <View
       style={{

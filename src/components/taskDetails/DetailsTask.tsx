@@ -1,19 +1,23 @@
-import moment from 'moment';
+import moment from "moment";
 import React from "react";
 import {
   Alert,
   FlatList,
   Image,
   ImageSourcePropType,
-  View
+  View,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { otherIcons, TabIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 
-import { useGlobalContext } from '../../providers/GlobalContextProvider';
-import { useDeleteTaskMutation, useGetSingleTaskQuery } from '../../redux/apis';
-import { ImgUrl } from '../../redux/baseApi';
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
+import {
+  useDeleteTaskMutation,
+  useGetMyProfileQuery,
+  useGetSingleTaskQuery,
+} from "../../redux/apis";
+import { ImgUrl } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
 import BackButton from "../shered/BackButton";
 import FlexText from "../shered/FlexText";
@@ -27,7 +31,7 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 import ButtonGreenOpacity30 from "../ui/buttons/ButtonGreenOpacity30";
 import ButtonTransparentBG from "../ui/buttons/ButtonTransparentBG";
 import IconButtonTransparent from "../ui/buttons/IconButtonTransparent";
-import Loader from '../ui/loader/Loader';
+import Loader from "../ui/loader/Loader";
 import Bids_Question from "./Bids_Question";
 import CancelRefundRequest from "./CancelRefundRequest";
 import FeedbackStatusButton from "./FeedbackStatusButton";
@@ -35,15 +39,15 @@ import SubmitBitButt from "./SubmitBitButt";
 import TaskProgress from "./TaskProgress";
 
 const color = {
-  "OPEN_FOR_BID": {
+  OPEN_FOR_BID: {
     backgroundColor: "#FFEDD5",
     color: "#F97316",
   },
-  "IN_PROGRESS": {
+  IN_PROGRESS: {
     backgroundColor: "#E0F2FE",
     color: "#0EA5E9",
   },
-}
+};
 
 const DetailsTask = ({
   heading,
@@ -53,45 +57,42 @@ const DetailsTask = ({
   id: string;
 }) => {
   const { role } = useGlobalContext();
-  const { data, isLoading, isFetching } = useGetSingleTaskQuery(id)
+  const { data, isLoading, isFetching } = useGetSingleTaskQuery(id);
+  const { data: profileData } = useGetMyProfileQuery();
   const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
   const navigate = Navigate();
   const handleRemoveTask = () => {
-    Alert.alert(
-      "Remove Task",
-      "Are you sure you want to remove this task?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Remove",
-          style: "destructive",
-          onPress: () => {
-            deleteTask(id)
-              .unwrap()
-              .then((res: any) => {
-                Toast.show({
-                  type: "success",
-                  text1: "Task removed",
-                  text2: res?.message || "Task has been removed successfully",
-                });
-                navigate("TabLayout", {
-                  screen: "Task",
-                })
-              })
-              .catch((err: any) => {
-                Toast.show({
-                  type: "error",
-                  text1: "Failed to remove task",
-                  text2: err?.data?.message || "Something went wrong",
-                });
+    Alert.alert("Remove Task", "Are you sure you want to remove this task?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Remove",
+        style: "destructive",
+        onPress: () => {
+          deleteTask(id)
+            .unwrap()
+            .then((res: any) => {
+              Toast.show({
+                type: "success",
+                text1: "Task removed",
+                text2: res?.message || "Task has been removed successfully",
               });
-          },
+              navigate("TabLayout", {
+                screen: "Task",
+              });
+            })
+            .catch((err: any) => {
+              Toast.show({
+                type: "error",
+                text1: "Failed to remove task",
+                text2: err?.data?.message || "Something went wrong",
+              });
+            });
         },
-      ]
-    );
+      },
+    ]);
   };
   const elements = [
     <ButtonGreenOpacity30
@@ -99,7 +100,8 @@ const DetailsTask = ({
       activeOpacity={1}
       text={data?.data?.status}
       style={{
-        backgroundColor: color[data?.data?.status as keyof typeof color]?.backgroundColor,
+        backgroundColor:
+          color[data?.data?.status as keyof typeof color]?.backgroundColor,
         width: 200,
         borderRadius: 8,
         marginVertical: 10,
@@ -187,10 +189,7 @@ const DetailsTask = ({
       }}
       text="Details"
     />,
-    <TextPrimary
-      key={8}
-      text={data?.data?.description}
-    />,
+    <TextPrimary key={8} text={data?.data?.description} />,
 
     heading == "My Tasks Details" ? (
       data?.data?.status == "OPEN_FOR_BID" ? (
@@ -236,7 +235,7 @@ const DetailsTask = ({
       ) : (
         <></>
       )
-    ) : (role != "user") && data?.data?.status == "OPEN_FOR_BID" ? (
+    ) : role != "user" && data?.data?.status == "OPEN_FOR_BID" ? (
       <FlexText
         key={9}
         style={{
@@ -264,13 +263,15 @@ const DetailsTask = ({
     ) : (
       <></>
     ),
-    data?.data?.status != "OPEN_FOR_BID" && role == "user" ? (
+    data?.data?.status != "OPEN_FOR_BID" &&
+    (profileData?.data?._id == data?.data?.provider?._id ||
+      profileData?.data?._id == data?.data?.customer?._id) ? (
       <>
         <TaskProgress data={data?.data} key={11} />
+        <FeedbackStatusButton status={data?.data?.status as any} id={id} />
         {data?.data?.status == "DISPUTE" && (
           <>
             <CancelRefundRequest />
-            <FeedbackStatusButton status={data?.data?.status as any} />
           </>
         )}
       </>
@@ -279,7 +280,7 @@ const DetailsTask = ({
     ),
   ];
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
   return (
     <SafeAreaProviderNoScroll>
@@ -302,4 +303,3 @@ const DetailsTask = ({
 };
 
 export default DetailsTask;
-

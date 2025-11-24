@@ -1,4 +1,4 @@
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 import { FieldsType } from "../types/Types";
 import { validateFields } from "../utils/formValidate";
 
@@ -11,7 +11,7 @@ const handleServiceAddUpdate = async (
   id?: string,
   createService?: any,
   updateService?: any,
-  navigate?: any,
+  navigate?: any
 ) => {
   const isValid = validateFields(fields, setFields);
   if (!isValid) {
@@ -37,33 +37,38 @@ const handleServiceAddUpdate = async (
       formData.append("service_image", file);
     });
     if (id) {
-      updateService(formData).unwrap().then(() => {
-        Toast.show({
-          type: "success",
-          text1: "Service updated successfully",
+      updateService(formData)
+        .unwrap()
+        .then(() => {
+          Toast.show({
+            type: "success",
+            text1: "Service updated successfully",
+          });
+          navigate.goBack();
         })
-        navigate.goBack()
-      }).catch((error: any) => {
-        Toast.show({
-          type: "error",
-          text1: error?.data?.message || "Failed to update service",
-        })
-      })
+        .catch((error: any) => {
+          Toast.show({
+            type: "error",
+            text1: error?.data?.message || "Failed to update service",
+          });
+        });
     } else {
-      createService(formData).unwrap().then(() => {
-        Toast.show({
-          type: "success",
-          text1: "Service added successfully",
+      createService(formData)
+        .unwrap()
+        .then(() => {
+          Toast.show({
+            type: "success",
+            text1: "Service added successfully",
+          });
+          navigate.goBack();
         })
-        navigate.goBack()
-      }).catch((error: any) => {
-        Toast.show({
-          type: "error",
-          text1: error?.data?.message || "Failed to add service",
-        })
-      })
+        .catch((error: any) => {
+          Toast.show({
+            type: "error",
+            text1: error?.data?.message || "Failed to add service",
+          });
+        });
     }
-
   } catch (error) {
     console.log("Failed to get current location", error);
   }

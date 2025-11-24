@@ -14,13 +14,13 @@ const TabButton = ({
   const tabs =
     role == "user"
       ? [
-        "All Tasks",
-        "open for bids",
-        "in Progress",
-        "completed",
-        "cancelled",
-        "dispute",
-      ]
+          "All Tasks",
+          "open for bids",
+          "in Progress",
+          "completed",
+          "cancelled",
+          "dispute",
+        ]
       : ["Ongoing Tasks", "Bids  Made", "Bids  Received", "dispute"];
   const [activeTab, setActiveTab] = useState<string>(tab ? tab[0] : tabs[0]);
 

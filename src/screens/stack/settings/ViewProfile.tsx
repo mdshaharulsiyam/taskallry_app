@@ -10,13 +10,13 @@ import {
 import BackButton from "../../../components/shered/BackButton";
 import { otherIcons, TabIcons } from "../../../constant/images";
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
-import { useGetMyProfileQuery } from '../../../redux/apis';
-import { ImgUrl } from '../../../redux/baseApi';
+import { useGetMyProfileQuery } from "../../../redux/apis";
+import { ImgUrl } from "../../../redux/baseApi";
 import Navigate from "../../../utils/Navigate";
 
 const ViewProfile = () => {
   const navigate = Navigate();
-  const { data } = useGetMyProfileQuery()
+  const { data } = useGetMyProfileQuery();
   const items = [
     {
       key: "name",
@@ -50,7 +50,8 @@ const ViewProfile = () => {
       <View style={styles.avatarWrap}>
         <Image
           source={
-            data?.data?.profile_image ? { uri: ImgUrl(data?.data?.profile_image + "") }
+            data?.data?.profile_image
+              ? { uri: ImgUrl(data?.data?.profile_image + "") }
               : (otherIcons.Avater as ImageSourcePropType)
           }
           style={styles.avatar}

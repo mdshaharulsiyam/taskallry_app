@@ -37,10 +37,17 @@ const FIlteredTask = ({ search }: { search: string }) => {
     searchTerm?: string;
     maxDistance?: number;
   } = isStatusFilter
-      ? {
+    ? {
         status: sort,
         ...(category ? { category } : {}),
-        ...(latino ? { latitude: latino?.lat, longitude: latino?.lng, maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range) } : {}),
+        ...(latino
+          ? {
+              latitude: latino?.lat,
+              longitude: latino?.lng,
+              maxDistance:
+                Number(distance_range) <= 0 ? 20 : Number(distance_range),
+            }
+          : {}),
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
         ...(search ? { searchTerm: search } : {}),
@@ -49,11 +56,18 @@ const FIlteredTask = ({ search }: { search: string }) => {
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),
       }
-      : {
+    : {
         sortOrder: sort === "Oldest First" ? "asc" : "desc",
         sortBy: "createdAt",
         ...(category ? { category } : {}),
-        ...(latino ? { latitude: latino?.lat, longitude: latino?.lng, maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range) } : {}),
+        ...(latino
+          ? {
+              latitude: latino?.lat,
+              longitude: latino?.lng,
+              maxDistance:
+                Number(distance_range) <= 0 ? 20 : Number(distance_range),
+            }
+          : {}),
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 500000 : Number(price_range),
         ...(search ? { searchTerm: search } : {}),
@@ -65,7 +79,7 @@ const FIlteredTask = ({ search }: { search: string }) => {
   return (
     <View style={{ marginTop: 10 }}>
       {(data?.data?.result && data?.data?.result?.length < 1) ||
-        !data?.data?.result ? (
+      !data?.data?.result ? (
         <>
           <Image
             source={otherIcons.Empty as ImageSourcePropType}

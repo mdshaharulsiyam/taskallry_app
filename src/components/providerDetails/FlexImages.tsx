@@ -1,14 +1,10 @@
 import React from "react";
 import { Image } from "react-native";
-import { ImgUrl } from '../../redux/baseApi';
+import { ImgUrl } from "../../redux/baseApi";
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 
-const FlexImages = ({
-  images
-}: {
-  images: string[];
-}) => {
+const FlexImages = ({ images }: { images: string[] }) => {
   const { width } = ScreenSize();
   return (
     <FlexText

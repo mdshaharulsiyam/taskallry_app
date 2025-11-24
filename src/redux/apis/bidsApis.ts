@@ -17,9 +17,9 @@ export interface Bid {
 }
 
 export interface CreateBidRequest {
-  task: string,
-  price: number,
-  details: string,
+  task: string;
+  price: number;
+  details: string;
 }
 
 interface CreateBidResponse {
@@ -36,8 +36,8 @@ interface GetAllBidsResponse {
       limit: number;
       total: number;
       totalPage: number;
-    },
-    result: Bid[]
+    };
+    result: Bid[];
   };
 }
 
@@ -49,8 +49,8 @@ interface GetBidsByTaskIdResponse {
       limit: number;
       total: number;
       totalPage: number;
-    },
-    result: Bid[]
+    };
+    result: Bid[];
   };
 }
 
@@ -83,7 +83,10 @@ export const bidsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Bid"],
     }),
-    updateBid: builder.mutation<CreateBidResponse, { bidId: string; price: number; details: string }>({
+    updateBid: builder.mutation<
+      CreateBidResponse,
+      { bidId: string; price: number; details: string }
+    >({
       query: ({ bidId, price, details }) => ({
         url: `/bid/update-bid/${bidId}`,
         method: "PATCH",
@@ -108,4 +111,3 @@ export const {
   useUpdateBidMutation,
   useDeleteBidMutation,
 } = bidsApi;
-

@@ -8,7 +8,6 @@ import { useAppSelector } from "../../redux/hooks";
 const ProvidersMap = () => {
   const hasApiKey = !!CONFIG.GOOGLE_MAPS_API_KEY;
 
-
   const {
     category,
     to_be_done,
@@ -34,39 +33,33 @@ const ProvidersMap = () => {
     searchTerm?: string;
     maxDistance?: number;
   } = isStatusFilter
-      ? {
+    ? {
         status: sort,
         ...(category ? { category } : {}),
         ...(latino
           ? {
-            maxDistance:
-              Number(distance_range) <= 0
-                ? 20
-                : Number(distance_range),
-          }
+              maxDistance:
+                Number(distance_range) <= 0 ? 20 : Number(distance_range),
+            }
           : {}),
         minPrice: 5000,
-        maxPrice:
-          Number(price_range) < 5000 ? 5100 : Number(price_range),
+        maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
         ...(to_be_done
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),
       }
-      : {
+    : {
         sortOrder: sort === "Oldest First" ? "asc" : "desc",
         sortBy: "createdAt",
         ...(category ? { category } : {}),
         ...(latino
           ? {
-            maxDistance:
-              Number(distance_range) <= 0
-                ? 20
-                : Number(distance_range),
-          }
+              maxDistance:
+                Number(distance_range) <= 0 ? 20 : Number(distance_range),
+            }
           : {}),
         minPrice: 5000,
-        maxPrice:
-          Number(price_range) < 5000 ? 500000 : Number(price_range),
+        maxPrice: Number(price_range) < 5000 ? 500000 : Number(price_range),
         ...(to_be_done
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),
@@ -95,11 +88,11 @@ const ProvidersMap = () => {
       };
     })
     .filter(Boolean) as {
-      lat: number;
-      lng: number;
-      title?: string;
-      image?: string | null;
-    }[];
+    lat: number;
+    lng: number;
+    title?: string;
+    image?: string | null;
+  }[];
 
   if (!hasApiKey) {
     return (
@@ -117,7 +110,9 @@ const ProvidersMap = () => {
     return (
       <View style={styles.container}>
         <View style={styles.banner}>
-          <Text style={styles.bannerText}>No tasks found to display on map.</Text>
+          <Text style={styles.bannerText}>
+            No tasks found to display on map.
+          </Text>
         </View>
       </View>
     );

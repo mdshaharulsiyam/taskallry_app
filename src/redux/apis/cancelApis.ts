@@ -40,7 +40,10 @@ interface DeleteCancelResponse {
 export const cancelApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // POST cancel-request/create
-    createCancelRequest: builder.mutation<CreateCancelResponse, CreateCancelRequest>({
+    createCancelRequest: builder.mutation<
+      CreateCancelResponse,
+      CreateCancelRequest
+    >({
       query: (body) => ({
         url: "/cancel-request/create",
         method: "POST",
@@ -94,5 +97,3 @@ export const {
   useAcceptCancelRequestMutation,
   useRejectCancelRequestMutation,
 } = cancelApi;
-
-

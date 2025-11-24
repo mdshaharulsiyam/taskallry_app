@@ -6,24 +6,32 @@ import TextPrimary from "../../components/shered/TextPrimary";
 import ButtonBG from "../../components/ui/buttons/ButtonBG";
 import ImageUploader from "../../components/ui/file/ImageUploader";
 import AddUpdateServiceFields from "../../formFields/AddUpdateServiceFields";
-import handleServiceAddUpdate from '../../handler/serviceAddUpdate';
+import handleServiceAddUpdate from "../../handler/serviceAddUpdate";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
-import { useCreateServiceMutation, useGetMyServicesQuery, useUpdateServiceMutation } from "../../redux/apis";
+import {
+  useCreateServiceMutation,
+  useGetMyServicesQuery,
+  useUpdateServiceMutation,
+} from "../../redux/apis";
 import { ImgUrl } from "../../redux/baseApi";
 import { FieldsType } from "../../types/Types";
 import { Navigation } from "../../utils/Navigate";
 import { RenderField } from "../../utils/RenderField";
 
 const AddUpdateService = () => {
-  const { params: { id } } = useRoute() as { params: { id: string } }
+  const {
+    params: { id },
+  } = useRoute() as { params: { id: string } };
   const { fields, setFields } = AddUpdateServiceFields();
   const navigate = Navigation();
   const [files, setFiles] = useState<any[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
   const { data } = useGetMyServicesQuery();
-  const [createService, { isLoading: isCreateLoading }] = useCreateServiceMutation()
-  const [updateService, { isLoading: isUpdateLoading }] = useUpdateServiceMutation()
+  const [createService, { isLoading: isCreateLoading }] =
+    useCreateServiceMutation();
+  const [updateService, { isLoading: isUpdateLoading }] =
+    useUpdateServiceMutation();
   useEffect(() => {
     if (data?.data?.images) {
       setExistingImages(data.data.images as string[]);
@@ -105,7 +113,9 @@ const AddUpdateService = () => {
 
       <ButtonBG
         disabled={isCreateLoading || isUpdateLoading}
-        text={isCreateLoading || isUpdateLoading ? "Loading..." : "Save Service"}
+        text={
+          isCreateLoading || isUpdateLoading ? "Loading..." : "Save Service"
+        }
         handler={() => {
           handleServiceAddUpdate(
             fields,
@@ -116,7 +126,7 @@ const AddUpdateService = () => {
             id,
             createService,
             updateService,
-            navigate,
+            navigate
           );
         }}
       />

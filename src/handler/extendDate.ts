@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from "moment";
 import Toast from "react-native-toast-message";
 import { FieldsType } from "../types/Types";
 import { validateFields } from "../utils/formValidate";
@@ -24,15 +24,13 @@ export const handleExtendDate = (
   const time = values?.time as string;
   const reason = (values?.reason as string) || "";
 
-  const newDateTime = moment(
-    `${date} ${time}`,
-    "YYYY-MM-DD HH:mm"
-  ).utc()
+  const newDateTime = moment(`${date} ${time}`, "YYYY-MM-DD HH:mm")
+    .utc()
     .toISOString();
   createExtensionRequest({
-    "task": taskId,
-    "requestedDateTime": newDateTime,
-    "reason": reason
+    task: taskId,
+    requestedDateTime: newDateTime,
+    reason: reason,
   })
     .unwrap()
     .then((res: any) => {

@@ -98,7 +98,6 @@ const FIlterOptions = (props: any) => {
             width: "auto",
             backgroundColor:
               filterState.viewMode === "map" ? "#115E59" : "#38a19cff",
-
           }}
           // textStyle={{
           //   color: filterState.viewMode === "map" ? "white" : "black",

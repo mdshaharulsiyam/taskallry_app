@@ -1,19 +1,20 @@
-import moment from 'moment';
+import moment from "moment";
 import React from "react";
 import { View } from "react-native";
-import { statusWithDate, Task } from '../../redux/apis';
+import { statusWithDate, Task } from "../../redux/apis";
 import FlexText from "../shered/FlexText";
 import ProgressBar, { IStatusData } from "../shered/ProgressBar";
 import TextPrimary from "../shered/TextPrimary";
 import TextSecondary from "../shered/TextSecondary";
 
 const TaskProgress = ({ data }: { data: Task | undefined }) => {
-  console.log(data)
-  const progress_data: IStatusData[] = data?.statusWithDate?.map((item: statusWithDate) => ({
-    name: item?.status,
-    status: "complete",
-    date: moment(item?.date).format("MMM DD, YYYY"),
-  })) || []
+  console.log(data);
+  const progress_data: IStatusData[] =
+    data?.statusWithDate?.map((item: statusWithDate) => ({
+      name: item?.status,
+      status: "complete",
+      date: moment(item?.date).format("MMM DD, YYYY"),
+    })) || [];
 
   return (
     <View

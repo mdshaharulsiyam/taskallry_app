@@ -20,12 +20,15 @@ const ExtendDate = () => {
   const { fields, setFields } = ExtendDateFields();
   const { top, bottom } = useSafeAreaInsets();
   const navigation = Navigation();
-  const { params: { id } } = useRoute() as {
+  const {
+    params: { id },
+  } = useRoute() as {
     params: {
       id: string;
     };
   };
-  const [createExtensionRequest, { isLoading }] = useCreateExtensionRequestMutation();
+  const [createExtensionRequest, { isLoading }] =
+    useCreateExtensionRequestMutation();
   return (
     <SafeAreaProvider backButtonText=" ">
       {/* <View
@@ -65,7 +68,13 @@ const ExtendDate = () => {
           text={isLoading ? "Submitting..." : "Submit"}
           disabled={isLoading}
           handler={() => {
-            handleExtendDate(fields, setFields, id, createExtensionRequest, navigation);
+            handleExtendDate(
+              fields,
+              setFields,
+              id,
+              createExtensionRequest,
+              navigation
+            );
           }}
         />
       </FlexText>

@@ -9,7 +9,6 @@ export interface IStatusData {
   status: "complete" | "pending";
 }
 
-
 const ProgressBar = ({ data }: { data: IStatusData[] }) => {
   return (
     <View

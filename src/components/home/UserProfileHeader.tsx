@@ -5,14 +5,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { otherIcons } from "../../constant/images";
-import { useGetMyProfileQuery } from '../../redux/apis';
+import { useGetMyProfileQuery } from "../../redux/apis";
 import Navigate from "../../utils/Navigate";
 import FlexText from "../shered/FlexText";
 import ImageFlex from "../shered/ImageFlex";
 import ImageButton from "../ui/buttons/ImageButton";
 
 const UserProfileHeader = () => {
-  const { data } = useGetMyProfileQuery()
+  const { data } = useGetMyProfileQuery();
   const navigate = Navigate();
   return (
     <FlexText

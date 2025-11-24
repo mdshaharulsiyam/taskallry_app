@@ -6,8 +6,8 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { otherIcons } from '../../constant/images';
-import { ImgUrl } from '../../redux/baseApi';
+import { otherIcons } from "../../constant/images";
+import { ImgUrl } from "../../redux/baseApi";
 import FlexText from "./FlexText";
 import HeaderSecondary from "./HeaderSecondary";
 import TextSecondary from "./TextSecondary";
@@ -38,7 +38,8 @@ const ImageFlex = ({
       ) : (
         <Image
           source={
-            image ? { uri: ImgUrl(image + "") }
+            image
+              ? { uri: ImgUrl(image + "") }
               : (otherIcons.Avater as ImageSourcePropType)
           }
           style={{

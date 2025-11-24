@@ -1,9 +1,23 @@
 import React, { useState } from "react";
-import { ImageSourcePropType, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import {
+  ImageSourcePropType,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { TabIcons } from "../../constant/images";
-import { useGlobalContext } from '../../providers/GlobalContextProvider';
-import { Bid, Question, useAcceptByCustomerMutation, useGetMyProfileQuery, useUpdateBidMutation } from '../../redux/apis';
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
+import {
+  Bid,
+  Question,
+  useAcceptByCustomerMutation,
+  useGetMyProfileQuery,
+  useUpdateBidMutation,
+} from "../../redux/apis";
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
@@ -22,7 +36,13 @@ const Bids_QuestionCard = ({
   customer,
 }: {
   type: "bids" | "question";
-  status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
+  status:
+    | "OPEN_FOR_BID"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "CANCELLED"
+    | "DISPUTE"
+    | "LATE";
   item?: Bid;
   question?: Question;
   customer?: string;
@@ -32,9 +52,10 @@ const Bids_QuestionCard = ({
   const [price, setPrice] = useState(item?.price ? String(item.price) : "");
   const [message, setMessage] = useState(item?.details || "");
   const [updateBid, { isLoading: isUpdating }] = useUpdateBidMutation();
-  const [acceptOffer, { isLoading: isAccepting }] = useAcceptByCustomerMutation();
-  const { data } = useGetMyProfileQuery()
-  const { role } = useGlobalContext()
+  const [acceptOffer, { isLoading: isAccepting }] =
+    useAcceptByCustomerMutation();
+  const { data } = useGetMyProfileQuery();
+  const { role } = useGlobalContext();
   const handleOpenUpdate = () => {
     if (item) {
       setPrice(String(item.price));
@@ -103,7 +124,9 @@ const Bids_QuestionCard = ({
         showText1={type == "bids"}
         text={item?.provider?.name || question?.provider?.name}
         text1={`⭐ ${item?.provider?.avgRating} (${item?.provider?.totalRatingCount} Reviews)`}
-        image={item?.provider?.profile_image || question?.provider?.profile_image}
+        image={
+          item?.provider?.profile_image || question?.provider?.profile_image
+        }
       />
       {type == "bids" && (
         <FlexText
@@ -120,18 +143,23 @@ const Bids_QuestionCard = ({
             <TextSecondary text="Offered Price " />
             <HeaderDesign text={`₦${item?.price}`} />
           </View>
-          {
-            (data?.data?._id == item?.provider?._id || customer == data?.data?._id) && status == "OPEN_FOR_BID" && (
+          {(data?.data?._id == item?.provider?._id ||
+            customer == data?.data?._id) &&
+            status == "OPEN_FOR_BID" && (
               <ButtonBG
                 style={{
                   width: "auto",
                 }}
-                text={role == "user" ? (isAccepting ? "Accepting..." : "Accept") : "Update Offer"}
+                text={
+                  role == "user"
+                    ? isAccepting
+                      ? "Accepting..."
+                      : "Accept"
+                    : "Update Offer"
+                }
                 handler={role == "user" ? handleAcceptOffer : handleOpenUpdate}
               />
-            )
-          }
-
+            )}
         </FlexText>
       )}
       <TextSecondary text={item?.details || question?.details} />

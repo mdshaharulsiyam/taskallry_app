@@ -10,10 +10,13 @@ import {
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
 import { otherIcons } from "../../../constant/images";
 import profileUpdateFields from "../../../formFields/profileUpdateFields";
-import handleUpdateProfile from '../../../handler/profile';
+import handleUpdateProfile from "../../../handler/profile";
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
-import { useGetMyProfileQuery, useUpdateProfileMutation } from '../../../redux/apis';
-import { ImgUrl } from '../../../redux/baseApi';
+import {
+  useGetMyProfileQuery,
+  useUpdateProfileMutation,
+} from "../../../redux/apis";
+import { ImgUrl } from "../../../redux/baseApi";
 import { FieldsType } from "../../../types/Types";
 import { RenderField } from "../../../utils/RenderField";
 
@@ -39,8 +42,8 @@ const MyProfile = () => {
             fiels?.uri
               ? { uri: fiels.uri }
               : data?.data?.profile_image
-                ? { uri: ImgUrl(data?.data?.profile_image + "") }
-                : (otherIcons.Avater as ImageSourcePropType)
+              ? { uri: ImgUrl(data?.data?.profile_image + "") }
+              : (otherIcons.Avater as ImageSourcePropType)
           }
           style={{
             height: 100,

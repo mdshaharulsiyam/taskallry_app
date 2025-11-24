@@ -23,8 +23,7 @@ const PostTaskFields = () => {
       error: false,
       value: "",
       required: true,
-      options: [
-      ],
+      options: [],
       keyboard: KeyboardType.DEFAULT,
     },
     {

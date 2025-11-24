@@ -9,7 +9,9 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import Navigate from "../../utils/Navigate";
 
 const RegulationsCenter = () => {
-  const { params: { id } } = useRoute() as {
+  const {
+    params: { id },
+  } = useRoute() as {
     params: {
       id: string;
     };

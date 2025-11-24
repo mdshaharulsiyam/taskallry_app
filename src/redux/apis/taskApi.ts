@@ -1,50 +1,56 @@
 import { baseApi } from "../baseApi";
 export interface statusWithDate {
-  "status": string,
-  "date": string,
-  "_id": string,
-  "createdAt": string,
-  "updatedAt": string
+  status: string;
+  date: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface Task {
-  "_id": string,
-  "title": string,
-  "category": {
-    "_id": string,
-    "name": string
-  },
-  "budget": number,
-  "status": "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE",
-  "isDeleted": boolean,
-  "paymentStatus": string,
-  "customer": {
-    "_id": string,
-    "name": string,
-    "profile_image": string
-  },
-  "payOn": string,
-  "location": {
-    "type": "Point",
-    "coordinates": string[]
-  },
-  "address": string,
-  "city": string,
-  "scheduleType": string,
-  "doneBy"?: string,
-  "preferredDate": string,
-  "preferredTime": string,
-  "description": string,
-  "task_attachments": string[],
-  "createdAt": string,
-  "updatedAt": string,
-  "__v": number,
-  "provider": {
-    "_id": string,
-    "name": string,
-    "profile_image": string
-  },
-  "statusWithDate": statusWithDate[],
-  "totalOffer": 1
+  _id: string;
+  title: string;
+  category: {
+    _id: string;
+    name: string;
+  };
+  budget: number;
+  status:
+    | "OPEN_FOR_BID"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "CANCELLED"
+    | "DISPUTE"
+    | "LATE";
+  isDeleted: boolean;
+  paymentStatus: string;
+  customer: {
+    _id: string;
+    name: string;
+    profile_image: string;
+  };
+  payOn: string;
+  location: {
+    type: "Point";
+    coordinates: string[];
+  };
+  address: string;
+  city: string;
+  scheduleType: string;
+  doneBy?: string;
+  preferredDate: string;
+  preferredTime: string;
+  description: string;
+  task_attachments: string[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  provider: {
+    _id: string;
+    name: string;
+    profile_image: string;
+  };
+  statusWithDate: statusWithDate[];
+  totalOffer: 1;
 }
 
 interface CreateTaskRequest {
@@ -72,9 +78,8 @@ interface GetAllTasksResponse {
 }
 interface GetSingleTaskResponse {
   success: boolean;
-  data: Task
+  data: Task;
 }
-
 
 interface DeleteTaskResponse {
   message: string;
@@ -119,7 +124,16 @@ export const taskApi = baseApi.injectEndpoints({
         maxDistance?: number;
       }
     >({
-      query: ({ sortOrder, sortBy, category, status, minPrice, maxPrice, searchTerm, maxDistance }) => ({
+      query: ({
+        sortOrder,
+        sortBy,
+        category,
+        status,
+        minPrice,
+        maxPrice,
+        searchTerm,
+        maxDistance,
+      }) => ({
         url: "/task/all-task",
         method: "GET",
         params: {
@@ -157,7 +171,10 @@ export const taskApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
-    acceptByCustomer: builder.mutation<AcceptOfferResponse, AcceptByCustomerRequest>({
+    acceptByCustomer: builder.mutation<
+      AcceptOfferResponse,
+      AcceptByCustomerRequest
+    >({
       query: (data) => ({
         url: "/task/accept-TaskBy-Customer",
         method: "PATCH",
@@ -165,11 +182,20 @@ export const taskApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
-    getMyTask: builder.query<GetAllTasksResponse, {
-      status?: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE",
-      sortOrder?: string,
-      sortBy?: string,
-    }>({
+    getMyTask: builder.query<
+      GetAllTasksResponse,
+      {
+        status?:
+          | "OPEN_FOR_BID"
+          | "IN_PROGRESS"
+          | "COMPLETED"
+          | "CANCELLED"
+          | "DISPUTE"
+          | "LATE";
+        sortOrder?: string;
+        sortBy?: string;
+      }
+    >({
       query: ({ status, sortOrder, sortBy }) => ({
         url: "/task/my-task",
         method: "GET",
@@ -191,5 +217,5 @@ export const {
   useDeleteTaskMutation,
   useAcceptOfferMutation,
   useGetMyTaskQuery,
-  useAcceptByCustomerMutation
+  useAcceptByCustomerMutation,
 } = taskApi;

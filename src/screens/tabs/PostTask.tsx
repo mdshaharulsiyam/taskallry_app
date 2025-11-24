@@ -11,7 +11,7 @@ import ImageUploader from "../../components/ui/file/ImageUploader";
 import PostTaskFields from "../../formFields/PostTaskFields";
 import { handlePostTask } from "../../handler/postTask";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
-import { Task, useCreateTaskMutation } from '../../redux/apis';
+import { Task, useCreateTaskMutation } from "../../redux/apis";
 import { FieldsType } from "../../types/Types";
 import Navigate from "../../utils/Navigate";
 import { RenderField } from "../../utils/RenderField";
@@ -44,7 +44,7 @@ const title = ["Task Overview", "Task Details", "Date & Time", "Budget "];
 const PostTask = () => {
   const route = useRoute() as any;
   const task = route?.params?.task as Task | undefined;
-  const [create, { isLoading }] = useCreateTaskMutation()
+  const [create, { isLoading }] = useCreateTaskMutation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fiels, setFiels] = useState<any>([]);
   const { height } = ScreenSize();
@@ -142,7 +142,13 @@ const PostTask = () => {
             style={{
               width: "auto",
             }}
-            text={currentSlide == 3 ? isLoading ? "loading..." : "Post" : "Continue"}
+            text={
+              currentSlide == 3
+                ? isLoading
+                  ? "loading..."
+                  : "Post"
+                : "Continue"
+            }
             handler={() => {
               const isValid = handlePostTask(
                 fields?.slice(

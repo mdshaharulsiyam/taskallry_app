@@ -1,16 +1,16 @@
 import { baseApi } from "../baseApi";
 
 export interface Feedback {
-  "_id": string,
-  "task": string,
-  "provider": string,
-  "customer": {
-    "_id": string,
-    "name": string,
-    "profile_image": string
-  },
-  "rating": number,
-  "details": string,
+  _id: string;
+  task: string;
+  provider: string;
+  customer: {
+    _id: string;
+    name: string;
+    profile_image: string;
+  };
+  rating: number;
+  details: string;
 }
 
 export interface CreateFeedbackRequest {
@@ -38,7 +38,10 @@ interface GetTaskFeedbackResponse {
 export const feedbackApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // POST feedback/create-feedback
-    createFeedback: builder.mutation<CreateFeedbackResponse, CreateFeedbackRequest>({
+    createFeedback: builder.mutation<
+      CreateFeedbackResponse,
+      CreateFeedbackRequest
+    >({
       query: (body) => ({
         url: "/feedback/create-feedback",
         method: "POST",

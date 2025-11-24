@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { useGlobalContext } from '../../providers/GlobalContextProvider';
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import { useGetAllTasksQuery, useGetMyTaskQuery } from "../../redux/apis";
 import Navigate from "../../utils/Navigate";
 import SectionHeading from "../shered/SectionHeading";
@@ -8,14 +8,17 @@ import TaskCard from "../shered/TaskCard";
 
 const RecentlyAddedTask = () => {
   const navigate = Navigate();
-  const { role } = useGlobalContext()
-  const { data } = role == "user" ? useGetMyTaskQuery({
-    sortOrder: "desc",
-    sortBy: "createdAt",
-  }) : useGetAllTasksQuery({
-    sortOrder: "desc",
-    sortBy: "createdAt",
-  });
+  const { role } = useGlobalContext();
+  const { data } =
+    role == "user"
+      ? useGetMyTaskQuery({
+          sortOrder: "desc",
+          sortBy: "createdAt",
+        })
+      : useGetAllTasksQuery({
+          sortOrder: "desc",
+          sortBy: "createdAt",
+        });
   return (
     <View style={{ marginTop: 10 }}>
       <SectionHeading

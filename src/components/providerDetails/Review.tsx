@@ -6,11 +6,7 @@ import HeaderDesign from "../shered/HeaderDesign";
 import TextSecondary from "../shered/TextSecondary";
 import ReviewCard from "./ReviewCard";
 
-const Review = ({
-  service
-}: {
-  service?: Service;
-}) => {
+const Review = ({ service }: { service?: Service }) => {
   const { data, isLoading, isError } = useGetMyFeedbackQuery();
   const feedbacks = data?.data || [];
 
@@ -32,16 +28,13 @@ const Review = ({
 
         <TextSecondary text={`of ${service?.totalRating} reviews`} />
       </FlexText>
-      {isLoading && (
-        <TextSecondary text="Loading reviews..." />
-      )}
-      {isError && (
-        <TextSecondary text="Failed to load reviews" />
-      )}
+      {isLoading && <TextSecondary text="Loading reviews..." />}
+      {isError && <TextSecondary text="Failed to load reviews" />}
       {!isLoading && !isError && feedbacks.length === 0 && (
         <TextSecondary text="No reviews yet" />
       )}
-      {!isLoading && !isError &&
+      {!isLoading &&
+        !isError &&
         feedbacks.map((fb) => (
           <ReviewCard
             key={fb._id}

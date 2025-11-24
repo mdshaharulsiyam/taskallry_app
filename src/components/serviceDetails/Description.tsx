@@ -9,11 +9,7 @@ import HeaderSecondary from "../shered/HeaderSecondary";
 import TextSecondary from "../shered/TextSecondary";
 import IconButtonTransparent from "../ui/buttons/IconButtonTransparent";
 
-const Description = ({
-  service
-}: {
-  service?: Service;
-}) => {
+const Description = ({ service }: { service?: Service }) => {
   const data = [
     `Certified & Verified: ✅`,
     `Customer Rating: ⭐ ${service?.averageRating}(${service?.totalRating} + Reviews)`,
@@ -29,14 +25,10 @@ const Description = ({
       }}
     >
       <HeaderSecondary text="Description  :- " />
-      <TextSecondary
-        text={service?.description}
-      />
-      {
-        data.map((item, index) => (
-          <TextSecondary key={index} text={item} />
-        ))
-      }
+      <TextSecondary text={service?.description} />
+      {data.map((item, index) => (
+        <TextSecondary key={index} text={item} />
+      ))}
       <FlexText>
         <IconButtonTransparent
           style={{
@@ -68,7 +60,13 @@ const Description = ({
               });
             }
           }}
-          text={isLoading ? "Updating..." : service?.isActive ? "Make Inactive" : "Make Active"}
+          text={
+            isLoading
+              ? "Updating..."
+              : service?.isActive
+              ? "Make Inactive"
+              : "Make Active"
+          }
         />
       </FlexText>
     </View>,

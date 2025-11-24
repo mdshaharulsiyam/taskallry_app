@@ -1,15 +1,15 @@
 import React from "react";
 import { Image, ImageSourcePropType, StyleSheet } from "react-native";
 import { otherIcons } from "../../constant/images";
-import { useGetMyProfileQuery } from '../../redux/apis';
-import { ImgUrl } from '../../redux/baseApi';
+import { useGetMyProfileQuery } from "../../redux/apis";
+import { ImgUrl } from "../../redux/baseApi";
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
 
 const ProfilePictureName = () => {
   const { width } = ScreenSize();
-  const { data, isLoading } = useGetMyProfileQuery()
+  const { data, isLoading } = useGetMyProfileQuery();
   return (
     <>
       <Image
@@ -30,7 +30,8 @@ const ProfilePictureName = () => {
       >
         <Image
           source={
-            data?.data?.profile_image ? { uri: ImgUrl(data?.data?.profile_image + "") }
+            data?.data?.profile_image
+              ? { uri: ImgUrl(data?.data?.profile_image + "") }
               : (otherIcons.Avater as ImageSourcePropType)
           }
           style={{

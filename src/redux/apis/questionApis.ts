@@ -1,23 +1,23 @@
 import { baseApi } from "../baseApi";
 
 export interface Question {
-  "_id": string,
-  "provider": {
-    "_id": string,
-    "name": string,
-    "profile_image": string
-  },
-  "task": string,
-  "details": string,
-  "question_image": string,
-  "createdAt": string,
-  "updatedAt": string,
+  _id: string;
+  provider: {
+    _id: string;
+    name: string;
+    profile_image: string;
+  };
+  task: string;
+  details: string;
+  question_image: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateQuestionRequest {
   data: {
-    "task": string,
-    "details": string
+    task: string;
+    details: string;
   };
   question_image?: any;
 }
@@ -45,7 +45,10 @@ interface DeleteQuestionResponse {
 
 export const questionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    createQuestion: builder.mutation<CreateQuestionResponse, CreateQuestionRequest>({
+    createQuestion: builder.mutation<
+      CreateQuestionResponse,
+      CreateQuestionRequest
+    >({
       query: (data) => {
         return {
           url: "/question/create",
@@ -85,4 +88,3 @@ export const {
   useGetQuestionsByTaskIdQuery,
   useDeleteQuestionMutation,
 } = questionApi;
-

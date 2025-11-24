@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {
   FlatList,
@@ -7,16 +7,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import ProfileOptions from "../../components/profile/ProfileOptions";
 import ProfilePictureName from "../../components/profile/ProfilePictureName";
 import FlexText from "../../components/shered/FlexText";
 import TextSecondary from "../../components/shered/TextSecondary";
 import { profileIcons } from "../../constant/images";
-import { useGlobalContext } from '../../providers/GlobalContextProvider';
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
-import { clearToken } from '../../redux/slices/authSlice';
-import { AppDispatch } from '../../redux/store';
+import { clearToken } from "../../redux/slices/authSlice";
+import { AppDispatch } from "../../redux/store";
 import { Navigation } from "../../utils/Navigate";
 const Profile = () => {
   const navigate = Navigation();

@@ -49,7 +49,9 @@ const TimePicker = ({
     return d;
   };
 
-  const [date, setDate] = useState<Date>(() => parseTimeString(value) || new Date());
+  const [date, setDate] = useState<Date>(
+    () => parseTimeString(value) || new Date()
+  );
   const [show, setShow] = useState(false);
   const [picked, setPicked] = useState(false);
 

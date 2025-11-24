@@ -32,18 +32,18 @@ interface VerifyCodeResponse {
 }
 
 interface UserProfile {
-  "_id": string,
-  "user": string,
-  "name": string,
-  "email": string,
-  "phone": string,
-  "address_document": string,
-  "isAddressProvided": true,
-  "createdAt": string,
-  "updatedAt": string,
-  "city": string,
-  "street": string,
-  "profile_image": string
+  _id: string;
+  user: string;
+  name: string;
+  email: string;
+  phone: string;
+  address_document: string;
+  isAddressProvided: true;
+  createdAt: string;
+  updatedAt: string;
+  city: string;
+  street: string;
+  profile_image: string;
 }
 
 interface UpdateProfileRequest {

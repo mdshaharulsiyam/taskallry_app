@@ -41,10 +41,10 @@ const ImageUploader = ({
       const asset = res?.assets?.[0];
       const file = asset
         ? {
-          uri: asset.uri,
-          name: asset.fileName,
-          type: asset.type,
-        }
+            uri: asset.uri,
+            name: asset.fileName,
+            type: asset.type,
+          }
         : null;
       if (file?.uri && setFiels) {
         setFiels((prev: any) => [file, ...prev]);
@@ -66,10 +66,10 @@ const ImageUploader = ({
       const first = res?.[0];
       const file = first
         ? {
-          uri: first.uri,
-          name: first.name,
-          type: first.type,
-        }
+            uri: first.uri,
+            name: first.name,
+            type: first.type,
+          }
         : null;
       if (file?.uri && setFiels) {
         setFiels((prev: any) => [file, ...prev]);
@@ -94,10 +94,10 @@ const ImageUploader = ({
       const asset = res?.assets?.[0];
       const file = asset
         ? {
-          uri: asset.uri,
-          name: asset.fileName,
-          type: asset.type,
-        }
+            uri: asset.uri,
+            name: asset.fileName,
+            type: asset.type,
+          }
         : null;
       if (file?.uri && setFiels) {
         setFiels((prev: any) => [file, ...prev]);

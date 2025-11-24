@@ -3,7 +3,7 @@ import { FlatList, StyleSheet } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import SectionHeading from "../../components/shered/SectionHeading";
 import TaskCard from "../../components/shered/TaskCard";
-import Loader from '../../components/ui/loader/Loader';
+import Loader from "../../components/ui/loader/Loader";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useGetMyTaskQuery } from "../../redux/apis/taskApi";
 
@@ -35,7 +35,6 @@ const Tasks = () => {
 
   const tasks = data?.data?.result || [];
 
-
   const elements = [
     <SectionHeading
       style={{
@@ -47,15 +46,23 @@ const Tasks = () => {
     />,
 
     <TabButton handler={(tab) => setTab(tab)} key={2} />,
-    (isLoading || isFetching) ? <Loader /> :
+    isLoading || isFetching ? (
+      <Loader />
+    ) : (
       <FlatList
         key={3}
         data={tasks}
         keyExtractor={(_item, index) => index.toString()}
         renderItem={({ item }) => (
-          <TaskCard from="user" tab={tab} showDetailsButton={true} task={item} />
+          <TaskCard
+            from="user"
+            tab={tab}
+            showDetailsButton={true}
+            task={item}
+          />
         )}
-      />,
+      />
+    ),
   ];
   return (
     <SafeAreaProviderNoScroll>

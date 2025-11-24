@@ -5,7 +5,7 @@ import FilteredProvider from "../../components/search/FilteredProvider";
 import FIlteredTask from "../../components/search/FIlteredTask";
 import FilterOptions from "../../components/search/FilterOptions";
 import ProvidersMap from "../../components/search/ProvidersMap";
-import { useGlobalContext } from '../../providers/GlobalContextProvider';
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useAppSelector } from "../../redux/hooks";
 import { selectFilters } from "../../redux/slices/filterSlice";
@@ -14,7 +14,7 @@ const Search = () => {
   const {
     params: { category_id, search, type },
   } = useRoute() as {
-    params: { category_id: string; search: string, type?: "Task" | "Provider" };
+    params: { category_id: string; search: string; type?: "Task" | "Provider" };
   };
   const { role } = useGlobalContext();
   const combinedType = type ? type : role === "user" ? "Provider" : "Task";
@@ -28,11 +28,13 @@ const Search = () => {
       key={1}
       type={combinedType}
     />,
-    filterState?.viewMode === "map" ?
-      <ProvidersMap key={3} /> :
-      combinedType == "Provider" ?
-        <FilteredProvider key={3} /> :
-        <FIlteredTask key={2} search={searchText} />
+    filterState?.viewMode === "map" ? (
+      <ProvidersMap key={3} />
+    ) : combinedType == "Provider" ? (
+      <FilteredProvider key={3} />
+    ) : (
+      <FIlteredTask key={2} search={searchText} />
+    ),
   ];
   return (
     <SafeAreaProviderNoScroll>

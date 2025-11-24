@@ -1,18 +1,18 @@
 import { baseApi } from "../baseApi";
 
 interface ManageContent {
-  description: string,
-  _id: string,
+  description: string;
+  _id: string;
 }
 interface ManageRequest {
   data: {
-    question: string,
-    answer: string,
-    createdAt: string,
-    updatedAt: string,
-    __v: number,
-    id: string
-  }[]
+    question: string;
+    answer: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    id: string;
+  }[];
 }
 interface ManageResponse {
   success: boolean;
@@ -55,4 +55,3 @@ export const {
   useGetTermsConditionsQuery,
   useGetPrivacyPolicyQuery,
 } = manageApi;
-

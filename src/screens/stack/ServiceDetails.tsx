@@ -13,7 +13,6 @@ import SafeAreaProvider from "../../providers/SafeAreaProvider";
 import { useGetMyServicesQuery } from "../../redux/apis";
 
 const ServiceDetails = () => {
-
   const [tab, setTab] = useState("Description");
   const { data, isLoading, isError } = useGetMyServicesQuery();
   const service = data?.data || null;
@@ -88,10 +87,13 @@ const ServiceDetails = () => {
         handler={(tab) => setTab(tab)}
         tab={["Description", "Reviews"]}
       />
-      {tab == "Description" ? <Description service={service} /> : <Review service={service} />}
+      {tab == "Description" ? (
+        <Description service={service} />
+      ) : (
+        <Review service={service} />
+      )}
     </SafeAreaProvider>
   );
 };
 
 export default ServiceDetails;
-

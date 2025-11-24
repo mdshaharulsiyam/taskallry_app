@@ -7,8 +7,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import Toast from 'react-native-toast-message';
-import { useCreateBidMutation } from '../../redux/apis';
+import Toast from "react-native-toast-message";
+import { useCreateBidMutation } from "../../redux/apis";
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
@@ -16,26 +16,26 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 import Input from "../ui/inputs/Input";
 import TextArea from "../ui/inputs/TextArea";
 
-
 const SubmitBitButt = ({ id }: { id: string }) => {
   const { height, width } = ScreenSize();
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState("");
   const [message, setMessage] = useState("");
-  const [createBid, { isLoading, }] = useCreateBidMutation()
+  const [createBid, { isLoading }] = useCreateBidMutation();
   const handleSubmit = () => {
     const body = {
       task: id,
       price: Number(price),
       details: message,
     };
-    console.log(body)
-    createBid(body).unwrap()
+    console.log(body);
+    createBid(body)
+      .unwrap()
       .then((res) => {
         Toast.show({
           type: "success",
           text1: "Bid created successfully",
-        })
+        });
         setMessage("");
         setPrice("");
         setOpen(false);
@@ -44,8 +44,8 @@ const SubmitBitButt = ({ id }: { id: string }) => {
         Toast.show({
           type: "error",
           text1: error?.data?.message,
-        })
-      })
+        });
+      });
   };
 
   return (
@@ -80,7 +80,7 @@ const SubmitBitButt = ({ id }: { id: string }) => {
                   handler={(_, text) => setPrice(text)}
                   placeHolder="Enter your offer price"
                   value={price}
-                  name='price'
+                  name="price"
                   label="Bid Amount"
                   keyboard="numeric"
                 />
@@ -89,7 +89,7 @@ const SubmitBitButt = ({ id }: { id: string }) => {
                   handler={(_, text) => setMessage(text)}
                   placeHolder="Message"
                   value={message}
-                  name='message'
+                  name="message"
                   label="Message (optional)"
                   keyboard="default"
                 />

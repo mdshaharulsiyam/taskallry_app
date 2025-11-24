@@ -25,8 +25,8 @@ const QuestionForm = ({ taskId }: { taskId: string }) => {
     const data = {
       task: taskId,
       details: trimmed,
-    }
-    console.log(data)
+    };
+    console.log(data);
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
     formData.append("question_image", files[files.length - 1]);
@@ -42,7 +42,7 @@ const QuestionForm = ({ taskId }: { taskId: string }) => {
         setFiles([]);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         Toast.show({
           type: "error",
           text1: error?.data?.message || "Failed to send question",
@@ -72,7 +72,21 @@ const QuestionForm = ({ taskId }: { taskId: string }) => {
         }}
       >
         <ImageUploader
-          component={files.length > 0 ? <Image source={{ uri: files[files.length - 1]?.uri }} style={{ width: 40, height: 40, borderRadius: 4, marginBottom: 4 }} /> : <Image source={otherIcons.Image as ImageSourcePropType} />}
+          component={
+            files.length > 0 ? (
+              <Image
+                source={{ uri: files[files.length - 1]?.uri }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 4,
+                  marginBottom: 4,
+                }}
+              />
+            ) : (
+              <Image source={otherIcons.Image as ImageSourcePropType} />
+            )
+          }
           setFiels={setFiles}
         />
         <ButtonBG

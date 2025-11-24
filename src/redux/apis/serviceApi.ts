@@ -33,7 +33,6 @@ export interface Service {
   totalRating: number;
 }
 
-
 interface CreateServiceRequest {
   name: string;
   description?: string;

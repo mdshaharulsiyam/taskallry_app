@@ -25,77 +25,81 @@ const ProviderDetails = () => {
 
   const elements = service
     ? [
-      <ButtonGreenOpacity30
-        key={1}
-        activeOpacity={1}
-        text={service.category?.name || "Category"}
-        style={{
-          width: 200,
-          borderRadius: 8,
-          marginVertical: 10,
-        }}
-        textStyle={{
-          color: "#115E59",
-          fontWeight: 700,
-        }}
-      />,
-      <HeaderDesign key={2} text={service.title || "Service"} />,
-      <FlexImages key={3} images={service.images || []} />,
+        <ButtonGreenOpacity30
+          key={1}
+          activeOpacity={1}
+          text={service.category?.name || "Category"}
+          style={{
+            width: 200,
+            borderRadius: 8,
+            marginVertical: 10,
+          }}
+          textStyle={{
+            color: "#115E59",
+            fontWeight: 700,
+          }}
+        />,
+        <HeaderDesign key={2} text={service.title || "Service"} />,
+        <FlexImages key={3} images={service.images || []} />,
 
-      <FlexText
-        key={4}
-        style={{
-          justifyContent: "space-between",
-          backgroundColor: "#E6F4F1",
-          padding: 10,
-          borderRadius: 5,
-          marginTop: 10,
-          paddingVertical: 20,
-        }}
-      >
-        <View>
-          <TextSecondary text="Starting Price" />
-          <HeaderDesign
+        <FlexText
+          key={4}
+          style={{
+            justifyContent: "space-between",
+            backgroundColor: "#E6F4F1",
+            padding: 10,
+            borderRadius: 5,
+            marginTop: 10,
+            paddingVertical: 20,
+          }}
+        >
+          <View>
+            <TextSecondary text="Starting Price" />
+            <HeaderDesign
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+              }}
+              text={`₦${service.price ?? 0}`}
+            />
+          </View>
+          <ButtonBG
+            text="Submit an Offer"
             style={{
-              fontSize: 18,
-              fontWeight: 700,
+              width: "auto",
             }}
-            text={`₦${service.price ?? 0}`}
+            handler={() => {}}
           />
-        </View>
-        <ButtonBG
-          text="Submit an Offer"
-          style={{
-            width: "auto",
-          }}
-          handler={() => { }}
-        />
-      </FlexText>,
+        </FlexText>,
 
-      <FlexText
-        style={{
-          justifyContent: "space-between",
-          marginVertical: 10,
-        }}
-        key={5}
-      >
-        <ImageFlex
-          image={ImgUrl(service.images?.[0] || "https://placehold.co/400x400.png")}
-          text={service.provider || "Provider"}
-          text1={`⭐ ${service.averageRating ?? 0} (${service.totalRating ?? 0} Reviews)`}
-        />
-        <ButtonTransparentBG
-          text="Chat Now"
+        <FlexText
           style={{
-            width: "auto",
-            borderWidth: 1,
-            borderColor: "#115E59",
+            justifyContent: "space-between",
+            marginVertical: 10,
           }}
-          handler={() => { }}
-        />
-      </FlexText>,
-      <Details_Review key={6} />,
-    ]
+          key={5}
+        >
+          <ImageFlex
+            image={ImgUrl(
+              service.images?.[0] || "https://placehold.co/400x400.png"
+            )}
+            text={service.provider || "Provider"}
+            text1={`⭐ ${service.averageRating ?? 0} (${
+              service.totalRating ?? 0
+            } Reviews)`}
+          />
+          <ButtonTransparentBG
+            text="Chat Now"
+            style={{
+              width: "auto",
+              borderWidth: 1,
+              borderColor: "#115E59",
+            }}
+            handler={() => {}}
+          />
+        </FlexText>,
+        <Details_Review key={6} />,
+      ]
     : [];
 
   return (

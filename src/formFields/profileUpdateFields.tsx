@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useGetMyProfileQuery } from '../redux/apis';
+import { useGetMyProfileQuery } from "../redux/apis";
 import { FieldsType, FieldType, KeyboardType } from "../types/Types";
 
 const profileUpdateFields = () => {
-  const { data } = useGetMyProfileQuery()
+  const { data } = useGetMyProfileQuery();
   const [fields, setFields] = useState<FieldsType[]>([
     {
       name: "name",

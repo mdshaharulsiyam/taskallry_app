@@ -41,12 +41,12 @@ const TaskCard = ({
         showDetailsButton
           ? null
           : navigate("TaskDetails", {
-            params: {
-              id: task?._id,
-              from,
-              heading: from == "user" ? "My Tasks Details" : "Tasks Details",
-            },
-          })
+              params: {
+                id: task?._id,
+                from,
+                heading: from == "user" ? "My Tasks Details" : "Tasks Details",
+              },
+            })
       }
       style={{
         backgroundColor: "#FFFFFF",
@@ -138,7 +138,8 @@ const TaskCard = ({
                 params: {
                   id: task?._id,
                   from,
-                  heading: from == "user" ? "My Tasks Details" : "Tasks Details",
+                  heading:
+                    from == "user" ? "My Tasks Details" : "Tasks Details",
                 },
               })
             }

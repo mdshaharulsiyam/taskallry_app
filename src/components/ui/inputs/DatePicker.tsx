@@ -80,9 +80,9 @@ const DatePicker = ({
             borderRadius: 8,
             ...(error
               ? {
-                borderColor: "red",
-                borderWidth: 1,
-              }
+                  borderColor: "red",
+                  borderWidth: 1,
+                }
               : {}),
             ...inputStyle,
           }}

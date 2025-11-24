@@ -1,6 +1,6 @@
-import moment from 'moment';
+import moment from "moment";
 import React from "react";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 import { FieldsType, KeyboardType } from "../types/Types";
 import { validateFields } from "../utils/formValidate";
 
@@ -11,14 +11,17 @@ export const handlePostTask = (
   allFields: FieldsType[],
   create: any,
   files: any,
-  successFn: () => void,
+  successFn: () => void
 ) => {
   const isValid = validateFields(fields, setFields);
   if (!isValid || currentSlide != 3) {
     return isValid;
   }
   const values = allFields.reduce((acc, field) => {
-    acc[field.name] = field?.keyboard == KeyboardType.NUMERIC ? Number(field.value) : field.value;
+    acc[field.name] =
+      field?.keyboard == KeyboardType.NUMERIC
+        ? Number(field.value)
+        : field.value;
     return acc;
   }, {} as any);
 
@@ -26,26 +29,27 @@ export const handlePostTask = (
     ? JSON.parse(values?.place?.split("|")?.[1])
     : { lat: 0, lng: 0 };
   const data = {
-    "title": values?.title,
-    "category": values?.task_category,
-    "budget": values?.offer,
-    "payOn": "completion",
-    "location": {
-      "type": "Point",
-      "coordinates": [latino?.lng, latino?.lat]
+    title: values?.title,
+    category: values?.task_category,
+    budget: values?.offer,
+    payOn: "completion",
+    location: {
+      type: "Point",
+      coordinates: [latino?.lng, latino?.lat],
     },
-    "doneBy": "ONLINE",
-    "address": values?.place?.split("|")?.[0],
-    "scheduleType": values?.flexible,
-    "preferredDate": values?.date,
-    "preferredTime": values?.time,
-    "description": values?.desc,
-    "preferredDeliveryDateTime": moment(
+    doneBy: "ONLINE",
+    address: values?.place?.split("|")?.[0],
+    scheduleType: values?.flexible,
+    preferredDate: values?.date,
+    preferredTime: values?.time,
+    description: values?.desc,
+    preferredDeliveryDateTime: moment(
       `${values?.date} ${values?.time}`,
       "YYYY-MM-DD HH:mm"
-    ).utc()
-      .toISOString()
-  }
+    )
+      .utc()
+      .toISOString(),
+  };
   const formData = new FormData();
   formData.append("data", JSON.stringify(data));
   formData.append("task_attachments", files[files.length - 1]);

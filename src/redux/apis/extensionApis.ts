@@ -43,7 +43,10 @@ interface DeleteExtensionResponse {
 export const extensionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // POST extension-request/create
-    createExtensionRequest: builder.mutation<CreateExtensionResponse, CreateExtensionRequest>({
+    createExtensionRequest: builder.mutation<
+      CreateExtensionResponse,
+      CreateExtensionRequest
+    >({
       query: (body) => ({
         url: "/extension-request/create",
         method: "POST",
@@ -97,4 +100,3 @@ export const {
   useAcceptExtensionRequestMutation,
   useRejectExtensionRequestMutation,
 } = extensionApi;
-

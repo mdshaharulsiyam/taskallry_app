@@ -16,14 +16,12 @@ import TextArea from "../ui/inputs/TextArea";
 
 const Bids_QuestionCard = ({
   type,
-  from = "service",
   status,
   item,
   question,
   customer,
 }: {
   type: "bids" | "question";
-  from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
   item?: Bid;
   question?: Question;
@@ -137,7 +135,7 @@ const Bids_QuestionCard = ({
         </FlexText>
       )}
       <TextSecondary text={item?.details || question?.details} />
-      {from == "user" && type == "question" && (
+      {role == "user" && type == "question" && (
         <IconButtonTransparent
           style={{
             marginTop: 10,

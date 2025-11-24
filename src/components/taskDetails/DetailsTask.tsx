@@ -256,7 +256,13 @@ const DetailsTask = ({
       <></>
     ),
     data?.data?.status == "OPEN_FOR_BID" ? (
-      <Bids_Question customer={data?.data?.customer?._id} from={role as "user" | "service"} status={data?.data?.status} key={10} id={id} role={role as "user" | "service"} />
+      <Bids_Question
+        customer={data?.data?.customer?._id}
+        status={data?.data?.status}
+        key={10}
+        id={id}
+        role={role as "user" | "service"}
+      />
     ) : (
       <></>
     ),

@@ -4,13 +4,11 @@ import { useGetBidsByTaskIdQuery } from '../../redux/apis';
 import Bids_QuestionCard from "./Bids_QuestionCard";
 
 const Bids = ({
-  from = "service",
   status,
   id,
   role,
   customer,
 }: {
-  from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
   id: string;
   role?: "user" | "service";
@@ -25,7 +23,7 @@ const Bids = ({
       }}
     >
       {data?.data?.result?.map((item) => (
-        <Bids_QuestionCard type="bids" from={from} status={status} item={item} customer={customer} />
+        <Bids_QuestionCard type="bids" status={status} item={item} customer={customer} />
       ))}
     </View>
   );

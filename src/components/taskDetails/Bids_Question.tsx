@@ -7,13 +7,11 @@ import Questions from "./Questions";
 const tab = ["Bids", "Questions"];
 
 const Bids_Question = ({
-  from = "service",
   status,
   id,
   role,
   customer,
 }: {
-  from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
   id: string;
   role?: "user" | "service";
@@ -21,8 +19,8 @@ const Bids_Question = ({
 }) => {
   const [active, setActive] = useState(tab[0]);
   const component = {
-    Bids: <Bids role={role} from={from} status={status} id={id} customer={customer} />,
-    Questions: <Questions role={role} from={from} status={status} id={id} customer={customer} />,
+    Bids: <Bids role={role} status={status} id={id} customer={customer} />,
+    Questions: <Questions role={role} status={status} id={id} customer={customer} />,
   };
   return (
     <View

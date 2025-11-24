@@ -7,8 +7,8 @@ import FilterOptions from "../../components/search/FilterOptions";
 import ProvidersMap from "../../components/search/ProvidersMap";
 import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
-import { useAppSelector } from "../../redux/hooks";
-import { selectFilters } from "../../redux/slices/filterSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { selectFilters, setSearchType } from "../../redux/slices/filterSlice";
 
 const Search = () => {
   const {
@@ -17,9 +17,14 @@ const Search = () => {
     params: { category_id: string; search: string; type?: "Task" | "Provider" };
   };
   const { role } = useGlobalContext();
+  const dispatch = useAppDispatch();
   const combinedType = type ? type : role === "user" ? "Provider" : "Task";
   const [searchText, setSearchText] = React.useState(search);
   const filterState = useAppSelector(selectFilters);
+
+  React.useEffect(() => {
+    dispatch(setSearchType(combinedType));
+  }, [combinedType, dispatch]);
 
   const elements = [
     <FilterOptions
@@ -28,13 +33,20 @@ const Search = () => {
       key={1}
       type={combinedType}
     />,
-    filterState?.viewMode === "map" ? (
-      <ProvidersMap key={3} />
-    ) : combinedType == "Provider" ? (
-      <FilteredProvider key={3} />
-    ) : (
-      <FIlteredTask key={2} search={searchText} />
-    ),
+    combinedType === "Provider"
+      ? (
+        // Provider search: always list view
+        <FilteredProvider key={3} />
+      )
+      : filterState?.viewMode === "map"
+        ? (
+          // Task search + map view
+          <ProvidersMap key={3} />
+        )
+        : (
+          // Task search + list view
+          <FIlteredTask key={2} search={searchText} />
+        ),
   ];
   return (
     <SafeAreaProviderNoScroll>

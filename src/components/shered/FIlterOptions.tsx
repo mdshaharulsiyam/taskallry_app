@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   resetFilters,
   selectFilters,
+  selectSearchType,
   setFilterCategory,
   setFilterDistanceRange,
   setFilterPriceRange,
@@ -29,6 +30,7 @@ const FIlterOptions = (props: any) => {
   const navigate = Navigate();
   const dispatch = useAppDispatch();
   const filterState = useAppSelector(selectFilters);
+  const searchType = useAppSelector(selectSearchType);
 
   const handleApply = () => {
     // Sync field values to Redux when Apply is clicked
@@ -87,42 +89,39 @@ const FIlterOptions = (props: any) => {
       }}
     >
       {fields?.map((field: FieldsType) => RenderField(field, setFields))}
-      <FlexText
-        style={{
-          justifyContent: "space-between",
-          marginTop: 20,
-        }}
-      >
-        <IconButtonBG
+      {searchType === "Task" && (
+        <FlexText
           style={{
-            width: "auto",
-            backgroundColor:
-              filterState.viewMode === "map" ? "#115E59" : "#38a19cff",
+            justifyContent: "space-between",
+            marginTop: 20,
           }}
-          // textStyle={{
-          //   color: filterState.viewMode === "map" ? "white" : "black",
-          // }}
-          text="Map View"
-          handler={() => dispatch(setViewMode("map"))}
-        />
-        <IconButtonBG
-          icon={otherIcons.List as ImageSourcePropType}
-          style={{
-            width: "auto",
-            backgroundColor:
-              filterState.viewMode === "list" ? "#115E59" : "#38a19cff",
-          }}
-          // textStyle={{
-          //   color: filterState.viewMode === "list" ? "white" : "black",
-          // }}
-          text="List View"
-          handler={() => dispatch(setViewMode("list"))}
-        />
-      </FlexText>
+        >
+          <IconButtonBG
+            style={{
+              width: "auto",
+              backgroundColor:
+                filterState.viewMode === "map" ? "#115E59" : "#38a19cff",
+            }}
+            text="Map View"
+            handler={() => dispatch(setViewMode("map"))}
+          />
+          <IconButtonBG
+            icon={otherIcons.List as ImageSourcePropType}
+            style={{
+              width: "auto",
+              backgroundColor:
+                filterState.viewMode === "list" ? "#115E59" : "#38a19cff",
+            }}
+            text="List View"
+            handler={() => dispatch(setViewMode("list"))}
+          />
+        </FlexText>
+      )}
       <ButtonBG text="Apply" handler={handleApply} />
       <ButtonGreenOpacity30 text="Reset Filters" handler={handleReset} />
     </View>
   );
-};
+}
+  ;
 
 export default FIlterOptions;

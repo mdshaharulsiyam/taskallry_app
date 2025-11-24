@@ -11,6 +11,7 @@ export interface FilterState {
   sortBy: string;
   sortOrder: string;
   viewMode: "list" | "map";
+  searchType: "Task" | "Provider";
 }
 
 const initialState: FilterState = {
@@ -23,6 +24,7 @@ const initialState: FilterState = {
   sortBy: "createdAt",
   sortOrder: "desc",
   viewMode: "list",
+  searchType: "Task",
 };
 
 export const filterSlice = createSlice({
@@ -72,6 +74,9 @@ export const filterSlice = createSlice({
     setViewMode: (state, action: PayloadAction<"list" | "map">) => {
       state.viewMode = action.payload;
     },
+    setSearchType: (state, action: PayloadAction<"Task" | "Provider">) => {
+      state.searchType = action.payload;
+    },
     setSortByAndOrder: (
       state,
       action: PayloadAction<{ sortBy: string; sortOrder: string }>
@@ -99,6 +104,7 @@ export const {
   resetFilters,
   setAllFilters,
   setViewMode,
+  setSearchType,
 } = filterSlice.actions;
 
 // Selectors
@@ -114,5 +120,6 @@ export const selectSort = (state: RootState) => state.filter.sort;
 export const selectSortBy = (state: RootState) => state.filter.sortBy;
 export const selectSortOrder = (state: RootState) => state.filter.sortOrder;
 export const selectViewMode = (state: RootState) => state.filter.viewMode;
+export const selectSearchType = (state: RootState) => state.filter.searchType;
 
 export default filterSlice.reducer;

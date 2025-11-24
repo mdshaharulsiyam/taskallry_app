@@ -123,7 +123,7 @@ const Bids_QuestionCard = ({
             <HeaderDesign text={`₦${item?.price}`} />
           </View>
           {
-            (data?.data?._id == item?.provider?._id || customer == data?.data?._id) && (
+            (data?.data?._id == item?.provider?._id || customer == data?.data?._id) && status == "OPEN_FOR_BID" && (
               <ButtonBG
                 style={{
                   width: "auto",

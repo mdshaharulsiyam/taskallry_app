@@ -238,7 +238,7 @@ const DetailsTask = ({
       ) : (
         <></>
       )
-    ) : role != "user" ? (
+    ) : (role != "user") && data?.data?.status == "OPEN_FOR_BID" ? (
       <FlexText
         key={9}
         style={{
@@ -256,7 +256,7 @@ const DetailsTask = ({
       <></>
     ),
     data?.data?.status == "OPEN_FOR_BID" ? (
-      <Bids_Question customer={data?.data?.customer?._id} from={from} status={data?.data?.status} key={10} id={id} role={role as "user" | "service"} />
+      <Bids_Question customer={data?.data?.customer?._id} from={role as "user" | "service"} status={data?.data?.status} key={10} id={id} role={role as "user" | "service"} />
     ) : (
       <></>
     ),

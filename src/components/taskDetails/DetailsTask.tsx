@@ -58,7 +58,6 @@ const DetailsTask = ({
   const { data, isLoading, isFetching } = useGetSingleTaskQuery(id)
   const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
   const navigate = Navigate();
-
   const handleRemoveTask = () => {
     Alert.alert(
       "Remove Task",
@@ -257,7 +256,7 @@ const DetailsTask = ({
       <></>
     ),
     data?.data?.status == "OPEN_FOR_BID" ? (
-      <Bids_Question from={from} status={data?.data?.status} key={10} id={id} role={role as "user" | "service"} />
+      <Bids_Question customer={data?.data?.customer?._id} from={from} status={data?.data?.status} key={10} id={id} role={role as "user" | "service"} />
     ) : (
       <></>
     ),

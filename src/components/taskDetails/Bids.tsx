@@ -8,11 +8,13 @@ const Bids = ({
   status,
   id,
   role,
+  customer,
 }: {
   from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
   id: string;
   role?: "user" | "service";
+  customer?: string;
 }) => {
   const { data } = useGetBidsByTaskIdQuery(id)
   console.log(data)
@@ -23,7 +25,7 @@ const Bids = ({
       }}
     >
       {data?.data?.result?.map((item) => (
-        <Bids_QuestionCard type="bids" from={from} status={status} item={item} role={role} />
+        <Bids_QuestionCard type="bids" from={from} status={status} item={item} customer={customer} />
       ))}
     </View>
   );

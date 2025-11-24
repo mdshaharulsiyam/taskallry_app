@@ -9,11 +9,13 @@ const Questions = ({
   status,
   id,
   role,
+  customer,
 }: {
   from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE",
   id: string;
   role?: "user" | "service";
+  customer?: string;
 }) => {
   const { data } = useGetQuestionsByTaskIdQuery(id)
   return (
@@ -24,7 +26,7 @@ const Questions = ({
     >
       {from == "service" && role != "user" && <QuestionForm taskId={id} />}
       {data?.data?.map((item) => (
-        <Bids_QuestionCard type="question" status={status} from={from} question={item} role={role} />
+        <Bids_QuestionCard type="question" status={status} from={from} question={item} customer={customer} />
       ))}
     </View>
   );

@@ -46,17 +46,11 @@ interface DeleteQuestionResponse {
 export const questionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createQuestion: builder.mutation<CreateQuestionResponse, CreateQuestionRequest>({
-      query: ({ data, question_image }) => {
-        const formData = new FormData();
-        formData.append("data", JSON.stringify(data));
-        if (question_image) {
-          formData.append("question_image", question_image as any);
-        }
-
+      query: (data) => {
         return {
           url: "/question/create",
           method: "POST",
-          body: formData,
+          body: data,
         };
       },
       invalidatesTags: ["Question", "Task"],

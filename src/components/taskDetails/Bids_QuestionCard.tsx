@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { ImageSourcePropType, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { TabIcons } from "../../constant/images";
-import { Bid, Question, useUpdateBidMutation } from '../../redux/apis';
+import { useGlobalContext } from '../../providers/GlobalContextProvider';
+import { Bid, Question, useGetMyProfileQuery, useUpdateBidMutation } from '../../redux/apis';
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
@@ -19,21 +20,23 @@ const Bids_QuestionCard = ({
   status,
   item,
   question,
-  role,
+  customer,
 }: {
   type: "bids" | "question";
   from?: "user" | "service";
   status: "OPEN_FOR_BID" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
   item?: Bid;
   question?: Question;
-  role?: "user" | "service";
+  customer?: string;
 }) => {
   const { height, width } = ScreenSize();
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState(item?.price ? String(item.price) : "");
   const [message, setMessage] = useState(item?.details || "");
   const [updateBid, { isLoading }] = useUpdateBidMutation();
-
+  const { data } = useGetMyProfileQuery()
+  const { role } = useGlobalContext()
+  console.log(data)
   const handleOpenUpdate = () => {
     if (item) {
       setPrice(String(item.price));
@@ -79,6 +82,7 @@ const Bids_QuestionCard = ({
         showText1={type == "bids"}
         text={item?.provider?.name || question?.provider?.name}
         text1={`⭐ ${item?.provider?.avgRating} (${item?.provider?.totalRatingCount} Reviews)`}
+        image={item?.provider?.profile_image || question?.provider?.profile_image}
       />
       {type == "bids" && (
         <FlexText
@@ -95,13 +99,16 @@ const Bids_QuestionCard = ({
             <TextSecondary text="Offered Price " />
             <HeaderDesign text={`₦${item?.price}`} />
           </View>
-          <ButtonBG
-            style={{
-              width: "auto",
-            }}
-            text={from == "user" ? "Accept" : "Update Offer"}
-            handler={from == "user" ? () => { } : handleOpenUpdate}
-          />
+          {
+            (data?.data?._id == item?.provider?._id || customer == data?.data?._id) && <ButtonBG
+              style={{
+                width: "auto",
+              }}
+              text={role == "user" ? "Accept" : "Update Offer"}
+              handler={role == "user" ? () => { } : handleOpenUpdate}
+            />
+          }
+
         </FlexText>
       )}
       <TextSecondary text={item?.details || question?.details} />

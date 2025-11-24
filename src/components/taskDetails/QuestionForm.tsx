@@ -26,6 +26,7 @@ const QuestionForm = ({ taskId }: { taskId: string }) => {
       task: taskId,
       details: trimmed,
     }
+    console.log(data)
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
     formData.append("question_image", files[files.length - 1]);
@@ -41,6 +42,7 @@ const QuestionForm = ({ taskId }: { taskId: string }) => {
         setFiles([]);
       })
       .catch((error) => {
+        console.log(error)
         Toast.show({
           type: "error",
           text1: error?.data?.message || "Failed to send question",

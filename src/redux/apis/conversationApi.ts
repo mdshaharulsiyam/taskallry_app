@@ -22,6 +22,7 @@ export interface Conversation {
     _id: string;
     name: string;
     profile_image: string;
+    email: string;
   };
   unseenMsg: number;
 }

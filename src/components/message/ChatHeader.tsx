@@ -6,6 +6,7 @@ import {
 import React from "react";
 import { Image, ImageSourcePropType, Text, View } from "react-native";
 import { otherIcons } from "../../constant/images";
+import { ImgUrl } from "../../redux/baseApi";
 import FlexText from "../shered/FlexText";
 import CircleButton from "../ui/buttons/CircleButton";
 
@@ -14,8 +15,19 @@ interface propType {
   show?: boolean;
   imageSource?: ImageSourcePropType;
   handler?: () => void;
+  name?: string;
+  email?: string;
+  avatar?: string;
 }
-const ChatHeader = ({ text, show = false, imageSource, handler }: propType) => {
+const ChatHeader = ({
+  text,
+  show = false,
+  imageSource,
+  handler,
+  name,
+  email,
+  avatar,
+}: propType) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   return (
     <View
@@ -53,7 +65,7 @@ const ChatHeader = ({ text, show = false, imageSource, handler }: propType) => {
           }}
         >
           <Image
-            src="https://placehold.co/400x400.png"
+            src={ImgUrl(avatar || "https://placehold.co/400x400.png")}
             style={{
               height: 40,
               width: 40,
@@ -66,14 +78,14 @@ const ChatHeader = ({ text, show = false, imageSource, handler }: propType) => {
                 fontWeight: 600,
               }}
             >
-              Jane Cooper
+              {name || text || ""}
             </Text>
             <Text
               style={{
                 fontSize: 12,
               }}
             >
-              Jane@gmail.com
+              {email || ""}
             </Text>
           </View>
         </FlexText>

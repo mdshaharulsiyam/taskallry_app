@@ -38,6 +38,9 @@ const Messages = () => {
         <ChatHeader
           show={true}
           imageSource={otherIcons.ChatBlock as ImageSourcePropType}
+          name={name}
+          email={email}
+          avatar={image}
         />
         {isLoading ? (
           <ActivityIndicator style={{ marginTop: 20 }} />

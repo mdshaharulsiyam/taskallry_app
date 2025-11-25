@@ -8,7 +8,6 @@ const Chat = () => {
   const { data, isLoading, isError } = useGetChatListQuery();
 
   const conversations = data?.data?.data || [];
-  console.log(data)
   return (
     <SafeAreaProviderNoScroll>
       {isLoading ? (

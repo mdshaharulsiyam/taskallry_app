@@ -20,7 +20,12 @@ const ChatItems = ({ item }: ChatItemsProps) => {
   );
 
   return (
-    <TouchableOpacity onPress={() => navigate("Messages")}>
+    <TouchableOpacity onPress={() => navigate("Messages", {
+      id: item._id,
+      name: item.userData?.name,
+      image: item.userData?.profile_image,
+      email: item.userData?.email,
+    })}>
       <FlexText
         style={{
           padding: 10,

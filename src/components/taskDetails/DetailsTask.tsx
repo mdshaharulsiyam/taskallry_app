@@ -159,12 +159,10 @@ const DetailsTask = ({
               role === "user" ? data?.data?.provider : data?.data?.customer;
 
             navigate("Messages", {
-              params: {
-                id: target?._id,
-                name: target?.name,
-                image: target?.profile_image,
-                email: target?.email,
-              },
+              id: target?._id,
+              name: target?.name,
+              image: target?.profile_image,
+              email: target?.email,
             });
           }}
           style={{

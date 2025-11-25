@@ -1,15 +1,28 @@
+import { useRoute } from "@react-navigation/native";
 import React from "react";
-import { FlatList, ImageSourcePropType, View } from "react-native";
+import { ActivityIndicator, FlatList, ImageSourcePropType, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ChatHeader from "../../components/message/ChatHeader";
 import Message from "../../components/message/Message";
 import SendMessage from "../../components/message/SendMessage";
 import { otherIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+import { useGetMessagesQuery } from "../../redux/apis/messageApi";
 import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
-const m = [1, 2, 3, 4, 5, 6];
 const Messages = () => {
+  const {
+    params: { id, name, image, email },
+  } = useRoute() as {
+    params: { id: string; name: string; image: string; email: string };
+  };
+
+  const { data, isLoading } = useGetMessagesQuery({
+    conversationId: id,
+  });
+
+  const messages = data?.data?.result || [];
+
   const navigate = Navigate();
   const { height } = ScreenSize();
   const { top, bottom } = useSafeAreaInsets();
@@ -26,17 +39,21 @@ const Messages = () => {
           show={true}
           imageSource={otherIcons.ChatBlock as ImageSourcePropType}
         />
-        <FlatList
-          style={{
-            height: height,
-            maxHeight: height - (top + bottom + 60 + 15 + 60 + 40 + 50),
-          }}
-          keyExtractor={(item, index) => index.toString()}
-          inverted
-          showsVerticalScrollIndicator={false}
-          data={[...m, ...m, ...m, ...m, ...m, ...m]}
-          renderItem={({ item, index }) => <Message i={index} />}
-        />
+        {isLoading ? (
+          <ActivityIndicator style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            style={{
+              height: height,
+              maxHeight: height - (top + bottom + 60 + 15 + 60 + 40 + 50),
+            }}
+            keyExtractor={(item) => item._id}
+            inverted
+            showsVerticalScrollIndicator={false}
+            data={messages}
+            renderItem={({ item }) => <Message item={item} />}
+          />
+        )}
         <SendMessage />
       </View>
     </SafeAreaProviderNoScroll>

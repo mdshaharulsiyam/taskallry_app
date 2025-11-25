@@ -44,6 +44,8 @@ interface UserProfile {
   city: string;
   street: string;
   profile_image: string;
+  bankName?: string;
+  bankAccountNumber?: string;
 }
 
 interface UpdateProfileRequest {

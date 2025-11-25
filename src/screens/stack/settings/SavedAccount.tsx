@@ -2,9 +2,12 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import SafeAreaProviderNoScroll from "../../../providers/SafeAreaProviderNoScroll";
 import Navigate from "../../../utils/Navigate";
+import { useGetBankQuery } from "../../../redux/apis/profileItemApi";
 
 const SavedAccount = () => {
   const navigate = Navigate();
+  const { data, isLoading } = useGetBankQuery();
+
   return (
     <SafeAreaProviderNoScroll backButtonText="Saved Account">
       <View style={styles.card}>
@@ -23,14 +26,14 @@ const SavedAccount = () => {
         <View style={styles.row}>
           <Text style={styles.label}>Bank Name</Text>
           <View style={styles.divider} />
-          <Text style={styles.value}>Alpha Morgan Bank</Text>
+          <Text style={styles.value}>{data?.data?.bankName}</Text>
         </View>
 
         {/* Row 2 */}
         <View style={[styles.row, { borderBottomWidth: 0 }]}>
           <Text style={styles.label}>Account No</Text>
           <View style={styles.divider} />
-          <Text style={styles.value}>0016563228</Text>
+          <Text style={styles.value}>{data?.data?.bankAccountNumber}</Text>
         </View>
       </View>
     </SafeAreaProviderNoScroll>

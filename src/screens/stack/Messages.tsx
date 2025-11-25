@@ -8,7 +8,7 @@ import { otherIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
-const data = [1, 2, 3, 4, 5, 6];
+const m = [1, 2, 3, 4, 5, 6];
 const Messages = () => {
   const navigate = Navigate();
   const { height } = ScreenSize();
@@ -34,7 +34,7 @@ const Messages = () => {
           keyExtractor={(item, index) => index.toString()}
           inverted
           showsVerticalScrollIndicator={false}
-          data={[...data, ...data, ...data, ...data, ...data, ...data]}
+          data={[...m, ...m, ...m, ...m, ...m, ...m]}
           renderItem={({ item, index }) => <Message i={index} />}
         />
         <SendMessage />

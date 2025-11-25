@@ -1,21 +1,34 @@
 import React from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
 import ChatItems from "../../components/chat/ChatItems";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
-const data = [1, 2, 3, 4, 5, 6];
+import { useGetChatListQuery } from "../../redux/apis/conversationApi";
+
 const Chat = () => {
-  //  backButtonText="Messages"
+  const { data, isLoading, isError } = useGetChatListQuery();
+
+  const conversations = data?.data?.data || [];
+  console.log(data)
   return (
     <SafeAreaProviderNoScroll>
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{
-          paddingBottom: 150,
-        }}
-        showsVerticalScrollIndicator={false}
-        data={data}
-        renderItem={({ item }) => <ChatItems />}
-      />
+      {isLoading ? (
+        <ActivityIndicator style={{ marginTop: 20 }} />
+      ) : (
+        <FlatList
+          keyExtractor={(item, index) => item._id ?? index.toString()}
+          contentContainerStyle={{
+            paddingBottom: 150,
+          }}
+          showsVerticalScrollIndicator={false}
+          data={conversations}
+          renderItem={({ item }) => <ChatItems item={item} />}
+          ListEmptyComponent={
+            !isError
+              ? null
+              : undefined
+          }
+        />
+      )}
     </SafeAreaProviderNoScroll>
   );
 };

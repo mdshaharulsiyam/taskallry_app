@@ -154,7 +154,19 @@ const DetailsTask = ({
         <IconButtonTransparent
           text="Chat"
           icon={TabIcons.Chat as ImageSourcePropType}
-          handler={() => console.log("")}
+          handler={() => {
+            const target =
+              role === "user" ? data?.data?.provider : data?.data?.customer;
+
+            navigate("Messages", {
+              params: {
+                id: target?._id,
+                name: target?.name,
+                image: target?.profile_image,
+                email: target?.email,
+              },
+            });
+          }}
           style={{
             width: "auto",
             paddingVertical: 6,

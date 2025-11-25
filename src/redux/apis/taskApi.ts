@@ -15,18 +15,19 @@ export interface Task {
   };
   budget: number;
   status:
-    | "OPEN_FOR_BID"
-    | "IN_PROGRESS"
-    | "COMPLETED"
-    | "CANCELLED"
-    | "DISPUTE"
-    | "LATE";
+  | "OPEN_FOR_BID"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "DISPUTE"
+  | "LATE";
   isDeleted: boolean;
   paymentStatus: string;
   customer: {
     _id: string;
     name: string;
     profile_image: string;
+    email: string;
   };
   payOn: string;
   location: {
@@ -48,6 +49,7 @@ export interface Task {
     _id: string;
     name: string;
     profile_image: string;
+    email: string;
   };
   statusWithDate: statusWithDate[];
   totalOffer: 1;
@@ -186,12 +188,12 @@ export const taskApi = baseApi.injectEndpoints({
       GetAllTasksResponse,
       {
         status?:
-          | "OPEN_FOR_BID"
-          | "IN_PROGRESS"
-          | "COMPLETED"
-          | "CANCELLED"
-          | "DISPUTE"
-          | "LATE";
+        | "OPEN_FOR_BID"
+        | "IN_PROGRESS"
+        | "COMPLETED"
+        | "CANCELLED"
+        | "DISPUTE"
+        | "LATE";
         sortOrder?: string;
         sortBy?: string;
       }

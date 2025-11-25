@@ -60,9 +60,9 @@ const SendMessage = ({
         );
 
         const res = await uploadConversationFile(formData).unwrap();
-        if (res?.data?.images) {
-          if (isImage) imageUrls = [res.data.images?.[0]];
-          else pdfUrls = [res.data.images?.[0]];
+        if (res?.success) {
+          if (res.data.images?.length > 0) imageUrls = [res.data.images?.[0]];
+          else if (res.data.pdfs?.length > 0) pdfUrls = [res.data.pdfs?.[0]];
         }
       }
 

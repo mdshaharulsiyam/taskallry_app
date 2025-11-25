@@ -21,8 +21,11 @@ const Messages = () => {
     params: { id: string; name: string; image: string; email: string };
   };
 
-  const { data, isLoading } = useGetMessagesQuery({
+  const [limit, setLimit] = useState(10);
+
+  const { data, isLoading, isFetching } = useGetMessagesQuery({
     conversationId: id,
+    limit,
   });
 
   const [messages, setMessages] = useState<MessageItem[]>([]);
@@ -174,6 +177,12 @@ const Messages = () => {
             inverted
             showsVerticalScrollIndicator={false}
             data={messages}
+            onEndReachedThreshold={0.1}
+            onEndReached={() => {
+              if (!isFetching && (data?.data?.meta?.total || 0) > messages.length) {
+                setLimit((prev) => prev + 10);
+              }
+            }}
             renderItem={({ item }) => <Message item={item} />}
           />
         )}

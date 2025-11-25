@@ -120,57 +120,111 @@ const DetailsTask = ({
       key={3}
     />,
 
-    heading == "My Tasks Details" ? (
-      <Image
-        key={5}
-        source={{ uri: ImgUrl(data?.data?.customer?.profile_image + "") }}
-        style={{
-          width: 200,
-          height: 120,
-          borderRadius: 10,
-        }}
-      />
+    data?.data?.status == "OPEN_FOR_BID" ? (
+      heading == "My Tasks Details" ? (
+        <Image
+          key={5}
+          source={{ uri: ImgUrl(data?.data?.customer?.profile_image + "") }}
+          style={{
+            width: 200,
+            height: 120,
+            borderRadius: 10,
+          }}
+        />
+      ) : (
+        <ImageFlex
+          key={4}
+          image={data?.data?.customer?.profile_image}
+          text="Posted by"
+          text1={data?.data?.customer?.name}
+        />
+      )
     ) : (
-      <ImageFlex
-        key={4}
-        image={data?.data?.customer?.profile_image}
-        text="Posted by"
-        text1={data?.data?.customer?.name}
-      />
+      <></>
     ),
 
     data?.data?.status != "OPEN_FOR_BID" ? (
-      <FlexText
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <ImageFlex
-          key={4}
-          image={data?.data?.provider?.profile_image}
-          text="Assigned To"
-          text1={data?.data?.provider?.name}
-        />
-        <IconButtonTransparent
-          text="Chat"
-          icon={TabIcons.Chat as ImageSourcePropType}
-          handler={() => {
-            const target =
-              role === "user" ? data?.data?.provider : data?.data?.customer;
-
-            navigate("Messages", {
-              id: target?._id,
-              name: target?.name,
-              image: target?.profile_image,
-              email: target?.email,
-            });
-          }}
+      <>
+        <View
           style={{
-            width: "auto",
-            paddingVertical: 6,
+            marginTop: 10,
           }}
-        />
-      </FlexText>
+        >
+          <FlexText
+            style={{
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <ImageFlex
+              key={4}
+              image={data?.data?.customer?.profile_image}
+              text="Posted by"
+              text1={data?.data?.customer?.name}
+            />
+            {role === "service" && (
+              <IconButtonTransparent
+                text="Chat"
+                icon={TabIcons.Chat as ImageSourcePropType}
+                handler={() => {
+                  const target = data?.data?.customer;
+
+                  navigate("Messages", {
+                    id: target?._id,
+                    name: target?.name,
+                    image: target?.profile_image,
+                    email: target?.email,
+                  });
+                }}
+                style={{
+                  width: "auto",
+                  paddingVertical: 6,
+                }}
+              />
+            )}
+          </FlexText>
+        </View>
+
+        <View
+          style={{
+            marginTop: 10,
+          }}
+        >
+          <FlexText
+            style={{
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <ImageFlex
+              key={5}
+              image={data?.data?.provider?.profile_image}
+              text="Assigned To"
+              text1={data?.data?.provider?.name}
+            />
+            {role === "user" && (
+              <IconButtonTransparent
+                text="Chat"
+                icon={TabIcons.Chat as ImageSourcePropType}
+                handler={() => {
+                  const target = data?.data?.provider;
+
+                  navigate("Messages", {
+                    id: target?._id,
+                    name: target?.name,
+                    image: target?.profile_image,
+                    email: target?.email,
+                  });
+                }}
+                style={{
+                  width: "auto",
+                  paddingVertical: 6,
+                }}
+              />
+            )}
+          </FlexText>
+        </View>
+      </>
     ) : (
       <></>
     ),

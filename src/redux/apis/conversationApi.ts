@@ -53,9 +53,13 @@ interface CreateConversationResponse {
 }
 
 interface UploadConversationFileResponse {
-  success: boolean;
-  message?: string;
-  url?: string;
+  success: true,
+  message: string,
+  data: {
+    images: string[],
+    videos: string[],
+    pdfs: string[]
+  }
 }
 
 export const conversationApi = baseApi.injectEndpoints({
@@ -92,7 +96,7 @@ export const conversationApi = baseApi.injectEndpoints({
       FormData
     >({
       query: (formData) => ({
-        url: "/file/upload-conversation",
+        url: "/file/upload-conversation-files",
         method: "POST",
         body: formData,
       }),

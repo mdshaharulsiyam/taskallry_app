@@ -96,7 +96,15 @@ const Messages = () => {
     };
   }, [socket, id, profileData]);
 
-  const handleSendMessage = async (text: string) => {
+  const handleSendMessage = async ({
+    text,
+    imageUrls,
+    pdfUrls,
+  }: {
+    text: string;
+    imageUrls?: string[];
+    pdfUrls?: string[];
+  }) => {
     if (!socket) return;
 
     const myId = profileData?.data?._id;
@@ -104,9 +112,9 @@ const Messages = () => {
     const optimistic: MessageItem = {
       _id: `${Date.now()}`,
       text,
-      imageUrl: [],
+      imageUrl: imageUrls || [],
       videoUrl: [],
-      pdfUrl: [],
+      pdfUrl: pdfUrls || [],
       msgByUserId: {
         name: profileData?.data?.name || "",
         profile_image: profileData?.data?.profile_image || "",
@@ -128,12 +136,15 @@ const Messages = () => {
 
     setMessages((prev) => [optimistic, ...prev]);
 
-    socket.emit("send-message", {
-      text,
-      imageUrl: [""],
-      pdfUrl: [""],
-      receiver: id,
-    });
+    socket.emit(
+      "send-message",
+      {
+        text,
+        imageUrl: imageUrls || [],
+        pdfUrl: pdfUrls || [],
+        receiver: id,
+      }
+    );
   };
 
   return (

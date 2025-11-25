@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import Toast from "react-native-toast-message";
-import { useCreateBidMutation } from "../../redux/apis";
+import { useAcceptOfferMutation, useCreateBidMutation } from "../../redux/apis";
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
@@ -22,6 +22,7 @@ const SubmitBitButt = ({ id, accept }: { id: string; accept: string }) => {
   const [price, setPrice] = useState("");
   const [message, setMessage] = useState("");
   const [createBid, { isLoading }] = useCreateBidMutation();
+  const [acceptOffer, { isLoading: isAccepting }] = useAcceptOfferMutation();
   const handleSubmit = () => {
     const body = {
       task: id,
@@ -51,14 +52,28 @@ const SubmitBitButt = ({ id, accept }: { id: string; accept: string }) => {
     <>
       <ButtonBG
         style={{ width: "auto" }}
-        text={accept ? "Accept" : "Submit a Bid"}
+        text={accept ? (isAccepting ? "Accepting..." : "Accept") : "Submit a Bid"}
         handler={() => {
           if (accept) {
-            // accept offer functions
+            acceptOffer({ taskId: id })
+              .unwrap()
+              .then((res) => {
+                Toast.show({
+                  type: "success",
+                  text1: res?.message || "Offer accepted successfully",
+                });
+              })
+              .catch((error) => {
+                Toast.show({
+                  type: "error",
+                  text1: error?.data?.message || "Failed to accept offer",
+                });
+              });
           } else {
             setOpen(true);
           }
         }}
+        disabled={!!accept && isAccepting}
       />
       <Modal
         visible={open}

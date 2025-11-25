@@ -5,27 +5,23 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useGetChatListQuery } from "../../redux/apis/conversationApi";
 
 const Chat = () => {
-  const { data, isLoading, isError } = useGetChatListQuery();
-
-  const conversations = data?.data?.data || [];
+  const { data, isLoading } = useGetChatListQuery({
+    page: 1,
+    limit: 10,
+  });
   return (
     <SafeAreaProviderNoScroll>
       {isLoading ? (
         <ActivityIndicator style={{ marginTop: 20 }} />
       ) : (
         <FlatList
-          keyExtractor={(item, index) => item._id ?? index.toString()}
+          keyExtractor={(item) => item?._id}
           contentContainerStyle={{
             paddingBottom: 150,
           }}
           showsVerticalScrollIndicator={false}
-          data={conversations}
+          data={data?.data?.data || []}
           renderItem={({ item }) => <ChatItems item={item} />}
-          ListEmptyComponent={
-            !isError
-              ? null
-              : undefined
-          }
         />
       )}
     </SafeAreaProviderNoScroll>

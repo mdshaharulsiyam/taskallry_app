@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
   ImageSourcePropType,
@@ -10,7 +10,15 @@ import { otherIcons } from "../../constant/images";
 import { SelectImage } from "../../utils/imagePick";
 import FlexText from "../shered/FlexText";
 
-const SendMessage = () => {
+const SendMessage = ({ onSend }: { onSend: (text: string) => void }) => {
+  const [text, setText] = useState("");
+
+  const handleSend = () => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    onSend(trimmed);
+    setText("");
+  };
   return (
     <FlexText
       style={{
@@ -33,10 +41,15 @@ const SendMessage = () => {
           height: 40,
           borderRadius: 20,
           color: "#000000",
+          paddingHorizontal: 12,
         }}
-        placeholder="test"
+        placeholder="Type a message"
+        value={text}
+        onChangeText={setText}
+        onSubmitEditing={handleSend}
+        returnKeyType="send"
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleSend}>
         <Image
           source={otherIcons.Send as ImageSourcePropType}
           style={{

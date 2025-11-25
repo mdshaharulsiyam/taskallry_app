@@ -52,6 +52,12 @@ interface CreateConversationResponse {
 
 }
 
+interface UploadConversationFileResponse {
+  success: boolean;
+  message?: string;
+  url?: string;
+}
+
 export const conversationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getChatList: builder.query<
@@ -80,10 +86,22 @@ export const conversationApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Conversation"],
     }),
+
+    uploadConversationFile: builder.mutation<
+      UploadConversationFileResponse,
+      FormData
+    >({
+      query: (formData) => ({
+        url: "/file/upload-conversation",
+        method: "POST",
+        body: formData,
+      }),
+    }),
   }),
 });
 
 export const {
   useGetChatListQuery,
   useCreateConversationMutation,
+  useUploadConversationFileMutation,
 } = conversationApi;

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { Conversation } from "../../redux/apis/conversationApi";
 import { ImgUrl } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
@@ -21,16 +21,16 @@ const ChatItems = ({ item }: ChatItemsProps) => {
 
   return (
     <TouchableOpacity onPress={() => navigate("Messages", {
-      id: item._id,
-      name: item.userData?.name,
-      image: item.userData?.profile_image,
-      email: item.userData?.email,
+      id: item?.userData?._id,
+      name: item?.userData?.name,
+      image: item?.userData?.profile_image,
+      email: item?.userData?.email,
     })}>
       <FlexText
         style={{
           padding: 10,
           borderRadius: 10,
-          backgroundColor: "#FFFFFF", //E6F4F1
+          backgroundColor: "#FFFFFF",
           marginVertical: 5,
           justifyContent: "space-between",
         }}
@@ -53,4 +53,3 @@ const ChatItems = ({ item }: ChatItemsProps) => {
 
 export default ChatItems;
 
-const styles = StyleSheet.create({});

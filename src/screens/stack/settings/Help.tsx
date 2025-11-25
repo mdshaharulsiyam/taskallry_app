@@ -9,8 +9,8 @@ import {
   View,
 } from "react-native";
 import SafeAreaProviderNoScroll from "../../../providers/SafeAreaProviderNoScroll";
+import { useGetFaqQuery } from "../../../redux/apis";
 
-// Enable LayoutAnimation on Android
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -18,36 +18,10 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const faqs = [
-  {
-    id: "1",
-    question: "How do I post a task?",
-    answer: 'Go to "Post a Task", fill in the details, and submit.',
-  },
-  {
-    id: "2",
-    question: "Can I pick a specific provider?",
-    answer: "Yes, you can select from available providers after posting.",
-  },
-  {
-    id: "3",
-    question: "What payment methods are supported?",
-    answer: "We support credit cards, debit cards, and mobile wallets.",
-  },
-  {
-    id: "4",
-    question: "Is there emergency support?",
-    answer: "Yes, we provide 24/7 emergency support for urgent tasks.",
-  },
-  {
-    id: "5",
-    question: "How do I check past tasks or receipts?",
-    answer: "Go to 'My Tasks' to view history and download receipts.",
-  },
-];
-
 const Help = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const { data } = useGetFaqQuery();
+  const faqs = data?.data || [];
 
   const toggleExpand = (id: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -57,7 +31,6 @@ const Help = () => {
   return (
     <SafeAreaProviderNoScroll backButtonText="Help / Support">
       <View style={styles.container}>
-        {/* FAQs */}
         <Text style={styles.sectionTitle}>FAQs</Text>
         {faqs.map((faq) => (
           <View key={faq.id} style={styles.faqItem}>
@@ -77,8 +50,6 @@ const Help = () => {
             )}
           </View>
         ))}
-
-        {/* Need More Help */}
         <Text style={[styles.sectionTitle, { marginTop: 20 }]}>
           Need More Help?
         </Text>

@@ -1,6 +1,9 @@
-import { createDrawerNavigator, DrawerContentScrollView } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+} from "@react-navigation/drawer";
 import React from "react";
-import FIlterOptions from '../components/shered/FIlterOptions';
+import FIlterOptions from "../components/shered/FIlterOptions";
 import StackLayout from "./StackLayout";
 
 const Drawer = createDrawerNavigator();
@@ -20,7 +23,6 @@ const DrawerLayout = () => {
 function CustomDrawerContent(props: any) {
   return (
     <DrawerContentScrollView {...props}>
-
       <FIlterOptions {...props} />
     </DrawerContentScrollView>
   );

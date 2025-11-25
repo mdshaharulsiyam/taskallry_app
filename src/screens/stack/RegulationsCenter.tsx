@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import React from "react";
 import { Image, ImageSourcePropType, TouchableOpacity } from "react-native";
 import BackButton from "../../components/shered/BackButton";
@@ -8,12 +9,19 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import Navigate from "../../utils/Navigate";
 
 const RegulationsCenter = () => {
+  const {
+    params: { id },
+  } = useRoute() as {
+    params: {
+      id: string;
+    };
+  };
   const navigate = Navigate();
   return (
     <SafeAreaProviderNoScroll>
       <BackButton text={`Resolution Center`} />
       <TouchableOpacity
-        onPress={() => navigate("ExtendDate")}
+        onPress={() => navigate("ExtendDate", { id })}
         style={{
           marginTop: 10,
           padding: 10,

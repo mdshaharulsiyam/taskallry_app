@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {
   FlatList,
@@ -6,35 +7,44 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
 import ProfileOptions from "../../components/profile/ProfileOptions";
 import ProfilePictureName from "../../components/profile/ProfilePictureName";
 import FlexText from "../../components/shered/FlexText";
 import TextSecondary from "../../components/shered/TextSecondary";
 import { profileIcons } from "../../constant/images";
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
-import Navigate from "../../utils/Navigate";
-    // {
-    //   name: "Change Password",
-    //   image: profileIcons.Lock,
-    //   navigate: "ChangePassword",
-    // },
+import { clearToken } from "../../redux/slices/authSlice";
+import { AppDispatch } from "../../redux/store";
+import { Navigation } from "../../utils/Navigate";
 const Profile = () => {
-  const navigate = Navigate();
+  const navigate = Navigation();
+  const dispatch = useDispatch<AppDispatch>();
+  const { setRole } = useGlobalContext();
   const elements = [
     <ProfilePictureName key={1} />,
     <ProfileOptions key={2} />,
-    <View style={{
-      paddingHorizontal: 20,
-
-    }}>
+    <View
+      style={{
+        paddingHorizontal: 20,
+      }}
+    >
       <TouchableOpacity
         key={4}
-        onPress={() => navigate("Login")}
+        onPress={async () => {
+          setRole(null);
+          await AsyncStorage.removeItem("token");
+          dispatch(clearToken());
+          navigate.reset({
+            index: 0,
+            routes: [{ name: "Login" }],
+          });
+        }}
         style={{
           marginTop: 10,
           padding: 10,
           borderRadius: 10,
-          // backgroundColor: "#E6F4F1"
           borderWidth: 1,
           paddingVertical: 14,
         }}
@@ -59,8 +69,9 @@ const Profile = () => {
             />
           </FlexText>
         </FlexText>
-      </TouchableOpacity>,
-    </View>
+      </TouchableOpacity>
+      ,
+    </View>,
   ];
   return (
     <SafeAreaProviderNoScroll zeroPadding={true}>

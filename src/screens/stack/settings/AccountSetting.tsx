@@ -7,17 +7,15 @@ import TextSecondary from "../../../components/shered/TextSecondary";
 import Navigate from "../../../utils/Navigate";
 
 export const AccountSetting = () => {
-      // {
-    //   name: "Change Password",
-    //   image: profileIcons.Lock,
-    //   navigate: "ChangePassword",
-    // },
-    const navigate = Navigate();
+  // {
+  //   name: "Change Password",
+  //   image: profileIcons.Lock,
+  //   navigate: "ChangePassword",
+  // },
+  const navigate = Navigate();
   return (
-    <SafeAreaProviderNoScroll
-      backButtonText="Account Setting"
-    >
-            <TouchableOpacity
+    <SafeAreaProviderNoScroll backButtonText="Account Setting">
+      <TouchableOpacity
         key={3}
         onPress={() => navigate("ChangePassword")}
         style={{
@@ -35,18 +33,15 @@ export const AccountSetting = () => {
           }}
         >
           <FlexText>
-            <Image
-              source={profileIcons.Lock as ImageSourcePropType}
-            />
-            <TextSecondary
-              text={"Change Password"}
-            />
+            <Image source={profileIcons.Lock as ImageSourcePropType} />
+            <TextSecondary text={"Change Password"} />
           </FlexText>
         </FlexText>
-      </TouchableOpacity>, 
+      </TouchableOpacity>
+      ,
       <TouchableOpacity
         key={3}
-        onPress={() => { }}
+        onPress={() => {}}
         style={{
           marginTop: 10,
           padding: 10,
@@ -76,8 +71,8 @@ export const AccountSetting = () => {
             />
           </FlexText>
         </FlexText>
-      </TouchableOpacity>,
-
+      </TouchableOpacity>
+      ,
     </SafeAreaProviderNoScroll>
   );
 };

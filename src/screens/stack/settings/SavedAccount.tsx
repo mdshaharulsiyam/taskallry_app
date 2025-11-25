@@ -4,14 +4,17 @@ import SafeAreaProviderNoScroll from "../../../providers/SafeAreaProviderNoScrol
 import Navigate from "../../../utils/Navigate";
 
 const SavedAccount = () => {
-  const navigate = Navigate()
+  const navigate = Navigate();
   return (
     <SafeAreaProviderNoScroll backButtonText="Saved Account">
       <View style={styles.card}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Saved Account</Text>
-          <TouchableOpacity onPress={() => navigate("UpdateBankAccount")} style={styles.updateBtn}>
+          <TouchableOpacity
+            onPress={() => navigate("UpdateBankAccount")}
+            style={styles.updateBtn}
+          >
             <Text style={styles.updateBtnText}>Update</Text>
           </TouchableOpacity>
         </View>

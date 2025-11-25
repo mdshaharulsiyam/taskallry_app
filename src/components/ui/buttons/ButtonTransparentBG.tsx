@@ -6,15 +6,18 @@ const ButtonTransparentBG = ({
   text,
   handler,
   activeOpacity = 0.7,
+  disabled = false,
 }: {
   style?: ViewStyle;
   text?: string;
   handler?: () => void;
   activeOpacity?: number;
+  disabled?: boolean;
 }) => {
   return (
     <TouchableOpacity
       onPress={() => {
+        if (disabled) return;
         handler?.();
       }}
       activeOpacity={activeOpacity}

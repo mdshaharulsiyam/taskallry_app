@@ -4,21 +4,49 @@ import { FlatList, StyleSheet } from "react-native";
 import FilteredProvider from "../../components/search/FilteredProvider";
 import FIlteredTask from "../../components/search/FIlteredTask";
 import FilterOptions from "../../components/search/FilterOptions";
+import ProvidersMap from "../../components/search/ProvidersMap";
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { selectFilters, setSearchType } from "../../redux/slices/filterSlice";
 
 const Search = () => {
   const {
-    params: { category_id, type },
+    params: { category_id, search, type },
   } = useRoute() as {
-    params: { category_id: string; type: "Provider" | "Task" };
+    params: { category_id: string; search: string; type?: "Task" | "Provider" };
   };
+  const { role } = useGlobalContext();
+  const dispatch = useAppDispatch();
+  const combinedType = type ? type : role === "user" ? "Provider" : "Task";
+  const [searchText, setSearchText] = React.useState(search);
+  const filterState = useAppSelector(selectFilters);
+
+  React.useEffect(() => {
+    dispatch(setSearchType(combinedType));
+  }, [combinedType, dispatch]);
+
   const elements = [
-    <FilterOptions key={1} type={type} />,
-    type == "Provider" ? (
-      <FilteredProvider key={3} />
-    ) : (
-      <FIlteredTask key={2} />
-    ),
+    <FilterOptions
+      search={searchText}
+      handler={(value: string) => setSearchText(value)}
+      key={1}
+      type={combinedType}
+    />,
+    combinedType === "Provider"
+      ? (
+        // Provider search: always list view
+        <FilteredProvider key={3} />
+      )
+      : filterState?.viewMode === "map"
+        ? (
+          // Task search + map view
+          <ProvidersMap key={3} />
+        )
+        : (
+          // Task search + list view
+          <FIlteredTask key={2} search={searchText} />
+        ),
   ];
   return (
     <SafeAreaProviderNoScroll>

@@ -17,7 +17,7 @@ const Home = () => {
     role == "service" ? <MyStats key={3} /> : <></>,
     <CategorySection key={4} />,
     <RecentlyAddedTask key={5} />,
-    <PopularTaskProvider key={6} />,
+    role != "service" ? <PopularTaskProvider key={6} /> : <></>,
   ];
   return (
     <SafeAreaProviderNoScroll>

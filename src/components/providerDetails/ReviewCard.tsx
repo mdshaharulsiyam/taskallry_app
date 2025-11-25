@@ -3,7 +3,21 @@ import { View } from "react-native";
 import ImageFlex from "../shered/ImageFlex";
 import TextSecondary from "../shered/TextSecondary";
 
-const ReviewCard = ({ type = "review" }: { type?: "review" }) => {
+interface ReviewCardProps {
+  type?: "review";
+  author?: string;
+  rating?: number;
+  details?: string;
+  image: string;
+}
+
+const ReviewCard = ({
+  type = "review",
+  author,
+  rating,
+  details,
+  image,
+}: ReviewCardProps) => {
   return (
     <View
       style={{
@@ -15,10 +29,16 @@ const ReviewCard = ({ type = "review" }: { type?: "review" }) => {
     >
       <ImageFlex
         showText1={type == "review"}
-        text="Ronald Richards"
-        text1="⭐ 4.5 (149 Reviews)"
+        text={author || "Ronald Richards"}
+        text1={`⭐ ${rating ?? 4.5}`}
+        image={image}
       />
-      <TextSecondary text="I was a bit nervous to be buying a secondhand phone from Amazon, but I couldn’t be happier with my purchase!! I have a pre-paid data plan so I was worried that this phone wouldn’t connect with my data plan, since the new phones don’t have the physical Sim tray anymore." />
+      <TextSecondary
+        text={
+          details ||
+          "I was a bit nervous to be buying a secondhand phone from Amazon, but I couldn’t be happier with my purchase!! I have a pre-paid data plan so I was worried that this phone wouldn’t connect with my data plan, since the new phones don’t have the physical Sim tray anymore."
+        }
+      />
     </View>
   );
 };

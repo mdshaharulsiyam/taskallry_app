@@ -1,3 +1,4 @@
+import moment from "moment";
 import React from "react";
 import {
   Image,
@@ -8,6 +9,8 @@ import {
   View,
 } from "react-native";
 import { otherIcons } from "../../constant/images";
+import { Task } from "../../redux/apis";
+import { ImgUrl } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
 import ButtonBG from "../ui/buttons/ButtonBG";
 import GreenLine from "../ui/line/GreenLine";
@@ -22,11 +25,13 @@ const TaskCard = ({
   showDetailsButton = false,
   tab,
   from,
+  task,
 }: {
   imageStyle?: ImageStyle;
   showDetailsButton?: boolean;
   tab?: string;
   from: "user" | "service";
+  task: Task;
 }) => {
   const navigate = Navigate();
   return (
@@ -36,12 +41,12 @@ const TaskCard = ({
         showDetailsButton
           ? null
           : navigate("TaskDetails", {
-            params: {
-              status: tab,
-              from,
-              heading: from == "user" ? "My Tasks Details" : "Tasks Details",
-            },
-          })
+              params: {
+                id: task?._id,
+                from,
+                heading: from == "user" ? "My Tasks Details" : "Tasks Details",
+              },
+            })
       }
       style={{
         backgroundColor: "#FFFFFF",
@@ -59,27 +64,27 @@ const TaskCard = ({
           style={{
             fontSize: 18,
           }}
-          text="Help move a couch"
+          text={task?.title}
         />
         <HeaderDesign
           style={{
             fontSize: 18,
           }}
-          text="₦24.00"
+          text={task?.budget + ""}
         />
       </FlexText>
       {showDetailsButton && <GreenLine />}
 
       <FlexCardIcon
-        text="Los Angeles CA 90024"
+        text={task?.address}
         image={otherIcons.Location as ImageSourcePropType}
       />
       <FlexCardIcon
-        text="New York, USA"
+        text={moment(task?.preferredDate).format("DD-MM-YYYY")}
         image={otherIcons.Calendar as ImageSourcePropType}
       />
       <FlexCardIcon
-        text="15 May 2020 8:00 am"
+        text={task?.preferredTime}
         image={otherIcons.Watch as ImageSourcePropType}
       />
       <FlexText
@@ -89,7 +94,11 @@ const TaskCard = ({
         }}
       >
         <Image
-          src="https://placehold.co/400x400.png"
+          source={
+            task?.customer?.profile_image
+              ? { uri: ImgUrl(task?.customer?.profile_image + "") }
+              : (otherIcons.Avater as ImageSourcePropType)
+          }
           style={{
             height: showDetailsButton ? 60 : 50,
             width: showDetailsButton ? 100 : 50,
@@ -102,7 +111,7 @@ const TaskCard = ({
             style={{
               fontWeight: "700",
             }}
-            text="Marvin Fey"
+            text={task?.customer?.name}
           />
           <FlexText>
             <TextPrimary
@@ -110,9 +119,9 @@ const TaskCard = ({
                 color: "#F97316",
                 fontWeight: "700",
               }}
-              text="Open"
+              text={task?.status}
             />
-            <TextPrimary text="• 1 offered" />
+            <TextPrimary text={task?.totalOffer + " offered"} />
           </FlexText>
         </View>
       </FlexText>
@@ -127,7 +136,7 @@ const TaskCard = ({
             handler={() =>
               navigate("TaskDetails", {
                 params: {
-                  status: tab,
+                  id: task?._id,
                   from,
                   heading:
                     from == "user" ? "My Tasks Details" : "Tasks Details",

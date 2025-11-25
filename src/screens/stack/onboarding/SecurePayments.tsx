@@ -38,7 +38,7 @@ const SecurePayments = () => {
         <ButtonBG
           style={{
             position: "absolute",
-            bottom: 160, 
+            bottom: 160,
             width: "100%",
           }}
           handler={() => navigate("TabLayout")}

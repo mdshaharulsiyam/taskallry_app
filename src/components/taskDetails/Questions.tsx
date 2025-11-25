@@ -1,33 +1,41 @@
 import React from "react";
 import { View } from "react-native";
+import { useGetQuestionsByTaskIdQuery } from "../../redux/apis";
 import Bids_QuestionCard from "./Bids_QuestionCard";
 import QuestionForm from "./QuestionForm";
 
 const Questions = ({
-  from = "service",
   status,
+  id,
+  role,
+  customer,
 }: {
-  from?: "user" | "service";
   status:
-    | "All Tasks"
-    | "open for bids"
-    | "in Progress"
-    | "completed"
-    | "cancelled"
-    | "dispute"
-    | "Ongoing Tasks"
-    | "Bids  Made"
-    | "Bids  Received";
+    | "OPEN_FOR_BID"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "CANCELLED"
+    | "DISPUTE"
+    | "LATE";
+  id: string;
+  role?: "user" | "service";
+  customer?: string;
 }) => {
+  const { data } = useGetQuestionsByTaskIdQuery(id);
   return (
     <View
       style={{
-        marginTop: from == "service" ? 0 : 10,
+        marginTop: role != "user" ? 0 : 10,
       }}
     >
-      {from == "service" && <QuestionForm />}
-      {[...Array(5).keys()]?.map((item) => (
-        <Bids_QuestionCard type="question" status={status} from={from} />
+      {role != "user" && <QuestionForm taskId={id} />}
+      {data?.data?.map((item) => (
+        <Bids_QuestionCard
+          type="question"
+          status={status}
+          question={item}
+          customer={customer}
+        />
       ))}
     </View>
   );

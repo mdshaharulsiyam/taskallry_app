@@ -1,5 +1,5 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Platform,
   StyleSheet,
@@ -32,14 +32,52 @@ const TimePicker = ({
   required?: boolean;
   showLabel?: boolean;
 }) => {
-  const [date, setDate] = useState(new Date(1598051730000));
+  const formatTime = (d: Date) => {
+    const hrs = d.getHours().toString().padStart(2, "0");
+    const mins = d.getMinutes().toString().padStart(2, "0");
+    return `${hrs}:${mins}`;
+  };
+
+  const parseTimeString = (str?: string) => {
+    if (!str) return undefined;
+    const m = str.match(/^(\d{1,2}):(\d{2})$/);
+    if (!m) return undefined;
+    const d = new Date();
+    d.setSeconds(0, 0);
+    d.setHours(Math.min(23, parseInt(m[1], 10)));
+    d.setMinutes(Math.min(59, parseInt(m[2], 10)));
+    return d;
+  };
+
+  const [date, setDate] = useState<Date>(
+    () => parseTimeString(value) || new Date()
+  );
   const [show, setShow] = useState(false);
-  const onChange = (event: any, selectedDate: any) => {
+  const [picked, setPicked] = useState(false);
+
+  useEffect(() => {
+    const parsed = parseTimeString(value);
+    if (parsed) {
+      setDate(parsed);
+      setPicked(true);
+    }
+  }, [value]);
+
+  const onChange = (event: any, selectedDate?: Date) => {
+    if (Platform.OS === "android") {
+      setShow(false);
+    } else {
+      // iOS keeps the picker visible; do nothing here
+    }
+
+    if (event?.type === "dismissed") return;
+
     const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
     setDate(currentDate);
-    console.log(currentDate);
-    // handler?.(name as string, currentDate)
+    setPicked(true);
+    if (handler && name) {
+      handler(name, formatTime(currentDate));
+    }
   };
   return (
     <View
@@ -74,7 +112,11 @@ const TimePicker = ({
             ...inputStyle,
           }}
         >
-          {value != "" ? value : placeHolder}
+          {value && value.length > 0
+            ? value
+            : picked
+            ? formatTime(date)
+            : placeHolder}
         </Text>
       </TouchableOpacity>
       {show && (

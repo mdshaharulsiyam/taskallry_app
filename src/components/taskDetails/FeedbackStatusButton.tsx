@@ -11,17 +11,10 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 
 const FeedbackStatusButton = ({
   status,
+  id,
 }: {
-  status:
-    | "All Tasks"
-    | "open for bids"
-    | "in Progress"
-    | "completed"
-    | "cancelled"
-    | "dispute"
-    | "Ongoing Tasks"
-    | "Bids  Made"
-    | "Bids  Received";
+  status: "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
+  id: string;
 }) => {
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);
@@ -45,11 +38,11 @@ const FeedbackStatusButton = ({
     <View style={{ flexDirection: "row", marginTop: 10 }}>
       <ButtonBG
         handler={() => {
-          if (status == "completed") {
+          if (status == "COMPLETED") {
             setOpen(true);
           }
         }}
-        text={status == "completed" ? "Send Feedback" : "Mark As Complete"}
+        text={status == "COMPLETED" ? "Send Feedback" : "Mark As Complete"}
         style={{
           width: "auto",
         }}

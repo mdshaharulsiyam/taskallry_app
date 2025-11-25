@@ -1,12 +1,27 @@
+import moment from "moment";
 import React from "react";
 import { View } from "react-native";
+import { statusWithDate, Task } from "../../redux/apis";
 import FlexText from "../shered/FlexText";
-import ProgressBar from "../shered/ProgressBar";
+import ProgressBar, { IStatusData } from "../shered/ProgressBar";
 import TextPrimary from "../shered/TextPrimary";
 import TextSecondary from "../shered/TextSecondary";
-import GreenLine from "../ui/line/GreenLine";
 
-const TaskProgress = () => {
+const TaskProgress = ({ data }: { data: Task | undefined }) => {
+  const progress_data: IStatusData[] =
+    data?.statusWithDate?.map((item: statusWithDate) => ({
+      name: item?.status,
+      status: "complete",
+      date: moment(item?.date).format("MMM DD, YYYY"),
+    })) || [];
+  const complete_find = progress_data.find((item) => item.name === "COMPLETE");
+  if (!complete_find) {
+    progress_data.push({
+      name: "COMPLETE",
+      status: "pending",
+      date: "",
+    });
+  }
   return (
     <View
       style={{
@@ -19,9 +34,9 @@ const TaskProgress = () => {
         }}
       >
         <TextPrimary text="Offered price" />
-        <TextSecondary text="₦ 27.6" />
+        <TextSecondary text={"₦ " + data?.budget} />
       </FlexText>
-      <FlexText
+      {/* <FlexText
         style={{
           justifyContent: "space-between",
           marginTop: 6,
@@ -30,16 +45,16 @@ const TaskProgress = () => {
         <TextPrimary text="Discount (0%)" />
         <TextSecondary text="₦ 0" />
       </FlexText>
-      <GreenLine />
-      <FlexText
+      <GreenLine /> */}
+      {/* <FlexText
         style={{
           justifyContent: "space-between",
         }}
       >
         <TextPrimary text="Total" />
         <TextSecondary text="₦ 27.6" />
-      </FlexText>
-      <ProgressBar />
+      </FlexText> */}
+      <ProgressBar data={progress_data} />
     </View>
   );
 };

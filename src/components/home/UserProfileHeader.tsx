@@ -1,12 +1,18 @@
 import React from "react";
-import { ImageSourcePropType, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  ImageSourcePropType,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { otherIcons } from "../../constant/images";
+import { useGetMyProfileQuery } from "../../redux/apis";
 import Navigate from "../../utils/Navigate";
 import FlexText from "../shered/FlexText";
 import ImageFlex from "../shered/ImageFlex";
 import ImageButton from "../ui/buttons/ImageButton";
 
 const UserProfileHeader = () => {
+  const { data } = useGetMyProfileQuery();
   const navigate = Navigate();
   return (
     <FlexText
@@ -15,13 +21,10 @@ const UserProfileHeader = () => {
         justifyContent: "space-between",
       }}
     >
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => navigate('MyProfile')}
-      >
+      <TouchableOpacity activeOpacity={1} onPress={() => navigate("MyProfile")}>
         <ImageFlex
-          image={`https://placehold.co/400x400.png`}
-          text="Hello Siyam"
+          image={data?.data?.profile_image}
+          text={data?.data?.name}
           text1="Welcome to TaskAlley"
         />
       </TouchableOpacity>

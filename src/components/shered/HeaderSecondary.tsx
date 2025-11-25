@@ -12,7 +12,7 @@ const HeaderSecondary = ({
 }) => {
   return (
     <Text
-    numberOfLines={numberOfLines}
+      numberOfLines={numberOfLines}
       style={[
         {
           fontFamily: "Poppins",

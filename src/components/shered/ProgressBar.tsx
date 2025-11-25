@@ -3,29 +3,13 @@ import { Image, ImageSourcePropType, View } from "react-native";
 import { otherIcons } from "../../constant/images";
 import FlexText from "./FlexText";
 import TextPrimary from "./TextPrimary";
-interface IStatusData {
+export interface IStatusData {
   name: string;
   date?: string;
   status: "complete" | "pending";
 }
-const data: IStatusData[] = [
-  {
-    name: "Offered",
-    date: "Feb 21, 2023",
-    status: "complete",
-  },
-  {
-    name: "In Progress",
-    date: "Feb 21, 2023",
-    status: "complete",
-  },
-  {
-    name: "Completed on",
-    status: "pending",
-  },
-];
 
-const ProgressBar = () => {
+const ProgressBar = ({ data }: { data: IStatusData[] }) => {
   return (
     <View
       style={{

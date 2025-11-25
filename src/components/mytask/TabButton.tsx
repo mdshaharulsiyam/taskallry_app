@@ -43,6 +43,7 @@ const TabButton = ({
           }}
           textStyle={{
             color: item == activeTab ? "#FFFFFF" : "#000000",
+            textTransform: "capitalize",
           }}
         />
       )}

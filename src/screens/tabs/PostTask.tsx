@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { Image, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlexText from "../../components/shered/FlexText";
 import SectionHeading from "../../components/shered/SectionHeading";
+import TextPrimary from "../../components/shered/TextPrimary";
 import ButtonBG from "../../components/ui/buttons/ButtonBG";
 import ButtonTransparentBG from "../../components/ui/buttons/ButtonTransparentBG";
 import ImageUploader from "../../components/ui/file/ImageUploader";
 import PostTaskFields from "../../formFields/PostTaskFields";
 import { handlePostTask } from "../../handler/postTask";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
+import { Task, useCreateTaskMutation } from "../../redux/apis";
 import { FieldsType } from "../../types/Types";
 import Navigate from "../../utils/Navigate";
 import { RenderField } from "../../utils/RenderField";
 import ScreenSize from "../../utils/ScreenSize";
-import TextPrimary from "../../components/shered/TextPrimary";
 const slide = [
   {
     skip: 0,
@@ -36,18 +38,53 @@ const slide = [
     keep: 1,
   },
 ];
+
 const title = ["Task Overview", "Task Details", "Date & Time", "Budget "];
 
 const PostTask = () => {
+  const route = useRoute() as any;
+  const task = route?.params?.task as Task | undefined;
+  const [create, { isLoading }] = useCreateTaskMutation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fiels, setFiels] = useState<any>([]);
   const { height } = ScreenSize();
   const { fields, setFields } = PostTaskFields();
   const { top, bottom } = useSafeAreaInsets();
   const navigate = Navigate();
+  const isEditMode = !!task;
+
+  useEffect(() => {
+    if (!task) return;
+    setFields((prev: FieldsType[]) =>
+      prev.map((field) => {
+        switch (field.name) {
+          case "title":
+            return { ...field, value: task.title || "" };
+          case "task_category":
+            return { ...field, value: task.category?._id || "" };
+          case "desc":
+            return { ...field, value: task.description || "" };
+          case "type":
+            return { ...field, value: task.doneBy || "" };
+          case "place":
+            return { ...field, value: task.address || "" };
+          case "flexible":
+            return { ...field, value: task.scheduleType || "" };
+          case "date":
+            return { ...field, value: task.preferredDate || "" };
+          case "time":
+            return { ...field, value: task.preferredTime || "" };
+          case "offer":
+            return { ...field, value: String(task.budget ?? "") };
+          default:
+            return field;
+        }
+      })
+    );
+  }, [task, setFields]);
   // backButtonText="Post Task"
   return (
-    <SafeAreaProvider >
+    <SafeAreaProvider>
       <View
         style={{
           flex: 1,
@@ -69,12 +106,18 @@ const PostTask = () => {
           <View>
             <TextPrimary text="Attachments (optional)" />
             <FlexText>
-              {
-                fiels?.length > 0 && <Image
+              {fiels?.length > 0 && (
+                <Image
                   source={{ uri: fiels?.[0]?.uri }}
-                  style={{ width: 80, height: 80, borderRadius: 8, marginRight: 8, resizeMode: "contain" }}
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 8,
+                    marginRight: 8,
+                    resizeMode: "contain",
+                  }}
                 />
-              }
+              )}
               <ImageUploader setFiels={setFiels} />
             </FlexText>
           </View>
@@ -86,6 +129,7 @@ const PostTask = () => {
         >
           {currentSlide != 0 && (
             <ButtonTransparentBG
+              disabled={isLoading}
               style={{
                 width: "auto",
               }}
@@ -94,10 +138,17 @@ const PostTask = () => {
             />
           )}
           <ButtonBG
+            disabled={isLoading}
             style={{
               width: "auto",
             }}
-            text={currentSlide == 3 ? "Post" : "Continue"}
+            text={
+              currentSlide == 3
+                ? isLoading
+                  ? "loading..."
+                  : "Post"
+                : "Continue"
+            }
             handler={() => {
               const isValid = handlePostTask(
                 fields?.slice(
@@ -105,14 +156,23 @@ const PostTask = () => {
                   slide[currentSlide].keep + slide[currentSlide].skip
                 ),
                 setFields,
-                currentSlide
+                currentSlide,
+                fields,
+                create,
+                fiels,
+                () => {
+                  navigate("Task");
+                  setCurrentSlide(0);
+                  setFiels([]);
+                }
               );
-              console.log(isValid);
+
               if (isValid && currentSlide < 3) {
                 setCurrentSlide((prev) => prev + 1);
-              } else if (currentSlide == 3) {
-                navigate("Task");
               }
+              // else if (currentSlide == 3) {
+              //   navigate("Task");
+              // }
               //  else if (currentSlide == 2) {
               //   navigate("Verify", {
               //     params: { phoneNumber: "", from: "signup" },

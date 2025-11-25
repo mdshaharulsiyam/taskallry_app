@@ -74,7 +74,7 @@ const CustomerSignUpFields = () => {
       required: true,
       keyboard: KeyboardType.DEFAULT,
     },
-     {
+    {
       name: "city",
       type: FieldType.STRING,
       placeHolder: "Enter City / LGA",

@@ -12,15 +12,20 @@ import Navigate from "../../utils/Navigate";
 import FlexText from "../shered/FlexText";
 import TextPrimary from "../shered/TextPrimary";
 import TextSecondary from "../shered/TextSecondary";
+import { ImgUrl } from "../../redux/baseApi";
 
 const CategorySquareButton = ({
   style,
   name,
   width,
+  image,
+  totalProviders,
 }: {
   style?: ViewStyle;
   name: string;
   width?: number;
+  image?: string;
+  totalProviders?: number;
 }) => {
   const navigate = Navigate();
   return (
@@ -61,7 +66,9 @@ const CategorySquareButton = ({
               height: 40,
               width: 40,
             }}
-            source={otherIcons.Category as ImageSourcePropType}
+            source={{
+              uri: image ? ImgUrl(image) : "https://placehold.co/400x400.png",
+            }}
           />
         </View>
         <TextPrimary style={{ fontWeight: 700 }} text={name} />
@@ -69,7 +76,7 @@ const CategorySquareButton = ({
           style={{
             marginTop: -6,
           }}
-          text={"1754 Providers"}
+          text={`${totalProviders} Providers`}
         />
       </FlexText>
     </TouchableOpacity>
@@ -77,5 +84,3 @@ const CategorySquareButton = ({
 };
 
 export default CategorySquareButton;
-
-const styles = StyleSheet.create({});

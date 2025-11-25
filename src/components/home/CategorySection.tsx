@@ -4,19 +4,10 @@ import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
 import CategoryButton from "../category/CategoryButton";
 import SectionHeading from "../shered/SectionHeading";
-
-const data = [
-  { name: "Cleaning", image: "" },
-  { name: "Plumbing", image: "" },
-  { name: "Appliances", image: "" },
-  { name: "Painting", image: "" },
-  { name: "Moving", image: "" },
-  { name: "Furniture", image: "" },
-  { name: "Gardening", image: "" },
-  { name: "Carpentry", image: "" },
-];
+import { useGetAllCategoriesQuery } from "../../redux/apis";
 
 const CategorySection = () => {
+  const { data, isLoading } = useGetAllCategoriesQuery({});
   const { width } = ScreenSize();
   const itemWidth = (width - 80) / 4;
   const navigate = Navigate();
@@ -24,7 +15,7 @@ const CategorySection = () => {
     <View style={{ marginTop: 10 }}>
       <SectionHeading text="Category" handler={() => navigate("Category")} />
       <FlatList
-        data={data}
+        data={data?.data?.result || []}
         numColumns={4}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.listContent}
@@ -33,6 +24,7 @@ const CategorySection = () => {
             width={itemWidth}
             style={{ width: itemWidth, paddingVertical: 15 }}
             name={item.name}
+            image={item.category_image}
           />
         )}
       />

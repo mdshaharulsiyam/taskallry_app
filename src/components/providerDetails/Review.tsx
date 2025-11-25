@@ -1,11 +1,15 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import { Service, useGetMyFeedbackQuery } from "../../redux/apis";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
 import TextSecondary from "../shered/TextSecondary";
 import ReviewCard from "./ReviewCard";
 
-const Review = () => {
+const Review = ({ service }: { service?: Service }) => {
+  const { data, isLoading, isError } = useGetMyFeedbackQuery();
+  const feedbacks = data?.data || [];
+
   return (
     <View>
       <FlexText
@@ -20,13 +24,26 @@ const Review = () => {
           gap: 10,
         }}
       >
-        <HeaderDesign text="4.8 ⭐" />
+        <HeaderDesign text={`${service?.averageRating} ⭐`} />
 
-        <TextSecondary text="of 125 reviews" />
+        <TextSecondary text={`of ${service?.totalRating} reviews`} />
       </FlexText>
-      {[...Array(5).keys()]?.map((item) => (
-        <ReviewCard />
-      ))}
+      {isLoading && <TextSecondary text="Loading reviews..." />}
+      {isError && <TextSecondary text="Failed to load reviews" />}
+      {!isLoading && !isError && feedbacks.length === 0 && (
+        <TextSecondary text="No reviews yet" />
+      )}
+      {!isLoading &&
+        !isError &&
+        feedbacks.map((fb) => (
+          <ReviewCard
+            key={fb._id}
+            author={fb?.customer?.name}
+            rating={fb?.rating}
+            details={fb?.details}
+            image={fb?.customer?.profile_image}
+          />
+        ))}
     </View>
   );
 };

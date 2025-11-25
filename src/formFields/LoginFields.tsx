@@ -9,7 +9,7 @@ const LoginFields = () => {
       placeHolder: "Enter Email Address",
       label: "Email Address",
       error: false,
-      value: "user@gmail.com",
+      value: "nice@yopmail.com",
       required: true,
       keyboard: KeyboardType.EMAIL_ADDRESS,
     },
@@ -30,7 +30,7 @@ const LoginFields = () => {
       label: "Remember me",
       error: false,
       value: "",
-      required: true,
+      required: false,
       keyboard: KeyboardType.DEFAULT,
     },
   ]);

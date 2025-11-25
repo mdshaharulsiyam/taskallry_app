@@ -1,21 +1,22 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TextStyle } from "react-native";
+import { MessageItem } from "../../redux/apis/messageApi";
 import TextPrimary from "../shered/TextPrimary";
 
-const Message = ({ i }: { i: number }) => {
+const Message = ({ item }: { item: MessageItem }) => {
+  const alignStyle: TextStyle = item.isMyMessage
+    ? { alignSelf: "flex-end", backgroundColor: "#FFFFFF" }
+    : { alignSelf: "flex-start", backgroundColor: "#E6F4F1" };
+
   return (
     <TextPrimary
-      text={`this is message ${i}`}
+      text={item.text}
       style={{
-        ...(i % 2 == 0
-          ? {
-              marginLeft: "auto",
-              backgroundColor: "#FFFFFF",
-            }
-          : { marginRight: "auto", backgroundColor: "#E6F4F1" }),
+        ...alignStyle,
         borderRadius: 10,
-        width: "auto",
-        padding: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        maxWidth: "80%",
       }}
     />
   );

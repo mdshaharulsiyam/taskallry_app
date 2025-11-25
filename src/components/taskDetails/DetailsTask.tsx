@@ -1,13 +1,23 @@
+import moment from "moment";
 import React from "react";
 import {
+  Alert,
   FlatList,
   Image,
   ImageSourcePropType,
-  StyleSheet,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import { otherIcons, TabIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
+import {
+  useDeleteTaskMutation,
+  useGetMyProfileQuery,
+  useGetSingleTaskQuery,
+} from "../../redux/apis";
+import { ImgUrl } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
 import BackButton from "../shered/BackButton";
 import FlexText from "../shered/FlexText";
@@ -21,45 +31,83 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 import ButtonGreenOpacity30 from "../ui/buttons/ButtonGreenOpacity30";
 import ButtonTransparentBG from "../ui/buttons/ButtonTransparentBG";
 import IconButtonTransparent from "../ui/buttons/IconButtonTransparent";
+import Loader from "../ui/loader/Loader";
 import Bids_Question from "./Bids_Question";
 import CancelRefundRequest from "./CancelRefundRequest";
 import FeedbackStatusButton from "./FeedbackStatusButton";
 import SubmitBitButt from "./SubmitBitButt";
 import TaskProgress from "./TaskProgress";
 
+const color = {
+  OPEN_FOR_BID: {
+    backgroundColor: "#FFEDD5",
+    color: "#F97316",
+  },
+  IN_PROGRESS: {
+    backgroundColor: "#E0F2FE",
+    color: "#0EA5E9",
+  },
+};
+
 const DetailsTask = ({
   heading,
-  from,
-  status,
+  id,
 }: {
   heading?: "Tasks Details" | "My Tasks Details";
-  from: "user" | "service";
-  status:
-    | "All Tasks"
-    | "open for bids"
-    | "in Progress"
-    | "completed"
-    | "cancelled"
-    | "dispute"
-    | "Ongoing Tasks"
-    | "Bids  Made"
-    | "Bids  Received";
+  id: string;
 }) => {
-  console.log(heading, from, status);
+  const { role } = useGlobalContext();
+  const { data, isLoading, isFetching } = useGetSingleTaskQuery(id);
+  const { data: profileData } = useGetMyProfileQuery();
+  const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
+  const navigate = Navigate();
+  const handleRemoveTask = () => {
+    Alert.alert("Remove Task", "Are you sure you want to remove this task?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Remove",
+        style: "destructive",
+        onPress: () => {
+          deleteTask(id)
+            .unwrap()
+            .then((res: any) => {
+              Toast.show({
+                type: "success",
+                text1: "Task removed",
+                text2: res?.message || "Task has been removed successfully",
+              });
+              navigate("TabLayout", {
+                screen: "Task",
+              });
+            })
+            .catch((err: any) => {
+              Toast.show({
+                type: "error",
+                text1: "Failed to remove task",
+                text2: err?.data?.message || "Something went wrong",
+              });
+            });
+        },
+      },
+    ]);
+  };
   const elements = [
     <ButtonGreenOpacity30
       key={1}
       activeOpacity={1}
-      text={status}
+      text={data?.data?.status}
       style={{
-        backgroundColor: "#FFEDD5",
+        backgroundColor:
+          color[data?.data?.status as keyof typeof color]?.backgroundColor,
         width: 200,
-
         borderRadius: 8,
         marginVertical: 10,
       }}
       textStyle={{
-        color: "#F97316",
+        color: color[data?.data?.status as keyof typeof color]?.color,
         fontWeight: 700,
       }}
     />,
@@ -68,14 +116,14 @@ const DetailsTask = ({
       style={{
         marginBottom: 10,
       }}
-      text="Task ID #1233"
+      text={`Task ID #${data?.data?._id}`}
       key={3}
     />,
 
     heading == "My Tasks Details" ? (
       <Image
         key={5}
-        src="https://placehold.co/400x400.png"
+        source={{ uri: ImgUrl(data?.data?.customer?.profile_image + "") }}
         style={{
           width: 200,
           height: 120,
@@ -85,13 +133,13 @@ const DetailsTask = ({
     ) : (
       <ImageFlex
         key={4}
-        image={`https://placehold.co/400x400.png`}
+        image={data?.data?.customer?.profile_image}
         text="Posted by"
-        text1="Marvin Fey"
+        text1={data?.data?.customer?.name}
       />
     ),
 
-    status == "in Progress" || status == "Ongoing Tasks" ? (
+    data?.data?.status != "OPEN_FOR_BID" ? (
       <FlexText
         style={{
           justifyContent: "space-between",
@@ -99,14 +147,24 @@ const DetailsTask = ({
       >
         <ImageFlex
           key={4}
-          image={`https://placehold.co/400x400.png`}
+          image={data?.data?.provider?.profile_image}
           text="Assigned To"
-          text1="Marvin Fey"
+          text1={data?.data?.provider?.name}
         />
         <IconButtonTransparent
           text="Chat"
           icon={TabIcons.Chat as ImageSourcePropType}
-          handler={() => console.log("")}
+          handler={() => {
+            const target =
+              role === "user" ? data?.data?.provider : data?.data?.customer;
+
+            navigate("Messages", {
+              id: target?._id,
+              name: target?.name,
+              image: target?.profile_image,
+              email: target?.email,
+            });
+          }}
           style={{
             width: "auto",
             paddingVertical: 6,
@@ -123,15 +181,15 @@ const DetailsTask = ({
       }
       key={5}
       text="Location"
-      text1="New York, USA"
+      text1={data?.data?.address}
     />,
     <ImageFlex
       component={
         <BlueBadgeOpacity30 icon={otherIcons.Calendar as ImageSourcePropType} />
       }
       key={6}
-      text="to be done on  "
-      text1="15 May 2020 8:00 am"
+      text="to be done on"
+      text1={moment(data?.data?.preferredDate).format("DD MMM YYYY h:mm A")}
     />,
 
     <HeaderSecondary
@@ -141,15 +199,10 @@ const DetailsTask = ({
       }}
       text="Details"
     />,
-    <TextPrimary
-      key={8}
-      text="I'm after 2 palettes that are sold out online but available from 2 specific stores.  They meed to be sent out to you in the US and then forwarded to me in Sydney in 1 package for convenience. For more information please direct message me! Paid!"
-    />,
+    <TextPrimary key={8} text={data?.data?.description} />,
 
     heading == "My Tasks Details" ? (
-      status != "All Tasks" ? (
-        <></>
-      ) : (
+      data?.data?.status == "OPEN_FOR_BID" ? (
         <FlexText
           key={9}
           style={{
@@ -162,26 +215,37 @@ const DetailsTask = ({
             borderRadius: 5,
           }}
         >
-          <TextSecondary text="Task budget " />
-          <HeaderDesign text="₦24.00" />
+          <TextSecondary text="Task budget" />
+          <HeaderDesign text={`₦${data?.data?.budget}`} />
           <FlexText>
             <ButtonTransparentBG
               style={{
                 width: "auto",
               }}
               text="Edit Task"
+              handler={() =>
+                navigate("TabLayout", {
+                  screen: "PostTask",
+                  params: {
+                    task: data?.data,
+                  },
+                })
+              }
             />
             <ButtonBG
               style={{
                 width: "auto",
               }}
-              text="Remove the task."
-              handler={() => {}}
+              text={isDeleting ? "Removing..." : "Remove the task."}
+              handler={handleRemoveTask}
+              disabled={isDeleting}
             />
           </FlexText>
         </FlexText>
+      ) : (
+        <></>
       )
-    ) : (
+    ) : role != "user" && data?.data?.status == "OPEN_FOR_BID" ? (
       <FlexText
         key={9}
         style={{
@@ -190,28 +254,36 @@ const DetailsTask = ({
         }}
       >
         <View>
-          <TextSecondary text="Task budget " />
-          <HeaderDesign text="₦24.00" />
+          <TextSecondary text="Task budget" />
+          <HeaderDesign text={`₦${data?.data?.budget}`} />
         </View>
-        <SubmitBitButt />
+        <SubmitBitButt id={id} />
       </FlexText>
-    ),
-
-    status == "All Tasks" ||
-    status == "open for bids" ||
-    from == "service" ||
-    status == "Bids  Made" ? (
-      <Bids_Question from={from} status={status} key={10} />
     ) : (
       <></>
     ),
-    status != "All Tasks" && status != "open for bids" && from == "user" ? (
+    data?.data?.status == "OPEN_FOR_BID" ? (
+      <Bids_Question
+        customer={data?.data?.customer?._id}
+        status={data?.data?.status}
+        key={10}
+        id={id}
+        role={role as "user" | "service"}
+      />
+    ) : (
+      <></>
+    ),
+    data?.data?.status != "OPEN_FOR_BID" &&
+      (profileData?.data?._id == data?.data?.provider?._id ||
+        profileData?.data?._id == data?.data?.customer?._id) ? (
       <>
-        <TaskProgress key={11} />
-        {status == "dispute" && (
+        <TaskProgress data={data?.data} key={11} />
+        {
+          role == "service" && <FeedbackStatusButton status={data?.data?.status as any} id={id} />
+        }
+        {data?.data?.status == "DISPUTE" && (
           <>
             <CancelRefundRequest />
-            <FeedbackStatusButton status={status} />
           </>
         )}
       </>
@@ -219,14 +291,15 @@ const DetailsTask = ({
       <></>
     ),
   ];
-  console.log();
-  const navigate = Navigate();
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <SafeAreaProviderNoScroll>
       <BackButton
         text={heading}
-        show={status == "in Progress"}
-        handler={() => navigate("RegulationsCenter")}
+        show={data?.data?.status == "IN_PROGRESS"}
+        handler={() => navigate("RegulationsCenter", { id: data?.data?._id })}
       />
       <FlatList
         keyExtractor={(item, index) => index.toString()}
@@ -242,5 +315,3 @@ const DetailsTask = ({
 };
 
 export default DetailsTask;
-
-const styles = StyleSheet.create({});

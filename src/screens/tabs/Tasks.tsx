@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import SectionHeading from "../../components/shered/SectionHeading";
@@ -29,8 +29,14 @@ const Tasks = () => {
 
   const status = getStatusFromTab(tab);
 
+  const [limit, setLimit] = useState(20);
+
+  useEffect(() => {
+    setLimit(20);
+  }, [status]);
+
   const { data, isLoading, isFetching } = useGetMyTaskQuery(
-    status ? { status } : {}
+    status ? { status, page: 1, limit } : { page: 1, limit }
   );
 
   const tasks = data?.data?.result || [];
@@ -53,6 +59,13 @@ const Tasks = () => {
         key={3}
         data={tasks}
         keyExtractor={(_item, index) => index.toString()}
+        onEndReachedThreshold={0.1}
+        onEndReached={() => {
+          const total = data?.data?.pagination?.total || 0;
+          if (!isFetching && total > tasks.length) {
+            setLimit((prev) => prev + 20);
+          }
+        }}
         renderItem={({ item }) => (
           <TaskCard
             from="user"

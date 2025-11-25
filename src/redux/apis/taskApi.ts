@@ -196,15 +196,19 @@ export const taskApi = baseApi.injectEndpoints({
         | "LATE";
         sortOrder?: string;
         sortBy?: string;
+        page?: number;
+        limit?: number;
       }
     >({
-      query: ({ status, sortOrder, sortBy }) => ({
+      query: ({ status, sortOrder, sortBy, page = 1, limit = 10 }) => ({
         url: "/task/my-task",
         method: "GET",
         params: {
           status,
           sortOrder,
           sortBy,
+          page,
+          limit,
         },
       }),
       providesTags: ["Task"],

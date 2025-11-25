@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   ImageSourcePropType,
@@ -37,16 +38,16 @@ const FIlteredTask = ({ search }: { search: string }) => {
     searchTerm?: string;
     maxDistance?: number;
   } = isStatusFilter
-    ? {
+      ? {
         status: sort,
         ...(category ? { category } : {}),
         ...(latino
           ? {
-              latitude: latino?.lat,
-              longitude: latino?.lng,
-              maxDistance:
-                Number(distance_range) <= 0 ? 20 : Number(distance_range),
-            }
+            latitude: latino?.lat,
+            longitude: latino?.lng,
+            maxDistance:
+              Number(distance_range) <= 0 ? 20 : Number(distance_range),
+          }
           : {}),
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
@@ -55,17 +56,17 @@ const FIlteredTask = ({ search }: { search: string }) => {
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),
       }
-    : {
+      : {
         sortOrder: sort === "Oldest First" ? "asc" : "desc",
         sortBy: "createdAt",
         ...(category ? { category } : {}),
         ...(latino
           ? {
-              latitude: latino?.lat,
-              longitude: latino?.lng,
-              maxDistance:
-                Number(distance_range) <= 0 ? 20 : Number(distance_range),
-            }
+            latitude: latino?.lat,
+            longitude: latino?.lng,
+            maxDistance:
+              Number(distance_range) <= 0 ? 20 : Number(distance_range),
+          }
           : {}),
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 500000 : Number(price_range),
@@ -74,11 +75,21 @@ const FIlteredTask = ({ search }: { search: string }) => {
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),
       };
-  const { data } = useGetAllTasksQuery(queryParams);
+  const [limit, setLimit] = useState(20);
+
+  useEffect(() => {
+    setLimit(20);
+  }, [category, to_be_done, work_location, distance_range, price_range, sort, search]);
+
+  const { data, isFetching } = useGetAllTasksQuery({
+    ...queryParams,
+    page: 1,
+    limit,
+  });
   return (
     <View style={{ marginTop: 10 }}>
       {(data?.data?.result && data?.data?.result?.length < 1) ||
-      !data?.data?.result ? (
+        !data?.data?.result ? (
         <>
           <Image
             source={otherIcons.Empty as ImageSourcePropType}
@@ -92,6 +103,19 @@ const FIlteredTask = ({ search }: { search: string }) => {
         <FlatList
           data={data?.data?.result || []}
           keyExtractor={(item, index) => index.toString()}
+          onEndReachedThreshold={0.1}
+          onEndReached={() => {
+            const total = data?.data?.pagination?.total || 0;
+            const current = data?.data?.result?.length || 0;
+            if (!isFetching && total > current) {
+              setLimit((prev) => prev + 20);
+            }
+          }}
+          ListFooterComponent={
+            isFetching && (data?.data?.result?.length || 0) > 0 ? (
+              <ActivityIndicator style={{ marginVertical: 8 }} />
+            ) : null
+          }
           renderItem={({ item }) => <TaskCard task={item} from="user" />}
         />
       )}

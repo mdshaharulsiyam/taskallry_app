@@ -33,14 +33,14 @@ const ProvidersMap = () => {
     searchTerm?: string;
     maxDistance?: number;
   } = isStatusFilter
-    ? {
+      ? {
         status: sort,
         ...(category ? { category } : {}),
         ...(latino
           ? {
-              maxDistance:
-                Number(distance_range) <= 0 ? 20 : Number(distance_range),
-            }
+            maxDistance:
+              Number(distance_range) <= 0 ? 20 : Number(distance_range),
+          }
           : {}),
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
@@ -48,15 +48,15 @@ const ProvidersMap = () => {
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),
       }
-    : {
+      : {
         sortOrder: sort === "Oldest First" ? "asc" : "desc",
         sortBy: "createdAt",
         ...(category ? { category } : {}),
         ...(latino
           ? {
-              maxDistance:
-                Number(distance_range) <= 0 ? 20 : Number(distance_range),
-            }
+            maxDistance:
+              Number(distance_range) <= 0 ? 20 : Number(distance_range),
+          }
           : {}),
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 500000 : Number(price_range),
@@ -65,7 +65,7 @@ const ProvidersMap = () => {
           : {}),
       };
 
-  const { data } = useGetAllTasksQuery(queryParams);
+  const { data } = useGetAllTasksQuery({ ...queryParams, page: 1, limit: 100 });
   const tasks = data?.data?.result || [];
   const markers = tasks
     .map((task) => {
@@ -88,11 +88,11 @@ const ProvidersMap = () => {
       };
     })
     .filter(Boolean) as {
-    lat: number;
-    lng: number;
-    title?: string;
-    image?: string | null;
-  }[];
+      lat: number;
+      lng: number;
+      title?: string;
+      image?: string | null;
+    }[];
 
   if (!hasApiKey) {
     return (

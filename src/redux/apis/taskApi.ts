@@ -124,6 +124,8 @@ export const taskApi = baseApi.injectEndpoints({
         doneBy?: string;
         searchTerm?: string;
         maxDistance?: number;
+        page?: number;
+        limit?: number;
       }
     >({
       query: ({
@@ -135,6 +137,8 @@ export const taskApi = baseApi.injectEndpoints({
         maxPrice,
         searchTerm,
         maxDistance,
+        page,
+        limit,
       }) => ({
         url: "/task/all-task",
         method: "GET",
@@ -147,6 +151,8 @@ export const taskApi = baseApi.injectEndpoints({
           maxPrice,
           searchTerm,
           maxDistance,
+          page,
+          limit,
         },
       }),
       providesTags: ["Task"],

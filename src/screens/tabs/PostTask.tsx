@@ -44,6 +44,7 @@ const title = ["Task Overview", "Task Details", "Date & Time", "Budget "];
 const PostTask = () => {
   const route = useRoute() as any;
   const task = route?.params?.task as Task | undefined;
+  const provider = route?.params?.id as string | undefined;
   const [create, { isLoading }] = useCreateTaskMutation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fiels, setFiels] = useState<any>([]);
@@ -163,7 +164,8 @@ const PostTask = () => {
                   navigate("Task");
                   setCurrentSlide(0);
                   setFiels([]);
-                }
+                },
+                provider
               );
 
               if (isValid && currentSlide < 3) {

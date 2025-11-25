@@ -10,7 +10,12 @@ export interface Service {
   };
   title: string;
   images: [string];
-  provider: string;
+  provider: {
+    _id: string;
+    name: string;
+    profile_image: string;
+    email: string;
+  };
   description: string;
   location: {
     type: "Point";

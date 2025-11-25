@@ -11,7 +11,8 @@ export const handlePostTask = (
   allFields: FieldsType[],
   create: any,
   files: any,
-  successFn: () => void
+  successFn: () => void,
+  provider: string | undefined,
 ) => {
   const isValid = validateFields(fields, setFields);
   if (!isValid || currentSlide != 3) {
@@ -33,6 +34,7 @@ export const handlePostTask = (
     category: values?.task_category,
     budget: values?.offer,
     payOn: "completion",
+    ...(provider && { provider }),
     location: {
       type: "Point",
       coordinates: [latino?.lng, latino?.lat],

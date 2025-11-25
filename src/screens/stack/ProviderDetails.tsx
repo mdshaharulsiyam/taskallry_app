@@ -13,6 +13,7 @@ import ButtonGreenOpacity30 from "../../components/ui/buttons/ButtonGreenOpacity
 import ButtonTransparentBG from "../../components/ui/buttons/ButtonTransparentBG";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useGetSingleServiceQuery } from "../../redux/apis";
+import Navigate from "../../utils/Navigate";
 
 const ProviderDetails = () => {
   const {
@@ -22,8 +23,8 @@ const ProviderDetails = () => {
   const { data, isLoading, isError } = useGetSingleServiceQuery(id);
   const service = data?.data || null;
 
-  const providerName =
-    (service as any)?.provider?.name ?? (service as any)?.provider ?? "Provider";
+  const navigate = Navigate();
+
 
   const elements = service
     ? [
@@ -70,7 +71,7 @@ const ProviderDetails = () => {
           style={{
             width: "auto",
           }}
-          handler={() => { }}
+          handler={() => navigate("TabLayout", { screen: "PostTask", params: { id: service.provider?._id } })}
         />
       </FlexText>,
 
@@ -83,7 +84,7 @@ const ProviderDetails = () => {
       >
         <ImageFlex
           image={service.images?.[0]}
-          text={providerName}
+          text={service.provider?.name}
           text1={`⭐ ${service.averageRating ?? 0} (${service.totalRating ?? 0} Reviews)`}
         />
         <ButtonTransparentBG
@@ -93,7 +94,14 @@ const ProviderDetails = () => {
             borderWidth: 1,
             borderColor: "#115E59",
           }}
-          handler={() => { }}
+          handler={() =>
+            navigate("Messages", {
+              id: service.provider?._id ?? "",
+              name: service.provider?.name ?? "",
+              image: service.provider?.profile_image ?? service.images?.[0] ?? "",
+              email: service.provider?.email ?? "",
+            })
+          }
         />
       </FlexText>,
       <Details_Review key={6} />,

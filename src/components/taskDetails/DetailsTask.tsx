@@ -111,7 +111,7 @@ const DetailsTask = ({
         fontWeight: 700,
       }}
     />,
-    <HeaderDesign key={2} text="Help move a couch" />,
+    <HeaderDesign key={2} text={data?.data?.title} />,
     <TextSecondary
       style={{
         marginBottom: 10,
@@ -311,7 +311,7 @@ const DetailsTask = ({
           <TextSecondary text="Task budget" />
           <HeaderDesign text={`₦${data?.data?.budget}`} />
         </View>
-        <SubmitBitButt id={id} />
+        <SubmitBitButt accept={data?.data?.provider?._id} id={id} />
       </FlexText>
     ) : (
       <></>

@@ -6,7 +6,11 @@ export interface MessageItem {
   imageUrl: string[];
   videoUrl: string[];
   pdfUrl: string[];
-  msgByUserId: string;
+  msgByUserId: {
+    name: string
+    profile_image: string
+    _id: string
+  };
   msgByUserModel: string;
   seen: boolean;
   conversationId: string;

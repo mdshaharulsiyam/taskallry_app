@@ -7,6 +7,7 @@ import Message from "../../components/message/Message";
 import SendMessage from "../../components/message/SendMessage";
 import { otherIcons } from "../../constant/images";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+import { useGetMyProfileQuery } from "../../redux/apis";
 import type { MessageItem } from "../../redux/apis/messageApi";
 import { useGetMessagesQuery } from "../../redux/apis/messageApi";
 import Navigate from "../../utils/Navigate";
@@ -27,6 +28,8 @@ const Messages = () => {
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [socket, setSocket] = useState<any>(null);
 
+  const { data: profileData } = useGetMyProfileQuery();
+
   const navigate = Navigate();
   const { height } = ScreenSize();
   const { top, bottom } = useSafeAreaInsets();
@@ -36,6 +39,18 @@ const Messages = () => {
       setMessages(data.data.result);
     }
   }, [data]);
+
+  useEffect(() => {
+    const myId = profileData?.data?._id;
+    if (!myId) return;
+
+    setMessages((prev) =>
+      prev.map((m) => ({
+        ...m,
+        isMyMessage: m.msgByUserId?._id === myId,
+      }))
+    );
+  }, [profileData]);
 
   useEffect(() => {
     let mounted = true;
@@ -56,8 +71,16 @@ const Messages = () => {
 
     const messageEvent = `message-${id}`;
 
+    const myId = profileData?.data?._id;
+
     const handleMessage = (message: MessageItem) => {
-      setMessages((prev) => [message, ...prev]);
+      console.log("message", message);
+      if (myId == message?.msgByUserId?._id) {
+        return
+      }
+      const isMyMessage = myId ? message?.msgByUserId?._id === myId : message.isMyMessage;
+      const next: MessageItem = { ...message, isMyMessage };
+      setMessages((prev) => [next, ...prev]);
     };
 
     const handleError = (err: any) => {
@@ -71,10 +94,40 @@ const Messages = () => {
       socket.off(messageEvent, handleMessage);
       socket.off("socket-error", handleError);
     };
-  }, [socket, id]);
+  }, [socket, id, profileData]);
 
   const handleSendMessage = async (text: string) => {
     if (!socket) return;
+
+    const myId = profileData?.data?._id;
+
+    // Optimistically add message on the right side
+    const optimistic: MessageItem = {
+      _id: `${Date.now()}`,
+      text,
+      imageUrl: [],
+      videoUrl: [],
+      pdfUrl: [],
+      msgByUserId: {
+        name: profileData?.data?.name || "",
+        profile_image: profileData?.data?.profile_image || "",
+        _id: myId || "",
+      },
+      msgByUserModel: "",
+      seen: false,
+      conversationId: id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      userDetails: {
+        _id: myId || "",
+        name: profileData?.data?.name || "",
+        profile_image: profileData?.data?.profile_image || "",
+        email: profileData?.data?.email || "",
+      },
+      isMyMessage: true,
+    };
+
+    setMessages((prev) => [optimistic, ...prev]);
 
     socket.emit("send-message", {
       text,

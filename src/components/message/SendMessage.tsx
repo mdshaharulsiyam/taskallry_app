@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   ImageSourcePropType,
   StyleSheet,
@@ -10,14 +11,24 @@ import { otherIcons } from "../../constant/images";
 import { SelectImage } from "../../utils/imagePick";
 import FlexText from "../shered/FlexText";
 
-const SendMessage = ({ onSend }: { onSend: (text: string) => void }) => {
+const SendMessage = ({
+  onSend,
+}: {
+  onSend: (text: string) => void | Promise<void>;
+}) => {
   const [text, setText] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const trimmed = text.trim();
-    if (!trimmed) return;
-    onSend(trimmed);
-    setText("");
+    if (!trimmed || isSending) return;
+    try {
+      setIsSending(true);
+      await onSend(trimmed);
+      setText("");
+    } finally {
+      setIsSending(false);
+    }
   };
   return (
     <FlexText
@@ -49,13 +60,17 @@ const SendMessage = ({ onSend }: { onSend: (text: string) => void }) => {
         onSubmitEditing={handleSend}
         returnKeyType="send"
       />
-      <TouchableOpacity onPress={handleSend}>
-        <Image
-          source={otherIcons.Send as ImageSourcePropType}
-          style={{
-            tintColor: "#115E59",
-          }}
-        />
+      <TouchableOpacity onPress={handleSend} disabled={isSending}>
+        {isSending ? (
+          <ActivityIndicator size="small" color="#115E59" />
+        ) : (
+          <Image
+            source={otherIcons.Send as ImageSourcePropType}
+            style={{
+              tintColor: "#115E59",
+            }}
+          />
+        )}
       </TouchableOpacity>
     </FlexText>
   );

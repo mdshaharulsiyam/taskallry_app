@@ -199,7 +199,9 @@ export const taskApi = baseApi.injectEndpoints({
         | "COMPLETED"
         | "CANCELLED"
         | "DISPUTE"
-        | "LATE";
+        | "LATE"
+        | "bidMade"
+        | "bidReceived"
         sortOrder?: string;
         sortBy?: string;
         page?: number;

@@ -4,13 +4,33 @@ import TabButton from "../../components/mytask/TabButton";
 import SectionHeading from "../../components/shered/SectionHeading";
 import TaskCard from "../../components/shered/TaskCard";
 import Loader from "../../components/ui/loader/Loader";
+import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useGetMyTaskQuery } from "../../redux/apis/taskApi";
 
 const Tasks = () => {
+  const { role } = useGlobalContext();
   const [tab, setTab] = useState("All Tasks");
 
-  const getStatusFromTab = (currentTab: string) => {
+  const getStatusFromTab = (
+    currentTab: string,
+    currentRole: "user" | "service" | null
+  ) => {
+    if (currentRole === "service") {
+      switch (currentTab) {
+        case "Ongoing Tasks":
+          return "IN_PROGRESS" as const;
+        case "Bids  Made":
+          return "bidMade" as const;
+        case "Bids  Received":
+          return "bidReceived" as const;
+        case "dispute":
+          return "DISPUTE" as const;
+        default:
+          return undefined;
+      }
+    }
+
     switch (currentTab) {
       case "open for bids":
         return "OPEN_FOR_BID" as const;
@@ -27,7 +47,7 @@ const Tasks = () => {
     }
   };
 
-  const status = getStatusFromTab(tab);
+  const status = getStatusFromTab(tab, role);
 
   const [limit, setLimit] = useState(20);
 
@@ -68,7 +88,7 @@ const Tasks = () => {
         }}
         renderItem={({ item }) => (
           <TaskCard
-            from="user"
+            from={role === "service" ? "service" : "user"}
             tab={tab}
             showDetailsButton={true}
             task={item}

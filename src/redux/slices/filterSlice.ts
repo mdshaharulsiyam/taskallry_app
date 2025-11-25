@@ -48,7 +48,6 @@ export const filterSlice = createSlice({
     },
     setFilterSort: (state, action: PayloadAction<string>) => {
       state.sort = action.payload;
-      // Automatically set sortBy and sortOrder based on sort selection
       switch (action.payload) {
         case "Newest First":
           state.sortBy = "createdAt";
@@ -107,7 +106,6 @@ export const {
   setSearchType,
 } = filterSlice.actions;
 
-// Selectors
 export const selectFilters = (state: RootState) => state.filter;
 export const selectCategory = (state: RootState) => state.filter.category;
 export const selectToBeDone = (state: RootState) => state.filter.to_be_done;

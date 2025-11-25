@@ -7,11 +7,6 @@ import TextSecondary from "../../../components/shered/TextSecondary";
 import Navigate from "../../../utils/Navigate";
 
 export const AccountSetting = () => {
-  // {
-  //   name: "Change Password",
-  //   image: profileIcons.Lock,
-  //   navigate: "ChangePassword",
-  // },
   const navigate = Navigate();
   return (
     <SafeAreaProviderNoScroll backButtonText="Account Setting">
@@ -22,7 +17,6 @@ export const AccountSetting = () => {
           marginTop: 10,
           padding: 10,
           borderRadius: 10,
-          // backgroundColor: "#E6F4F1"
           borderWidth: 1,
           paddingVertical: 14,
         }}
@@ -46,7 +40,6 @@ export const AccountSetting = () => {
           marginTop: 10,
           padding: 10,
           borderRadius: 10,
-          // backgroundColor: "#E6F4F1"
           borderWidth: 1,
           paddingVertical: 14,
         }}

@@ -67,7 +67,6 @@ const TimePicker = ({
     if (Platform.OS === "android") {
       setShow(false);
     } else {
-      // iOS keeps the picker visible; do nothing here
     }
 
     if (event?.type === "dismissed") return;

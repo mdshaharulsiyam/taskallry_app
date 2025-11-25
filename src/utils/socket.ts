@@ -12,7 +12,6 @@ export const getSocket = async (): Promise<Socket> => {
   const token = await AsyncStorage.getItem("token");
 
   socket = io(url, {
-    // transports: ["websocket"],
     query: {
       token: token || "",
     },

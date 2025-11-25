@@ -101,7 +101,6 @@ const Messages = () => {
 
     const myId = profileData?.data?._id;
 
-    // Optimistically add message on the right side
     const optimistic: MessageItem = {
       _id: `${Date.now()}`,
       text,

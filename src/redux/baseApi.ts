@@ -6,7 +6,6 @@ export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${url}/api/v1`,
     prepareHeaders: async (headers, { getState }) => {
-      // Prefer token from Redux auth slice, fall back to AsyncStorage
       const state: any = getState();
       const tokenFromState: string | null | undefined = state?.auth?.token;
       const token = tokenFromState ?? (await AsyncStorage.getItem("token"));

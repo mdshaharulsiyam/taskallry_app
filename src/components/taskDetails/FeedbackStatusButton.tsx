@@ -21,14 +21,13 @@ const FeedbackStatusButton = ({
   const [review, setReview] = useState("");
 
   const handleStarPress = (index: number) => {
-    setRating(index + 1); // index is 0-based, rating is 1-based
+    setRating(index + 1);
   };
 
   const handleSubmit = () => {
     console.log("⭐ Rating:", rating);
     console.log("📝 Review:", review);
 
-    // clear after submit
     setRating(0);
     setReview("");
     setOpen(false);

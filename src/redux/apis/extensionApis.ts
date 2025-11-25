@@ -42,7 +42,6 @@ interface DeleteExtensionResponse {
 
 export const extensionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // POST extension-request/create
     createExtensionRequest: builder.mutation<
       CreateExtensionResponse,
       CreateExtensionRequest
@@ -55,7 +54,6 @@ export const extensionApi = baseApi.injectEndpoints({
       invalidatesTags: ["Extension", "Task"],
     }),
 
-    // GET extension-request/byTask/:taskId
     getExtensionsByTask: builder.query<GetExtensionsByTaskResponse, string>({
       query: (taskId) => ({
         url: `/extension-request/byTask/${taskId}`,
@@ -64,7 +62,6 @@ export const extensionApi = baseApi.injectEndpoints({
       providesTags: ["Extension"],
     }),
 
-    // DELETE extension-request/delete/:id
     deleteExtensionRequest: builder.mutation<DeleteExtensionResponse, string>({
       query: (id) => ({
         url: `/extension-request/delete/${id}`,
@@ -73,7 +70,6 @@ export const extensionApi = baseApi.injectEndpoints({
       invalidatesTags: ["Extension", "Task"],
     }),
 
-    // PATCH extension-request/acceptRequest/:id
     acceptExtensionRequest: builder.mutation<UpdateExtensionResponse, string>({
       query: (id) => ({
         url: `/extension-request/acceptRequest/${id}`,
@@ -82,7 +78,6 @@ export const extensionApi = baseApi.injectEndpoints({
       invalidatesTags: ["Extension", "Task"],
     }),
 
-    // PATCH extension-request/rejectRequest/:id
     rejectExtensionRequest: builder.mutation<UpdateExtensionResponse, string>({
       query: (id) => ({
         url: `/extension-request/rejectRequest/${id}`,

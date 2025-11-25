@@ -60,7 +60,6 @@ const SelectInput = ({
           data={options}
           labelField="label"
           valueField="value"
-          //  mode="modal"
           placeholder={placeHolder}
           value={Array.isArray(value) ? value : []}
           style={baseStyle}
@@ -96,7 +95,6 @@ const SelectInput = ({
           data={options}
           labelField="label"
           valueField="value"
-          // mode="modal"
           placeholder={placeHolder}
           value={typeof value === "string" ? value : undefined}
           style={baseStyle}

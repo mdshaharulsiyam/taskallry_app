@@ -98,9 +98,6 @@ const Login = () => {
               () => navigate("TabLayout"),
               (token) => dispatch(setToken(token))
             );
-            // const email = fields[0]?.value + "";
-            // setRole(email?.includes("user") ? "user" : "service");
-            // navigate("TabLayout");
           }}
         />
       </View>

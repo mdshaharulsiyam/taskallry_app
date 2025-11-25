@@ -42,7 +42,6 @@ const Verify = () => {
               } else {
                 navigate("TrustedServices");
               }
-              // handleSignIn(fields, setFields)
             }}
           />
         </View>

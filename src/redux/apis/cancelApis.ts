@@ -39,7 +39,6 @@ interface DeleteCancelResponse {
 
 export const cancelApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // POST cancel-request/create
     createCancelRequest: builder.mutation<
       CreateCancelResponse,
       CreateCancelRequest
@@ -52,7 +51,6 @@ export const cancelApi = baseApi.injectEndpoints({
       invalidatesTags: ["Cancel", "Task"],
     }),
 
-    // GET cancel-request/byTask/:taskId
     getCancelsByTask: builder.query<GetCancelsByTaskResponse, string>({
       query: (taskId) => ({
         url: `/cancel-request/byTask/${taskId}`,
@@ -61,7 +59,6 @@ export const cancelApi = baseApi.injectEndpoints({
       providesTags: ["Cancel"],
     }),
 
-    // DELETE cancel-request/delete/:id
     deleteCancelRequest: builder.mutation<DeleteCancelResponse, string>({
       query: (id) => ({
         url: `/cancel-request/delete/${id}`,
@@ -70,7 +67,6 @@ export const cancelApi = baseApi.injectEndpoints({
       invalidatesTags: ["Cancel", "Task"],
     }),
 
-    // PATCH cancel-request/acceptRequest/:id
     acceptCancelRequest: builder.mutation<UpdateCancelResponse, string>({
       query: (id) => ({
         url: `/cancel-request/acceptRequest/${id}`,
@@ -79,7 +75,6 @@ export const cancelApi = baseApi.injectEndpoints({
       invalidatesTags: ["Cancel", "Task"],
     }),
 
-    // PATCH cancel-request/rejectRequest/:id
     rejectCancelRequest: builder.mutation<UpdateCancelResponse, string>({
       query: (id) => ({
         url: `/cancel-request/rejectRequest/${id}`,

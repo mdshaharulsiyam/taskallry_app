@@ -18,7 +18,6 @@ const UpdateBankAccount = () => {
     setBankErr(!bankValid);
     setAcctErr(!acctValid);
     if (!bankValid || !acctValid) return;
-    // TODO: integrate API call to save bank details
     navigation.goBack();
   };
 
@@ -51,7 +50,6 @@ const UpdateBankAccount = () => {
           error={acctErr}
           keyboard="number-pad"
           handler={(_, v) => {
-            // allow only digits
             const digits = v.replace(/[^0-9]/g, "");
             setAccountNo(digits);
             if (acctErr) setAcctErr(false);

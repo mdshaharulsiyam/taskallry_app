@@ -50,7 +50,6 @@ const ImageUploader = ({
         setFiels((prev: any) => [file, ...prev]);
       }
     } catch (err: unknown) {
-      // ignore
     } finally {
       setShowModal(false);
     }
@@ -75,7 +74,6 @@ const ImageUploader = ({
         setFiels((prev: any) => [file, ...prev]);
       }
     } catch (err: unknown) {
-      // ignore
     } finally {
       setShowModal(false);
     }
@@ -103,7 +101,6 @@ const ImageUploader = ({
         setFiels((prev: any) => [file, ...prev]);
       }
     } catch (e) {
-      // ignore
     } finally {
       setShowModal(false);
     }

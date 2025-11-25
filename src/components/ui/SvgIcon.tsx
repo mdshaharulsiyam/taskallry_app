@@ -25,11 +25,9 @@ const SvgIcon: React.FC<SvgIconProps> = ({
   accessibleLabel,
   onPress,
 }) => {
-  // If color is provided and XML exists, try to inject fill color for simple svgs
   const patchedXml = React.useMemo(() => {
     if (!xml || !color) return xml;
     try {
-      // naive replace: add fill to root <svg> if missing; otherwise replace common fill attributes
       let out = xml;
       if (!/fill=\"/i.test(out)) {
         out = out.replace(/<svg(\s|>)/i, `<svg fill=\"${color}\" $1`);

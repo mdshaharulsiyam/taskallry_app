@@ -51,7 +51,6 @@ const FIlteredTask = ({ search }: { search: string }) => {
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 5100 : Number(price_range),
         ...(search ? { searchTerm: search } : {}),
-        // maxDistance: Number(distance_range) <= 0 ? 20 : Number(distance_range),
         ...(to_be_done
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),

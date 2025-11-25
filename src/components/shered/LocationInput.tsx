@@ -4,7 +4,6 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import HeaderSecondary from "./HeaderSecondary";
 import { CONFIG } from "../../constant/config";
 
-// Interface remains the same
 interface LocationInputProps {
   style?: ViewStyle;
   label?: string;
@@ -30,7 +29,6 @@ const LocationInput = ({
 }: LocationInputProps) => {
   const ref = useRef<any>(null);
 
-  // 💡 DIAGNOSTIC STATE: Use this to track the selected data and ensure logging works.
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
   useEffect(() => {
@@ -40,15 +38,12 @@ const LocationInput = ({
     );
   }, []);
 
-  // ✅ ENABLED: Logic to pre-fill the input field when the 'value' prop changes.
   useEffect(() => {
     if (ref.current && value) {
       ref.current.setAddressText(value);
     }
   }, [value]);
 
-  // 💡 DIAGNOSTIC HOOK: Logs the selected location whenever the state updates.
-  // This helps isolate logging issues from the onPress event execution.
   useEffect(() => {
     if (selectedLocation) {
       console.log(
@@ -79,11 +74,9 @@ const LocationInput = ({
         ref={ref}
         placeholder={placeHolder}
         onPress={(data, details = null) => {
-          // --- ORIGINAL LOGIC ---
           console.log("LOCATION SELECTED (onPress):", { data, details });
           handler?.(name as string, "");
 
-          // 💡 DIAGNOSTIC ADDITION: Set the local state to trigger the logging hook
           setSelectedLocation({ data, details });
         }}
         onFail={(error) => console.log("PLACES API ERROR:", error)}

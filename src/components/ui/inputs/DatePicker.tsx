@@ -36,7 +36,6 @@ const DatePicker = ({
   const [show, setShow] = useState(false);
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || date;
-    // Close picker on Android after selection, keep it open on iOS
     if (Platform.OS === "android") {
       setShow(false);
     } else {
@@ -45,7 +44,6 @@ const DatePicker = ({
     setDate(currentDate);
     console.log(event);
 
-    // Propagate selected date to parent as a formatted string
     if (selectedDate && handler && name) {
       const year = selectedDate.getFullYear();
       const month = String(selectedDate.getMonth() + 1).padStart(2, "0");

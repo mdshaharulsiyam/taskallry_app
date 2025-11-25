@@ -37,7 +37,6 @@ interface GetTaskFeedbackResponse {
 
 export const feedbackApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // POST feedback/create-feedback
     createFeedback: builder.mutation<
       CreateFeedbackResponse,
       CreateFeedbackRequest
@@ -50,7 +49,6 @@ export const feedbackApi = baseApi.injectEndpoints({
       invalidatesTags: ["Feedback", "Task"],
     }),
 
-    // GET feedback/my-feedback
     getMyFeedback: builder.query<GetMyFeedbackResponse, void>({
       query: () => ({
         url: "/feedback/my-feedback",
@@ -59,7 +57,6 @@ export const feedbackApi = baseApi.injectEndpoints({
       providesTags: ["Feedback"],
     }),
 
-    // GET feedback/task-feedback
     getTaskFeedback: builder.query<GetTaskFeedbackResponse, string>({
       query: (taskId) => ({
         url: "/feedback/task-feedback",

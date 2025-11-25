@@ -82,7 +82,6 @@ const PostTask = () => {
       })
     );
   }, [task, setFields]);
-  // backButtonText="Post Task"
   return (
     <SafeAreaProvider>
       <View
@@ -170,14 +169,6 @@ const PostTask = () => {
               if (isValid && currentSlide < 3) {
                 setCurrentSlide((prev) => prev + 1);
               }
-              // else if (currentSlide == 3) {
-              //   navigate("Task");
-              // }
-              //  else if (currentSlide == 2) {
-              //   navigate("Verify", {
-              //     params: { phoneNumber: "", from: "signup" },
-              //   });
-              // }
             }}
           />
         </FlexText>

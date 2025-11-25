@@ -18,16 +18,9 @@ const LocationInputExample = () => {
     console.log("Selected place data:", data);
     console.log("Selected place details:", details);
 
-    // Store the selected location
     setSelectedLocation(details);
     setLocationAddress(data.description);
 
-    // You can access various properties from the details object:
-    // - details.geometry.location.lat (latitude)
-    // - details.geometry.location.lng (longitude)
-    // - details.formatted_address (full address)
-    // - details.place_id (unique place identifier)
-    // - details.address_components (array of address parts)
   };
 
   return (

@@ -102,7 +102,6 @@ const FilterOptionsFields = () => {
         max: 5000000,
         min: 5000,
         step: 1,
-        // range: true,
       },
       {
         name: "sort",

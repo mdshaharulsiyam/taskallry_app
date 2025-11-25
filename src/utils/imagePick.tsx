@@ -8,9 +8,6 @@ export const SelectImage = async () => {
       name: pickResult.name,
       type: pickResult.type,
     };
-    // const [pickResult] = await pick({mode:'import'}) // equivalent
-    // do something with the picked file
   } catch (err: unknown) {
-    // see error handling
   }
 };

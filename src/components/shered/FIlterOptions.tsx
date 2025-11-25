@@ -33,7 +33,6 @@ const FIlterOptions = (props: any) => {
   const searchType = useAppSelector(selectSearchType);
 
   const handleApply = () => {
-    // Sync field values to Redux when Apply is clicked
     fields.forEach((field) => {
       const value = field.value;
       switch (field.name) {
@@ -70,7 +69,6 @@ const FIlterOptions = (props: any) => {
       }
     });
 
-    // Close the drawer
     props?.navigation?.closeDrawer();
   };
 

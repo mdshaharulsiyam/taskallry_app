@@ -76,26 +76,6 @@ const handleServiceAddUpdate = async (
 
 export default handleServiceAddUpdate;
 
-// // Request location permission on Android before getting current position
-// if (Platform.OS === "android") {
-//   const granted = await PermissionsAndroid.request(
-//     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-//     {
-//       title: "Location Permission",
-//       message: "TaskAlley needs access to your location to save service location.",
-//       buttonPositive: "OK",
-//     }
-//   );
 
-//   if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-//     console.log("Location permission denied");
-//     return;
-//   }
-// }
 
-// const location = await GetLocation.getCurrentPosition({
-//   enableHighAccuracy: true,
-//   timeout: 15000,
-// });
 
-// const { latitude, longitude } = location;

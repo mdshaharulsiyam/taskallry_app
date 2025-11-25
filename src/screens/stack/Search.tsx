@@ -35,16 +35,13 @@ const Search = () => {
     />,
     combinedType === "Provider"
       ? (
-        // Provider search: always list view
         <FilteredProvider key={3} />
       )
       : filterState?.viewMode === "map"
         ? (
-          // Task search + map view
           <ProvidersMap key={3} />
         )
         : (
-          // Task search + list view
           <FIlteredTask key={2} search={searchText} />
         ),
   ];

@@ -11,5 +11,4 @@ export const handleServiceSignUp = (
   if (currentSlide !== 4) {
     return isValid;
   }
-  // console.log(isValid)
 };

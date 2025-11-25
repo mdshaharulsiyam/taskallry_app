@@ -27,7 +27,6 @@ const ProfileOptionsButton = ({
         marginTop: 10,
         padding: 10,
         borderRadius: 10,
-        // backgroundColor: "#E6F4F1"
         borderWidth: 1,
         paddingVertical: 14,
       }}

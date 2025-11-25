@@ -26,7 +26,6 @@ const AlertModal: React.FC<AlertModalProps> = ({
   onCancel,
   onOk,
 }) => {
-  // Map type → style + emoji
   const getTypeStyles = () => {
     switch (type) {
       case "success":

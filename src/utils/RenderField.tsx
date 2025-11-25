@@ -10,7 +10,6 @@ import SelectInput from "../components/ui/inputs/SelectInput";
 import TextArea from "../components/ui/inputs/TextArea";
 import TimePicker from "../components/ui/inputs/TimePicker";
 import { FieldsType, FieldType, KeyboardType } from "../types/Types";
-// import LocationInput from "../components/ui/inputs/LocationInput";
 
 export const RenderField = (
   field: FieldsType,

@@ -183,6 +183,11 @@ const Messages = () => {
                 setLimit((prev) => prev + 10);
               }
             }}
+            ListFooterComponent={
+              isFetching && messages.length > 0 ? (
+                <ActivityIndicator style={{ marginVertical: 8 }} />
+              ) : null
+            }
             renderItem={({ item }) => <Message item={item} />}
           />
         )}

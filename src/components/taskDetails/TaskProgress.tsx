@@ -14,11 +14,14 @@ const TaskProgress = ({ data }: { data: Task | undefined }) => {
       status: "complete",
       date: moment(item?.date).format("MMM DD, YYYY"),
     })) || [];
-  progress_data.push({
-    name: "COMPLETE",
-    status: "pending",
-    date: "",
-  });
+  const complete_find = progress_data.find((item) => item.name === "COMPLETE");
+  if (!complete_find) {
+    progress_data.push({
+      name: "COMPLETE",
+      status: "pending",
+      date: "",
+    });
+  }
   return (
     <View
       style={{

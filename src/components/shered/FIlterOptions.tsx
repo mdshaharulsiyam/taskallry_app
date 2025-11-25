@@ -88,7 +88,11 @@ const FIlterOptions = (props: any) => {
         paddingHorizontal: 10,
       }}
     >
-      {fields?.map((field: FieldsType) => RenderField(field, setFields))}
+      {fields?.map((field: FieldsType) => (
+        <React.Fragment key={field.name}>
+          {RenderField(field, setFields)}
+        </React.Fragment>
+      ))}
       {searchType === "Task" && (
         <FlexText
           style={{

@@ -8,8 +8,11 @@ import SectionHeading from "../shered/SectionHeading";
 import TextPrimary from "../shered/TextPrimary";
 import ButtonBG from "../ui/buttons/ButtonBG";
 import IconButtonTransparent from "../ui/buttons/IconButtonTransparent";
+import { useGetMyProfileQuery } from "../../redux/apis";
 
 const CreateReferral = () => {
+  const { data, isLoading, isError } = useGetMyProfileQuery();
+  console.log("Profile Data:", data?.data?.referralCode, isLoading, isError);
   return (
     <View
       style={{
@@ -33,11 +36,11 @@ const CreateReferral = () => {
           style={{
             padding: 3,
           }}
-          text="TASK-USER123"
+          text={data?.data?.referralCode || ""}
         />
         <ButtonBG
           handler={() => {
-            const code = "TASK-USER123";
+            const code = data?.data?.referralCode || "";
             Clipboard.setString(code);
             Toast.show({
               type: "success",
@@ -59,7 +62,7 @@ const CreateReferral = () => {
       >
         <IconButtonTransparent
           handler={async () => {
-            const code = "TASK-USER123";
+            const code = data?.data?.referralCode || "";
             const url = `https://taskalley.app/ref/${code}`;
             try {
               await Share.share({

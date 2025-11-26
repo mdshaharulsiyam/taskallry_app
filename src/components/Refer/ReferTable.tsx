@@ -2,6 +2,7 @@ import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
+import { useGetReferralQuery } from "../../redux/apis";
 
 const data = [
   {
@@ -28,6 +29,9 @@ const data = [
 ];
 
 const ReferTable = () => {
+  // useGetReferralQuery
+  const { data: referralData, isLoading, isError } = useGetReferralQuery();
+  console.log("Referral Data:", referralData?.data?.result, isLoading, isError);
   return (
     <View style={styles.table}>
       {/* Header Row */}
@@ -43,14 +47,22 @@ const ReferTable = () => {
 
       {/* Data Rows */}
       <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
+        data={referralData?.data?.result || []}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <FlexText style={styles.row}>
-            <Text style={styles.cell}>{item.type}</Text>
+            <Text style={styles.cell}>
+              {item.isMeReferrer ? "Joined with a referral" : "Got a referral"}
+            </Text>
+
             <Text style={[styles.cell, styles.middleCell]}>{item.status}</Text>
             <Text style={styles.cell}>{item.value}</Text>
-            <Text style={styles.cell}>{item.date}</Text>
+
+            <Text style={styles.cell}>
+              {item.isMeReferrer
+                ? new Date(item.createdAt).toLocaleDateString()
+                : ""}
+            </Text>
           </FlexText>
         )}
       />

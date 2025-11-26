@@ -19,14 +19,14 @@ const UpdateBankAccount = () => {
   );
   const [bankErr, setBankErr] = useState(false);
   const [acctErr, setAcctErr] = useState(false);
-
+  // console.log("Saved:", { bankName, accountNo });
   const handleSave = async () => {
+    // console.log("Saved:", { bankName, accountNo });
     const bankValid = bankName.trim().length > 1;
     const acctValid = /^\d{8,20}$/.test(accountNo.trim());
     setBankErr(!bankValid);
     setAcctErr(!acctValid);
     if (!bankValid || !acctValid) return;
-    console.log("Saved:", { bankName, accountNo });
     // navigation.goBack(); const [updateProfile, { isLoading }] = useUpdateProfileMutation();
     try {
       const res = await updatebank({

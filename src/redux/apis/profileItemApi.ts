@@ -15,6 +15,21 @@ interface UpdateProfileRequest {
   bankName?: string;
 }
 
+interface NotificationItem {
+  _id: string;
+  title: string;
+  message: string;
+  type: string;
+}
+
+interface NotificationResponse {
+  success: boolean;
+  message: string;
+  data: {
+    result: NotificationItem[];
+  };
+}
+
 export const profileItemApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getBank: builder.query<UpdateProfileResponse, void>({
@@ -33,7 +48,40 @@ export const profileItemApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Profile"],
     }),
+
+    // /notification/get-notifications
+
+    getNotification: builder.query<NotificationResponse, void>({
+      query: () => ({
+        url: "/notification/get-notifications",
+        method: "GET",
+      }),
+      providesTags: ["Profile"],
+    }),
+    // read all /notification/see-notifications
+    readAll: builder.mutation<NotificationResponse, void>({
+      query: () => ({
+        url: "/notification/see-notifications",
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Profile"],
+    }),
+
+    // {{local_url}}/notification/delete-notification/6923058ae5facd1a334eee72 cannot done
+    deleteNotification: builder.mutation<NotificationResponse, string>({
+      query: (notificationId) => ({
+        url: `/notification/delete-notification/${notificationId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Profile"],
+    }),
   }),
 });
 
-export const { useGetBankQuery, useUpdateBankMutation } = profileItemApi;
+export const {
+  useGetBankQuery,
+  useGetNotificationQuery,
+  useUpdateBankMutation,
+  useDeleteNotificationMutation,
+  useReadAllMutation,
+} = profileItemApi;

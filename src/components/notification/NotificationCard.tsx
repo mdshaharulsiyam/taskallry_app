@@ -11,9 +11,32 @@ import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
 import TextSecondary from "../shered/TextSecondary";
+import { useDeleteNotificationMutation } from "../../redux/apis/profileItemApi";
 
-const NotificationCard = () => {
+interface NotificationCardProps {
+  notification: {
+    title: string;
+    message: string;
+    // add more fields if exists
+  };
+}
+const NotificationCard: React.FC<NotificationCardProps> = ({
+  notification,
+}) => {
+  console.log("Notification item:", notification._id);
   const { width } = ScreenSize();
+  // useDeleteNotificationMutation
+  const [deleteNotificationMutation, { isLoading: isDeleting }] =
+    useDeleteNotificationMutation();
+  const deleteNotification = async (id: string) => {
+    try {
+      const res = await deleteNotificationMutation(id).unwrap();
+      console.log("Delete API Response:", res);
+    } catch (err) {
+      console.log("Delete error:", err);
+    }
+  };
+
   return (
     <FlexText
       style={{
@@ -33,11 +56,11 @@ const NotificationCard = () => {
           style={{
             fontSize: 18,
           }}
-          text="Task Accepted"
+          text={notification?.title}
         />
-        <TextSecondary text="A Tasker has a question about your task. Check the task details and reply to keep things moving." />
+        <TextSecondary text={notification?.message} />
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => deleteNotification(notification?._id)}>
         <Image
           source={otherIcons.Close as ImageSourcePropType}
           style={{

@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  Image,
-  ImageSourcePropType,
   StyleSheet,
   View,
 } from "react-native";
-import { otherIcons } from "../../constant/images";
 import { useGetAllTasksQuery } from "../../redux/apis";
 import { useAppSelector } from "../../redux/hooks";
+import EmptyList from "../shered/EmptyList";
 import TaskCard from "../shered/TaskCard";
 
 const FIlteredTask = ({ search }: { search: string }) => {
@@ -81,7 +79,7 @@ const FIlteredTask = ({ search }: { search: string }) => {
     setLimit(20);
   }, [category, to_be_done, work_location, distance_range, price_range, sort, search]);
 
-  const { data, isFetching } = useGetAllTasksQuery({
+  const { data, isFetching, isLoading, refetch } = useGetAllTasksQuery({
     ...queryParams,
     page: 1,
     limit,
@@ -90,15 +88,13 @@ const FIlteredTask = ({ search }: { search: string }) => {
     <View style={{ marginTop: 10 }}>
       {(data?.data?.result && data?.data?.result?.length < 1) ||
         !data?.data?.result ? (
-        <>
-          <Image
-            source={otherIcons.Empty as ImageSourcePropType}
-            style={{
-              height: 100,
-              alignSelf: "center",
-            }}
-          />
-        </>
+        <EmptyList
+          title="No tasks found"
+          description="Try adjusting your filters or pull to refresh."
+          showImage={false}
+          refetch={refetch}
+          refetchLoading={isLoading || isFetching}
+        />
       ) : (
         <FlatList
           data={data?.data?.result || []}

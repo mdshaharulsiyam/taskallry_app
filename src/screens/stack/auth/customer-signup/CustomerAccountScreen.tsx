@@ -45,6 +45,7 @@ const CustomerAccountScreen = () => {
         style={{ marginTop: 12 }}
         text="Continue"
         disabled={isLoading}
+        loading={isLoading}
         handler={() => { void onContinue(); }}
       />
     </SafeAreaProvider>

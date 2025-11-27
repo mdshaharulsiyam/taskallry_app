@@ -1,13 +1,18 @@
 import React from "react";
 import Toast from "react-native-toast-message";
 import { FieldsType } from "../types/Types";
+import { validateFields } from '../utils/formValidate';
 
 export const handleProviderSignUp = (
   fields: FieldsType[],
   _setFields: React.Dispatch<React.SetStateAction<FieldsType[]>>,
   register: any,
-  successHandler?: () => void,
+  successHandler?: (phone: string) => void,
 ) => {
+  const isValid = validateFields(fields, _setFields);
+  if (!isValid) {
+    return isValid;
+  }
   const values = fields.reduce((acc, field) => {
     acc[field.name] = field.value;
     return acc;
@@ -47,7 +52,7 @@ export const handleProviderSignUp = (
         text1: "Registered successfully",
         text2: res?.message || "Provider registered successfully",
       });
-      successHandler?.();
+      successHandler?.(values?.phone as string);
     })
     .catch((err: any) => {
       Toast.show({

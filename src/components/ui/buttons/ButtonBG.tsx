@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import { ActivityIndicator, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 
 const ButtonBG = ({
   style,
@@ -7,17 +7,19 @@ const ButtonBG = ({
   handler,
   textStyle,
   disabled,
+  loading,
 }: {
   style?: ViewStyle;
   textStyle?: TextStyle;
   text?: string;
   handler: () => void;
   disabled?: boolean;
+  loading?: boolean;
 }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        if (disabled) return;
+        if (disabled || loading) return;
         handler?.();
       }}
       activeOpacity={0.7}
@@ -34,15 +36,19 @@ const ButtonBG = ({
         ...style,
       }}
     >
-      <Text
-        style={{
-          lineHeight: 23,
-          color: "#FFFFFF",
-          ...textStyle,
-        }}
-      >
-        {text ? text : "Close"}
-      </Text>
+      {loading ? (
+        <ActivityIndicator size="small" color="#FFFFFF" />
+      ) : (
+        <Text
+          style={{
+            lineHeight: 23,
+            color: "#FFFFFF",
+            ...textStyle,
+          }}
+        >
+          {text ? text : "Close"}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

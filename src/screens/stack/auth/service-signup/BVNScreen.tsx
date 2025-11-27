@@ -20,7 +20,7 @@ const BVNScreen = () => {
   const onVerify = async () => {
     try {
       await verifyBvn({ bvn: getValue("bvn") }).unwrap();
-      navigation.navigate("Identity");
+      navigation.navigate("Address");
     } catch (e) {
       // handle error if needed
     }
@@ -35,6 +35,7 @@ const BVNScreen = () => {
         style={{ marginTop: 12 }}
         text="Verify"
         disabled={isLoading}
+        loading={isLoading}
         handler={() => { void onVerify(); }}
       />
     </SafeAreaProvider>

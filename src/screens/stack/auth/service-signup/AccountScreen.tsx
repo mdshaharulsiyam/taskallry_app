@@ -21,7 +21,7 @@ const AccountScreen = () => {
 
 
   const onContinue = async () => {
-    handleProviderSignUp(fields.slice(0, 6), setFields, register, (phone: string) => sucessNavigate(navigation, phone));
+    handleProviderSignUp(fields.slice(0, 6), setFields, register, (email: string) => sucessNavigate(navigation, email));
   };
   return (
     <SafeAreaProvider backButtonText="Service Sign Up">

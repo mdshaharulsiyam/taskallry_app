@@ -7,7 +7,7 @@ export const handleProviderSignUp = (
   fields: FieldsType[],
   _setFields: React.Dispatch<React.SetStateAction<FieldsType[]>>,
   register: any,
-  successHandler?: (phone: string) => void,
+  successHandler?: (email: string) => void,
 ) => {
   const isValid = validateFields(fields, _setFields);
   if (!isValid) {
@@ -52,7 +52,7 @@ export const handleProviderSignUp = (
         text1: "Registered successfully",
         text2: res?.message || "Provider registered successfully",
       });
-      successHandler?.(values?.phone as string);
+      successHandler?.(values?.email as string);
     })
     .catch((err: any) => {
       Toast.show({

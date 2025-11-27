@@ -2,9 +2,9 @@ import React from "react";
 import Toast from "react-native-toast-message";
 import { FieldsType } from "../types/Types";
 import { validateFields } from "../utils/formValidate";
-export const sucessNavigate = (navigation: any, phone: string) => {
+export const sucessNavigate = (navigation: any, email: string) => {
   navigation.navigate("Verify", {
-    params: { phoneNumber: phone, from: "signup" },
+    params: { email, from: "signup" },
   });
 };
 

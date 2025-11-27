@@ -105,6 +105,14 @@ interface VerifyResetOtpRequest {
 interface VerifyResetOtpResponse {
   message: string;
   success: boolean;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    isBankNumberVerified: boolean;
+    isIdentificationDocumentVerified: boolean;
+    isAddressProvided: boolean;
+    role: "provider" | "customer";
+  }
 }
 
 interface ApplyReferralCodeRequest {
@@ -115,7 +123,6 @@ interface ApplyReferralCodeResponse {
   message: string;
   success: boolean;
   data?: {
-    // Add any additional response fields here if needed
     discountAmount?: number;
     referralCredit?: number;
   };

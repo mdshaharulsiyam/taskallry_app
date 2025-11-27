@@ -21,6 +21,7 @@ const ProviderDetails = () => {
   } = useRoute() as { params: { id: string } };
 
   const { data, isLoading, isError } = useGetSingleServiceQuery(id);
+  console.log(data);
   const service = data?.data || null;
 
   const navigate = Navigate();
@@ -104,7 +105,7 @@ const ProviderDetails = () => {
           }
         />
       </FlexText>,
-      <Details_Review key={6} />,
+      <Details_Review service={service} key={6} />,
     ]
     : [];
 

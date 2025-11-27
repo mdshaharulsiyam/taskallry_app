@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { View } from "react-native";
+import { Service } from '../../redux/apis';
 import FlexText from "../shered/FlexText";
 import ButtonBG from "../ui/buttons/ButtonBG";
 import Details from "./Details";
 import Review from "./Review";
 const tab = ["Details", "Review"];
-const component = {
-  Details: <Details />,
-  Review: <Review />,
-};
-const Details_Review = () => {
+
+const Details_Review = ({ service }: { service: Service }) => {
+  const component = {
+    Details: <Details />,
+    Review: <Review service={service} />,
+  };
   const [active, setActive] = useState(tab[0]);
   return (
     <View

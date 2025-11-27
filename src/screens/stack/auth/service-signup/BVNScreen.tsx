@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import Toast from "react-native-toast-message";
 import HeaderDesign from "../../../../components/shered/HeaderDesign";
 import TextSecondary from "../../../../components/shered/TextSecondary";
 import ButtonBG from "../../../../components/ui/buttons/ButtonBG";
@@ -18,12 +19,16 @@ const BVNScreen = () => {
   const getValue = (name: string) => fields.find(f => f.name === name)?.value as string;
 
   const onVerify = async () => {
-    try {
-      await verifyBvn({ bvn: getValue("bvn") }).unwrap();
-      navigation.navigate("Address");
-    } catch (e) {
-      // handle error if needed
-    }
+    const bvn = String(getValue("bvn") || "");
+    verifyBvn({ bvn })
+      .unwrap()
+      .then((res: any) => {
+        Toast.show({ type: "success", text1: "BVN verified", text2: res?.message || "Verification successful" });
+        navigation.navigate("Address");
+      })
+      .catch((err: any) => {
+        Toast.show({ type: "error", text1: "BVN verification failed", text2: err?.data?.message || "Something went wrong" });
+      });
   };
 
   return (

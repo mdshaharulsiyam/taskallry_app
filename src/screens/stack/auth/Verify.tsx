@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
@@ -49,12 +50,17 @@ const Verify = () => {
               }
               verifyCode({ email: targetEmail, verifyCode: Number(code) })
                 .unwrap()
-                .then((res: any) => {
+                .then(async (res: any) => {
                   Toast.show({ type: "success", text1: "Verified", text2: res?.message || "OTP verified successfully" });
                   if (from === "forget") {
                     navigate("ResetPassword");
                     return;
                   }
+                  await AsyncStorage.setItem("token", res?.data?.accessToken);
+                  await AsyncStorage.setItem(
+                    "role",
+                    res?.data?.role === "customer" ? "user" : "service"
+                  );
                   const d = res?.data || {};
                   const role = d?.role as "provider" | "customer" | undefined;
                   if (role === "provider") {

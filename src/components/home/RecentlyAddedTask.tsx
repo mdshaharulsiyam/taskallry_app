@@ -20,6 +20,7 @@ const RecentlyAddedTask = () => {
   );
   const data = role === "user" ? myTasks.data : allTasks.data;
   const refetch = role === "user" ? myTasks.refetch : allTasks.refetch;
+  const refetchLoading = role === "user" ? (myTasks.isFetching || myTasks.isLoading) : (allTasks.isFetching || allTasks.isLoading);
   const items = data?.data?.result || [];
   return (
     <View style={{ marginTop: 10 }}>
@@ -38,6 +39,7 @@ const RecentlyAddedTask = () => {
           description="When new tasks appear, you will see them here."
           showImage={false}
           refetch={refetch}
+          refetchLoading={refetchLoading}
         />
       ) : (
         <FlatList

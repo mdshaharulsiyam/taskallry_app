@@ -7,6 +7,7 @@ import ButtonBG from "../../../../components/ui/buttons/ButtonBG";
 import ImageUploader from "../../../../components/ui/file/ImageUploader";
 import CustomerSignUpFields from "../../../../formFields/CustomerSignUpFields";
 import SafeAreaProvider from "../../../../providers/SafeAreaProvider";
+import { useUpdateProfileMutation } from "../../../../redux/apis";
 import { FieldsType } from "../../../../types/Types";
 import { RenderField } from "../../../../utils/RenderField";
 
@@ -15,6 +16,21 @@ const CustomerAddressScreen = () => {
   const { fields, setFields } = CustomerSignUpFields();
   const [fiels, setFiels] = useState<any>([]);
   const slice = fields.slice(6, 6 + 2);
+
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+  const getValue = (name: string) => fields.find(f => f.name === name)?.value as string;
+
+  const onContinue = async () => {
+    try {
+      await updateProfile({
+        city: getValue("city"),
+        street: getValue("address"),
+      }).unwrap();
+      navigation.navigate("CustomerReferral");
+    } catch (e) {
+      // handle error UI if needed
+    }
+  };
 
   return (
     <SafeAreaProvider backButtonText="Customer Sign Up">
@@ -33,7 +49,8 @@ const CustomerAddressScreen = () => {
       <ButtonBG
         style={{ marginTop: 12 }}
         text="Continue"
-        handler={() => navigation.navigate("CustomerReferral")}
+        disabled={isLoading}
+        handler={() => { void onContinue(); }}
       />
     </SafeAreaProvider>
   );

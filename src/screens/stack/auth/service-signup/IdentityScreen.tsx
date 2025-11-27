@@ -7,6 +7,7 @@ import ButtonBG from "../../../../components/ui/buttons/ButtonBG";
 import ImageUploader from "../../../../components/ui/file/ImageUploader";
 import ServiceSignUpFields from "../../../../formFields/ServiceSignUpFields";
 import SafeAreaProvider from "../../../../providers/SafeAreaProvider";
+import { useCompleteIdentityVerificationMutation } from "../../../../redux/apis";
 import { FieldsType } from "../../../../types/Types";
 import { RenderField } from "../../../../utils/RenderField";
 
@@ -15,6 +16,20 @@ const IdentityScreen = () => {
   const { fields, setFields } = ServiceSignUpFields();
   const [fiels, setFiels] = useState<any>([]);
   const slice = fields.slice(7, 7 + 2);
+  const [completeIdentity, { isLoading }] = useCompleteIdentityVerificationMutation();
+  const getValue = (name: string) => fields.find(f => f.name === name)?.value as string;
+
+  const onContinue = async () => {
+    try {
+      await completeIdentity({
+        documentType: getValue("documentType"),
+        idNumber: getValue("bvn_id"),
+      }).unwrap();
+      navigation.navigate("Address");
+    } catch (e) {
+      // handle error if needed
+    }
+  };
 
   return (
     <SafeAreaProvider backButtonText="Service Sign Up">
@@ -33,7 +48,8 @@ const IdentityScreen = () => {
       <ButtonBG
         style={{ marginTop: 12 }}
         text="Continue"
-        handler={() => navigation.navigate("Address")}
+        disabled={isLoading}
+        handler={() => { void onContinue(); }}
       />
     </SafeAreaProvider>
   );

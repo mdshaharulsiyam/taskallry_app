@@ -23,6 +23,14 @@ const withoutLog = [
   "trustedservices",
   "securepayments",
   "realtimebooking",
+  "account",
+  "bvn",
+  "identity",
+  "address",
+  "referral",
+  "customeraccount",
+  "customeraddress",
+  "customerreferral",
 ];
 const SafeAreaProvider = ({
   children,
@@ -39,6 +47,7 @@ const SafeAreaProvider = ({
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const route = useRoute();
   const { role } = useGlobalContext();
+  console.log(route.name);
   useEffect(() => {
     const currentRoute = route.name.toLowerCase();
     if (!withoutLog.includes(currentRoute) && !role) {

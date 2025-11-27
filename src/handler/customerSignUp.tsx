@@ -1,7 +1,7 @@
 import React from "react";
+import Toast from "react-native-toast-message";
 import { FieldsType } from "../types/Types";
 import { validateFields } from "../utils/formValidate";
-import Toast from "react-native-toast-message";
 export const sucessNavigate = (navigate: any, phone: string) => {
   navigate("Verify", {
     params: { phoneNumber: phone, from: "signup" },
@@ -13,8 +13,11 @@ export const handleCustomerSignUp = (
   setFields: React.Dispatch<React.SetStateAction<FieldsType[]>>,
   currentSlide: number,
   register: any,
-  sucessHandler?: (phone: string) => void
+  slide: { skip: number, keep: number, field: string }[],
+  completedStep: { signup: boolean, isAddressProvided: boolean, coupon: boolean },
+  sucessHandler?: (phone: string) => void,
 ) => {
+  console.log(slide);
   const isValid = validateFields(fields, setFields);
   if (currentSlide !== 2 && !isValid) {
     return isValid;

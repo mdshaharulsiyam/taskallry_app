@@ -35,6 +35,7 @@ const Profile = () => {
         onPress={async () => {
           setRole(null);
           await AsyncStorage.removeItem("token");
+          await AsyncStorage.removeItem("role");
           dispatch(clearToken());
           navigate.reset({
             index: 0,

@@ -6,19 +6,23 @@ interface LoginRequest {
 }
 
 interface LoginResponse {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
+  success: true;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    isBankNumberVerified: boolean;
+    isIdentificationDocumentVerified: boolean;
+    isAddressProvided: boolean;
+    role: "provider" | "customer";
+  }
 }
 
 interface RegisterRequest {
   name: string;
   email: string;
   password: string;
-  role: "user" | "service";
+  role: "provider" | "customer";
 }
 
 interface VerifyCodeRequest {
@@ -101,8 +105,38 @@ interface VerifyResetOtpResponse {
   success: boolean;
 }
 
+interface ApplyReferralCodeRequest {
+  code: string;
+}
+
+interface ApplyReferralCodeResponse {
+  message: string;
+  success: boolean;
+  data?: {
+    // Add any additional response fields here if needed
+    discountAmount?: number;
+    referralCredit?: number;
+  };
+}
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    applyReferralCode: builder.mutation<ApplyReferralCodeResponse, ApplyReferralCodeRequest>({
+      query: (body) => ({
+        url: '/referral/apply-referral-code',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Auth'],
+    }),
+    applyReferralCodeUse: builder.mutation<ApplyReferralCodeResponse, ApplyReferralCodeRequest>({
+      query: (body) => ({
+        url: '/referralUse/apply-referral-code',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Auth'],
+    }),
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
         url: "/auth/login",
@@ -198,6 +232,8 @@ export const authApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useApplyReferralCodeMutation,
+  useApplyReferralCodeUseMutation,
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,

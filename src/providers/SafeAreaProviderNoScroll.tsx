@@ -22,6 +22,14 @@ const withoutLog = [
   "trustedservices",
   "securepayments",
   "realtimebooking",
+  "account",
+  "bvn",
+  "identity",
+  "address",
+  "referral",
+  "customeraccount",
+  "customeraddress",
+  "customerreferral",
 ];
 
 const SafeAreaProviderNoScroll = ({
@@ -38,6 +46,7 @@ const SafeAreaProviderNoScroll = ({
   const route = useRoute();
   const { height } = Dimensions.get("window");
   const { role } = useGlobalContext();
+  console.log(route.name);
   useEffect(() => {
     const currentRoute = route.name.toLowerCase();
     if (!withoutLog.includes(currentRoute) && !role) {

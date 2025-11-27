@@ -1,9 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import Toast from "react-native-toast-message";
 import HeaderDesign from "../../../../components/shered/HeaderDesign";
 import TextSecondary from "../../../../components/shered/TextSecondary";
 import ButtonBG from "../../../../components/ui/buttons/ButtonBG";
 import CustomerSignUpFields from "../../../../formFields/CustomerSignUpFields";
+import { sucessNavigate } from "../../../../handler/customerSignUp";
 import SafeAreaProvider from "../../../../providers/SafeAreaProvider";
 import { useRegisterMutation } from "../../../../redux/apis";
 import { FieldsType } from "../../../../types/Types";
@@ -20,20 +22,26 @@ const CustomerAccountScreen = () => {
   const onContinue = async () => {
     const password = getValue("password");
     const confirmPassword = getValue("confirmPassword");
-    if (password !== confirmPassword) return;
-    try {
-      await register({
-        name: getValue("name"),
-        email: getValue("email"),
-        phone: getValue("phone"),
-        password,
-        confirmPassword,
-        role: "customer",
-      }).unwrap();
-      navigation.navigate("CustomerAddress");
-    } catch (e) {
-      // handle error UI if needed
+    if (password !== confirmPassword) {
+      Toast.show({ type: "error", text1: "Password mismatch", text2: "Password and Confirm Password do not match" });
+      return;
     }
+    register({
+      name: getValue("name"),
+      email: getValue("email"),
+      phone: getValue("phone"),
+      password,
+      confirmPassword,
+      role: "customer",
+    })
+      .unwrap()
+      .then((res: any) => {
+        Toast.show({ type: "success", text1: "Account created", text2: res?.message || "Customer registered successfully" });
+        sucessNavigate(navigation, getValue("email"));
+      })
+      .catch((err: any) => {
+        Toast.show({ type: "error", text1: "Failed to create account", text2: err?.data?.message || "Something went wrong" });
+      });
   };
 
   return (

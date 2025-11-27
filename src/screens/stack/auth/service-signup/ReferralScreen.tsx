@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import RNRestart from "react-native-restart";
 import Toast from "react-native-toast-message";
 import HeaderDesign from "../../../../components/shered/HeaderDesign";
 import TextSecondary from "../../../../components/shered/TextSecondary";
@@ -20,18 +21,15 @@ const ReferralScreen = () => {
 
   const onApply = async () => {
     const code = getValue("referralCode");
-    if (!code) return navigation.navigate("Finish");
     applyReferral({ code })
       .unwrap()
       .then((res: any) => {
         Toast.show({ type: "success", text1: "Referral applied", text2: res?.message || "Code applied successfully" });
+        RNRestart.Restart();
       })
       .catch((err: any) => {
         Toast.show({ type: "error", text1: "Failed to apply code", text2: err?.data?.message || "Invalid referral code" });
       })
-      .finally(() => {
-        navigation.navigate("TabLayout");
-      });
   };
 
   return (
@@ -49,7 +47,7 @@ const ReferralScreen = () => {
       <ButtonTransparentBG
         style={{ marginTop: 8 }}
         text="Skip & Continue Without Code"
-        handler={() => navigation.navigate("Finish")}
+        handler={() => RNRestart.Restart()}
       />
     </SafeAreaProvider>
   );

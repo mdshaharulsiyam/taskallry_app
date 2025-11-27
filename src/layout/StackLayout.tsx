@@ -12,6 +12,7 @@ import Category from "../screens/stack/Category";
 import ExtendDate from "../screens/stack/ExtendDate";
 import Messages from "../screens/stack/Messages";
 import MyTaskDetails from "../screens/stack/MyTaskDetails";
+import Onboarding from "../screens/stack/onboarding/Onboarding";
 import RealTimeBooking from "../screens/stack/onboarding/RealTimeBooking";
 import SecurePayments from "../screens/stack/onboarding/SecurePayments";
 import TrustedServices from "../screens/stack/onboarding/TrustedServices";
@@ -21,6 +22,7 @@ import RegulationsCenter from "../screens/stack/RegulationsCenter";
 import RequestCancel from "../screens/stack/RequestCancel";
 import Search from "../screens/stack/Search";
 import ServiceDetails from "../screens/stack/ServiceDetails";
+import { AccountSetting } from "../screens/stack/settings/AccountSetting";
 import ChangePassword from "../screens/stack/settings/ChangePassword";
 import Earnings from "../screens/stack/settings/Earnings";
 import Help from "../screens/stack/settings/Help";
@@ -29,15 +31,15 @@ import Notifications from "../screens/stack/settings/Notifications";
 import PrivacyPolicy from "../screens/stack/settings/PrivacyPolicy";
 import SavedAccount from "../screens/stack/settings/SavedAccount";
 import Terms from "../screens/stack/settings/Terms";
-import TaskDetails from "../screens/stack/TaskDetails";
-import TabLayout from "./TabLayout";
 import UpdateBankAccount from "../screens/stack/settings/UpdateBankAccount";
 import ViewProfile from "../screens/stack/settings/ViewProfile";
-import { AccountSetting } from "../screens/stack/settings/AccountSetting";
+import TaskDetails from "../screens/stack/TaskDetails";
+import TabLayout from "./TabLayout";
 const Stack = createNativeStackNavigator();
 
 const StackLayout = () => {
   const screens = {
+    Onboarding: Onboarding,
     Login: Login,
     Forget: ForgetPassword,
     Verify: Verify,
@@ -82,7 +84,7 @@ const StackLayout = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="TabLayout"
+      initialRouteName="Onboarding"
       screenOptions={{ headerShown: false }}
     >
       {stacks?.map((item: any) => (

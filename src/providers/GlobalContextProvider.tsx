@@ -1,10 +1,8 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
   ReactNode,
   useContext,
-  useEffect,
-  useState,
+  useState
 } from "react";
 
 interface GlobalContextType {
@@ -20,15 +18,6 @@ const GlobalContextProvider = ({ children }: { children: ReactNode }) => {
     role,
     setRole,
   };
-  useEffect(() => {
-    const getRole = async () => {
-      const role = await AsyncStorage.getItem("role");
-      if (role) {
-        setRole(role as "user" | "service" | null);
-      }
-    };
-    getRole();
-  }, []);
   return (
     <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
   );

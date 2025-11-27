@@ -1,36 +1,28 @@
-import {
-  CommonActions,
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { Dimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BackButton from "../components/shered/BackButton";
-import { useGlobalContext } from "./GlobalContextProvider";
-const withoutLog = [
-  "login",
-  "signup",
-  "forget",
-  "verify",
-  "resetpassword",
-  "choosesignup",
-  "customersignup",
-  "servicesignup",
-  "trustedservices",
-  "securepayments",
-  "realtimebooking",
-  "account",
-  "bvn",
-  "identity",
-  "address",
-  "referral",
-  "customeraccount",
-  "customeraddress",
-  "customerreferral",
-];
+// const withoutLog = [
+//   "login",
+//   "signup",
+//   "forget",
+//   "verify",
+//   "resetpassword",
+//   "choosesignup",
+//   "customersignup",
+//   "servicesignup",
+//   "trustedservices",
+//   "securepayments",
+//   "realtimebooking",
+//   "account",
+//   "bvn",
+//   "identity",
+//   "address",
+//   "referral",
+//   "customeraccount",
+//   "customeraddress",
+//   "customerreferral",
+// ];
 
 const SafeAreaProviderNoScroll = ({
   children,
@@ -42,33 +34,33 @@ const SafeAreaProviderNoScroll = ({
   zeroPadding?: boolean;
 }) => {
   const { top, bottom } = useSafeAreaInsets();
-  const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const route = useRoute();
   const { height } = Dimensions.get("window");
-  const { role } = useGlobalContext();
-  console.log(route.name);
-  useEffect(() => {
-    const currentRoute = route.name.toLowerCase();
-    if (!withoutLog.includes(currentRoute) && !role) {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: "Login" }],
-        })
-      );
-    }
-  }, [role, route.name]);
-  useEffect(() => {
-    const currentRoute = route.name.toLowerCase();
-    if (withoutLog.includes(currentRoute) && role) {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: "TabLayout" }],
-        })
-      );
-    }
-  }, [role, route.name]);
+  // const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  // const route = useRoute();
+  // const { role } = useGlobalContext();
+  // console.log(route.name);
+  // useEffect(() => {
+  //   const currentRoute = route.name.toLowerCase();
+  //   if (!withoutLog.includes(currentRoute) && !role) {
+  //     navigation.dispatch(
+  //       CommonActions.reset({
+  //         index: 0,
+  //         routes: [{ name: "Login" }],
+  //       })
+  //     );
+  //   }
+  // }, [role, route.name]);
+  // useEffect(() => {
+  //   const currentRoute = route.name.toLowerCase();
+  //   if (withoutLog.includes(currentRoute) && role) {
+  //     navigation.dispatch(
+  //       CommonActions.reset({
+  //         index: 0,
+  //         routes: [{ name: "TabLayout" }],
+  //       })
+  //     );
+  //   }
+  // }, [role, route.name]);
   return (
     <View
       style={{

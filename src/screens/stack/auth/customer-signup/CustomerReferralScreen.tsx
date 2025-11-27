@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import RNRestart from "react-native-restart";
 import Toast from "react-native-toast-message";
 import HeaderDesign from "../../../../components/shered/HeaderDesign";
 import TextSecondary from "../../../../components/shered/TextSecondary";
@@ -18,7 +19,7 @@ const CustomerReferralScreen = () => {
   const [applyReferral, { isLoading }] = useApplyReferralCodeUseMutation();
   const getValue = (name: string) => fields.find(f => f.name === name)?.value as string;
 
-  const goHome = () => navigation.navigate("TabLayout");
+  const goHome = () => RNRestart.Restart();
   const onApply = async () => {
     const code = getValue("referralCode");
     if (!code) return goHome();

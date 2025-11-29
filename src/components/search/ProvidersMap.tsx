@@ -184,7 +184,7 @@ const ProvidersMap = () => {
   );
 };
 
-export default ProvidersMap;
+export default React.memo(ProvidersMap);
 
 const styles = StyleSheet.create({
   container: {

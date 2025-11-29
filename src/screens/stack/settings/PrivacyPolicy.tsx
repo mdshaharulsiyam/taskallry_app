@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
 import Loader from "../../../components/ui/loader/Loader";
@@ -22,19 +22,21 @@ const PrivacyPolicy = () => {
 
   return (
     <SafeAreaProvider backButtonText="Privacy Policy">
-      <WebView
-        originWhitelist={["*"]}
-        source={{
-          html:
-            htmlContent ||
-            "<html><body><p>No privacy policy content available.</p></body></html>",
-        }}
-        style={{ flex: 1 }}
-      />
+      <Suspense>
+        <WebView
+          originWhitelist={["*"]}
+          source={{
+            html:
+              htmlContent ||
+              "<html><body><p>No privacy policy content available.</p></body></html>",
+          }}
+          style={{ flex: 1 }}
+        />
+      </Suspense>
     </SafeAreaProvider>
   );
 };
 
-export default PrivacyPolicy;
+export default React.memo(PrivacyPolicy);
 
 const styles = StyleSheet.create({});

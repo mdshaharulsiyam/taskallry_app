@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { Suspense } from "react";
-import Loader from "../components/ui/loader/Loader";
+import React, { useMemo } from "react";
 import AddUpdateService from "../screens/stack/AddUpdateService";
 import ChooseSignUp from "../screens/stack/auth/ChooseSignUp";
 import CustomerSignUp from "../screens/stack/auth/CustomerSignUp";
@@ -39,7 +38,7 @@ import TabLayout from "./TabLayout";
 const Stack = createNativeStackNavigator();
 
 const StackLayout = () => {
-  const screens = {
+  const screens = useMemo(() => ({
     Onboarding: Onboarding,
     Login: Login,
     Forget: ForgetPassword,
@@ -75,37 +74,39 @@ const StackLayout = () => {
     UpdateBankAccount: UpdateBankAccount,
     ViewProfile: ViewProfile,
     AccountSetting: AccountSetting,
-  };
+  }), []);
 
-  const stacks = Object.keys(screens).map((key) => ({
-    route: key,
-    label: key,
-    component: screens[key as keyof typeof screens],
-  }));
+  const stacks = useMemo(
+    () =>
+      Object.keys(screens).map((key) => ({
+        route: key,
+        label: key,
+        component: screens[key as keyof typeof screens],
+      })),
+    [screens]
+  );
+
+  const screenElements = useMemo(
+    () =>
+      stacks.map((item: any) => (
+        <Stack.Screen
+          key={item?.route}
+          name={item?.route}
+          options={{
+            headerShown: false,
+          }}
+          component={item?.component}
+        />
+      )),
+    [stacks]
+  );
 
   return (
     <Stack.Navigator
       initialRouteName="Onboarding"
       screenOptions={{ headerShown: false }}
     >
-      {stacks?.map((item: any) => {
-        const Component = item?.component;
-        return (
-          <Stack.Screen
-            key={item?.route}
-            name={item?.route}
-            options={{
-              headerShown: false,
-            }}
-          >
-            {() => (
-              <Suspense fallback={<Loader />}>
-                <Component />
-              </Suspense>
-            )}
-          </Stack.Screen>
-        );
-      })}
+      {screenElements}
     </Stack.Navigator>
   );
 };

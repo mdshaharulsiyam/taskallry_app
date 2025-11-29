@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { Suspense } from "react";
 import { StyleSheet } from "react-native";
 import DetailsTask from "../../components/taskDetails/DetailsTask";
 
@@ -13,9 +13,14 @@ const MyTaskDetails = () => {
       id: string;
     };
   };
-  return <DetailsTask heading={heading} from={from} id={id} />;
+  const DetailsTaskAny = DetailsTask as any;
+  return (
+    <Suspense>
+      <DetailsTaskAny heading={heading} from={from} id={id} />
+    </Suspense>
+  );
 };
 
-export default MyTaskDetails;
+export default React.memo(MyTaskDetails);
 
 const styles = StyleSheet.create({});

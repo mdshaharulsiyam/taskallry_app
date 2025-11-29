@@ -1,10 +1,14 @@
-import React from "react";
+import React, { Suspense, useCallback } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import NotificationCard from "../../../components/notification/NotificationCard";
 import TextPrimary from "../../../components/shered/TextPrimary";
 import SafeAreaProviderNoScroll from "../../../providers/SafeAreaProviderNoScroll";
 
 const Notifications = () => {
+  const renderItem = useCallback(
+    () => <NotificationCard />,
+    []
+  );
   return (
     <SafeAreaProviderNoScroll backButtonText="Notifications">
       <TouchableOpacity
@@ -19,15 +23,17 @@ const Notifications = () => {
           text="mark as read"
         />
       </TouchableOpacity>
-      <FlatList
-        data={[1, 2, 3, 4, 5, 6]}
-        keyExtractor={(item) => item?.toString()}
-        renderItem={({ item, index }) => <NotificationCard />}
-      />
+      <Suspense>
+        <FlatList
+          data={[1, 2, 3, 4, 5, 6]}
+          keyExtractor={(item) => item?.toString()}
+          renderItem={renderItem}
+        />
+      </Suspense>
     </SafeAreaProviderNoScroll>
   );
 };
 
-export default Notifications;
+export default React.memo(Notifications);
 
 const styles = StyleSheet.create({});

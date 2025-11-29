@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+import React, { Suspense } from "react";
 import { View } from "react-native";
 import AccountScreen from "./service-signup/AccountScreen";
 import AddressScreen from "./service-signup/AddressScreen";
@@ -12,15 +12,17 @@ const Stack = createNativeStackNavigator();
 const ServiceSignUp = () => {
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Account">
-        <Stack.Screen name="Account" component={AccountScreen} />
-        <Stack.Screen name="BVN" component={BVNScreen} />
-        <Stack.Screen name="Identity" component={IdentityScreen} />
-        <Stack.Screen name="Address" component={AddressScreen} />
-        <Stack.Screen name="Referral" component={ReferralScreen} />
-      </Stack.Navigator>
+      <Suspense>
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Account">
+          <Stack.Screen name="Account" component={AccountScreen} />
+          <Stack.Screen name="BVN" component={BVNScreen} />
+          <Stack.Screen name="Identity" component={IdentityScreen} />
+          <Stack.Screen name="Address" component={AddressScreen} />
+          <Stack.Screen name="Referral" component={ReferralScreen} />
+        </Stack.Navigator>
+      </Suspense>
     </View>
   );
 };
 
-export default ServiceSignUp;
+export default React.memo(ServiceSignUp);

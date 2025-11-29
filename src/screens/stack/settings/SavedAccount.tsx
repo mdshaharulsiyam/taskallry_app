@@ -1,20 +1,18 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import SafeAreaProviderNoScroll from "../../../providers/SafeAreaProviderNoScroll";
 import Navigate from "../../../utils/Navigate";
 
 const SavedAccount = () => {
   const navigate = Navigate();
+  const handleUpdate = useCallback(() => navigate("UpdateBankAccount"), [navigate]);
   return (
     <SafeAreaProviderNoScroll backButtonText="Saved Account">
       <View style={styles.card}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Saved Account</Text>
-          <TouchableOpacity
-            onPress={() => navigate("UpdateBankAccount")}
-            style={styles.updateBtn}
-          >
+          <TouchableOpacity onPress={handleUpdate} style={styles.updateBtn}>
             <Text style={styles.updateBtnText}>Update</Text>
           </TouchableOpacity>
         </View>
@@ -37,7 +35,7 @@ const SavedAccount = () => {
   );
 };
 
-export default SavedAccount;
+export default React.memo(SavedAccount);
 
 const styles = StyleSheet.create({
   card: {

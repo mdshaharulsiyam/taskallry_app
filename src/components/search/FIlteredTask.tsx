@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -84,6 +84,11 @@ const FIlteredTask = ({ search }: { search: string }) => {
     page: 1,
     limit,
   });
+  const keyExtractor = useCallback((_: any, index: number) => index.toString(), []);
+  const renderItem = useCallback(
+    ({ item }: { item: any }) => <TaskCard task={item} from="user" />,
+    []
+  );
   return (
     <View style={{ marginTop: 10 }}>
       {(data?.data?.result && data?.data?.result?.length < 1) ||
@@ -98,7 +103,7 @@ const FIlteredTask = ({ search }: { search: string }) => {
       ) : (
         <FlatList
           data={data?.data?.result || []}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={keyExtractor}
           onEndReachedThreshold={0.1}
           onEndReached={() => {
             const total = data?.data?.pagination?.total || 0;
@@ -112,13 +117,20 @@ const FIlteredTask = ({ search }: { search: string }) => {
               <ActivityIndicator style={{ marginVertical: 8 }} />
             ) : null
           }
-          renderItem={({ item }) => <TaskCard task={item} from="user" />}
+          renderItem={renderItem}
+          initialNumToRender={8}
+          maxToRenderPerBatch={8}
+          windowSize={7}
+          removeClippedSubviews
+          updateCellsBatchingPeriod={50}
+          keyboardShouldPersistTaps="handled"
         />
       )}
     </View>
   );
 };
 
-export default FIlteredTask;
+export default React.memo(FIlteredTask);
 
 const styles = StyleSheet.create({});
+

@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import FilteredProvider from "../../components/search/FilteredProvider";
 import FIlteredTask from "../../components/search/FIlteredTask";
@@ -19,47 +19,60 @@ const Search = () => {
   const { role } = useGlobalContext();
   const dispatch = useAppDispatch();
   const combinedType = type ? type : role === "user" ? "Provider" : "Task";
-  const [searchText, setSearchText] = React.useState(search);
+  const [searchText, setSearchText] = useState(search);
   const filterState = useAppSelector(selectFilters);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(setSearchType(combinedType));
   }, [combinedType, dispatch]);
 
-  const elements = [
-    <FilterOptions
-      search={searchText}
-      handler={(value: string) => setSearchText(value)}
-      key={1}
-      type={combinedType}
-    />,
-    combinedType === "Provider"
-      ? (
-        <FilteredProvider key={3} />
-      )
-      : filterState?.viewMode === "map"
+  const elements = useMemo(
+    () => [
+      <FilterOptions
+        search={searchText}
+        handler={(value: string) => setSearchText(value)}
+        key={1}
+        type={combinedType}
+      />,
+      combinedType === "Provider"
         ? (
-          <ProvidersMap key={3} />
+          <FilteredProvider key={3} />
         )
-        : (
-          <FIlteredTask key={2} search={searchText} />
-        ),
-  ];
+        : filterState?.viewMode === "map"
+          ? (
+            <ProvidersMap key={3} />
+          )
+          : (
+            <FIlteredTask key={2} search={searchText} />
+          ),
+    ],
+    [combinedType, filterState?.viewMode, searchText]
+  );
+  const keyExtractor = useCallback((_: any, index: number) => index.toString(), []);
+  const renderItem = useCallback(({ item }: { item: React.ReactElement }) => item, []);
   return (
     <SafeAreaProviderNoScroll>
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{
-          paddingBottom: 150,
-        }}
-        showsVerticalScrollIndicator={false}
-        data={elements}
-        renderItem={({ item }) => item}
-      />
+      <Suspense>
+        <FlatList
+          keyExtractor={keyExtractor}
+          contentContainerStyle={{
+            paddingBottom: 150,
+          }}
+          showsVerticalScrollIndicator={false}
+          data={elements}
+          renderItem={renderItem}
+          initialNumToRender={2}
+          maxToRenderPerBatch={2}
+          windowSize={5}
+          removeClippedSubviews
+          updateCellsBatchingPeriod={50}
+          keyboardShouldPersistTaps="handled"
+        />
+      </Suspense>
     </SafeAreaProviderNoScroll>
   );
 };
 
-export default Search;
+export default React.memo(Search);
 
 const styles = StyleSheet.create({});

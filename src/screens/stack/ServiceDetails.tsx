@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { View } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import FlexImages from "../../components/providerDetails/FlexImages";
@@ -50,51 +50,53 @@ const ServiceDetails = () => {
 
   return (
     <SafeAreaProvider backButtonText="My Service Details">
-      <SectionHeading
-        style={{
-          marginTop: 10,
-        }}
-        text="My Service Details"
-        showViewButton={false}
-      />
-      <TextPrimary
-        style={{
-          color: "#115E59",
-          backgroundColor: "#E6F4F1",
-          width: 150,
-          textAlign: "center",
-          padding: 5,
-          borderRadius: 10,
-          marginTop: 10,
-        }}
-        text={service.category?.name || "Service"}
-      />
-      <HeaderDesign text={service.title || "My Service"} />
-      <FlexImages images={service.images || []} />
-      <FlexText
-        style={{
-          padding: 20,
-          backgroundColor: "#E6F4F1",
-          marginVertical: 10,
-          borderRadius: 10,
-          justifyContent: "space-between",
-        }}
-      >
-        <TextSecondary text="Starting Price" />
-        <HeaderDesign text={`₦${service.price ?? 0}`} />
-      </FlexText>
+      <Suspense>
+        <SectionHeading
+          style={{
+            marginTop: 10,
+          }}
+          text="My Service Details"
+          showViewButton={false}
+        />
+        <TextPrimary
+          style={{
+            color: "#115E59",
+            backgroundColor: "#E6F4F1",
+            width: 150,
+            textAlign: "center",
+            padding: 5,
+            borderRadius: 10,
+            marginTop: 10,
+          }}
+          text={service.category?.name || "Service"}
+        />
+        <HeaderDesign text={service.title || "My Service"} />
+        <FlexImages images={service.images || []} />
+        <FlexText
+          style={{
+            padding: 20,
+            backgroundColor: "#E6F4F1",
+            marginVertical: 10,
+            borderRadius: 10,
+            justifyContent: "space-between",
+          }}
+        >
+          <TextSecondary text="Starting Price" />
+          <HeaderDesign text={`₦${service.price ?? 0}`} />
+        </FlexText>
 
-      <TabButton
-        handler={(tab) => setTab(tab)}
-        tab={["Description", "Reviews"]}
-      />
-      {tab == "Description" ? (
-        <Description service={service} />
-      ) : (
-        <Review service={service} />
-      )}
+        <TabButton
+          handler={(tab) => setTab(tab)}
+          tab={["Description", "Reviews"]}
+        />
+        {tab == "Description" ? (
+          <Description service={service} />
+        ) : (
+          <Review service={service} />
+        )}
+      </Suspense>
     </SafeAreaProvider>
   );
 };
 
-export default ServiceDetails;
+export default React.memo(ServiceDetails);

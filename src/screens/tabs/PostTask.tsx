@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlexText from "../../components/shered/FlexText";
@@ -85,98 +85,100 @@ const PostTask = () => {
   }, [task, setFields]);
   return (
     <SafeAreaProvider>
-      <View
-        style={{
-          flex: 1,
-          gap: 6,
-          justifyContent: "flex-start",
-          minHeight: height - top - bottom,
-          paddingBottom: 90,
-          marginTop: 10,
-        }}
-      >
-        <SectionHeading text={title[currentSlide]} showViewButton={false} />
-        {fields
-          ?.slice(
-            slide[currentSlide].skip,
-            slide[currentSlide].keep + slide[currentSlide].skip
-          )
-          ?.map((field: FieldsType) => RenderField(field, setFields))}
-        {currentSlide == 1 && (
-          <View>
-            <TextPrimary text="Attachments (optional)" />
-            <FlexText>
-              {fiels?.length > 0 && (
-                <Image
-                  source={{ uri: fiels?.[0]?.uri }}
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: 8,
-                    marginRight: 8,
-                    resizeMode: "contain",
-                  }}
-                />
-              )}
-              <ImageUploader setFiels={setFiels} />
-            </FlexText>
-          </View>
-        )}
-        <FlexText
+      <Suspense>
+        <View
           style={{
-            marginTop: 6,
+            flex: 1,
+            gap: 6,
+            justifyContent: "flex-start",
+            minHeight: height - top - bottom,
+            paddingBottom: 90,
+            marginTop: 10,
           }}
         >
-          {currentSlide != 0 && (
-            <ButtonTransparentBG
+          <SectionHeading text={title[currentSlide]} showViewButton={false} />
+          {fields
+            ?.slice(
+              slide[currentSlide].skip,
+              slide[currentSlide].keep + slide[currentSlide].skip
+            )
+            ?.map((field: FieldsType) => RenderField(field, setFields))}
+          {currentSlide == 1 && (
+            <View>
+              <TextPrimary text="Attachments (optional)" />
+              <FlexText>
+                {fiels?.length > 0 && (
+                  <Image
+                    source={{ uri: fiels?.[0]?.uri }}
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: 8,
+                      marginRight: 8,
+                      resizeMode: "contain",
+                    }}
+                  />
+                )}
+                <ImageUploader setFiels={setFiels} />
+              </FlexText>
+            </View>
+          )}
+          <FlexText
+            style={{
+              marginTop: 6,
+            }}
+          >
+            {currentSlide != 0 && (
+              <ButtonTransparentBG
+                disabled={isLoading}
+                style={{
+                  width: "auto",
+                }}
+                text="Previous"
+                handler={() => setCurrentSlide((prev) => prev - 1)}
+              />
+            )}
+            <ButtonBG
               disabled={isLoading}
               style={{
                 width: "auto",
               }}
-              text="Previous"
-              handler={() => setCurrentSlide((prev) => prev - 1)}
-            />
-          )}
-          <ButtonBG
-            disabled={isLoading}
-            style={{
-              width: "auto",
-            }}
-            text={
-              currentSlide == 3
-                ? isLoading
-                  ? "loading..."
-                  : "Post"
-                : "Continue"
-            }
-            handler={() => {
-              const isValid = handlePostTask(
-                fields?.slice(
-                  slide[currentSlide].skip,
-                  slide[currentSlide].keep + slide[currentSlide].skip
-                ),
-                setFields,
-                currentSlide,
-                fields,
-                create,
-                fiels,
-                () => {
-                  navigate("Task");
-                  setCurrentSlide(0);
-                  setFiels([]);
-                },
-                provider
-              );
-
-              if (isValid && currentSlide < 3) {
-                setCurrentSlide((prev) => prev + 1);
+              text={
+                currentSlide == 3
+                  ? isLoading
+                    ? "loading..."
+                    : "Post"
+                  : "Continue"
               }
-            }}
-          />
-        </FlexText>
-      </View>
+              handler={() => {
+                const isValid = handlePostTask(
+                  fields?.slice(
+                    slide[currentSlide].skip,
+                    slide[currentSlide].keep + slide[currentSlide].skip
+                  ),
+                  setFields,
+                  currentSlide,
+                  fields,
+                  create,
+                  fiels,
+                  () => {
+                    navigate("Task");
+                    setCurrentSlide(0);
+                    setFiels([]);
+                  },
+                  provider
+                );
+
+                if (isValid && currentSlide < 3) {
+                  setCurrentSlide((prev) => prev + 1);
+                }
+              }}
+            />
+          </FlexText>
+        </View>
+      </Suspense>
     </SafeAreaProvider>
   );
 };
 
-export default PostTask;
+export default React.memo(PostTask);

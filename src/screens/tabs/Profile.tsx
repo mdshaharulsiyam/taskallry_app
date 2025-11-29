@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React from "react";
+import React, { Suspense, useCallback, useMemo } from "react";
 import {
   FlatList,
   Image,
@@ -18,75 +18,84 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { clearToken } from "../../redux/slices/authSlice";
 import { AppDispatch } from "../../redux/store";
 import { Navigation } from "../../utils/Navigate";
+
 const Profile = () => {
   const navigate = Navigation();
   const dispatch = useDispatch<AppDispatch>();
   const { setRole } = useGlobalContext();
-  const elements = [
-    <ProfilePictureName key={1} />,
-    <ProfileOptions key={2} />,
-    <View
-      style={{
-        paddingHorizontal: 20,
-      }}
-    >
-      <TouchableOpacity
-        key={4}
-        onPress={async () => {
-          setRole(null);
-          await AsyncStorage.removeItem("token");
-          await AsyncStorage.removeItem("role");
-          dispatch(clearToken());
-          navigate.reset({
-            index: 0,
-            routes: [{ name: "Login" }],
-          });
-        }}
+
+  const handleLogout = useCallback(async () => {
+    setRole(null);
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("role");
+    dispatch(clearToken());
+    navigate.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });
+  }, [dispatch, navigate, setRole]);
+
+  const elements = useMemo(
+    () => [
+      <ProfilePictureName key={1} />,
+      <ProfileOptions key={2} />,
+      <View
         style={{
-          marginTop: 10,
-          padding: 10,
-          borderRadius: 10,
-          borderWidth: 1,
-          paddingVertical: 14,
+          paddingHorizontal: 20,
         }}
       >
-        <FlexText
+        <TouchableOpacity
+          key={4}
+          onPress={handleLogout}
           style={{
-            justifyContent: "space-between",
+            marginTop: 10,
+            padding: 10,
+            borderRadius: 10,
+            borderWidth: 1,
+            paddingVertical: 14,
           }}
         >
-          <FlexText>
-            <Image
-              source={profileIcons.Logout as ImageSourcePropType}
-              style={{
-                tintColor: "#FF0000",
-              }}
-            />
-            <TextSecondary
-              style={{
-                color: "#FF0000",
-              }}
-              text={"Log Out"}
-            />
+          <FlexText
+            style={{
+              justifyContent: "space-between",
+            }}
+          >
+            <FlexText>
+              <Image
+                source={profileIcons.Logout as ImageSourcePropType}
+                style={{
+                  tintColor: "#FF0000",
+                }}
+              />
+              <TextSecondary
+                style={{
+                  color: "#FF0000",
+                }}
+                text={"Log Out"}
+              />
+            </FlexText>
           </FlexText>
-        </FlexText>
-      </TouchableOpacity>
-      ,
-    </View>,
-  ];
+        </TouchableOpacity>
+        ,
+      </View>,
+    ],
+    [dispatch, navigate, setRole, handleLogout]
+  );
   return (
     <SafeAreaProviderNoScroll zeroPadding={true}>
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{
-          paddingBottom: 150,
-        }}
-        showsVerticalScrollIndicator={false}
-        data={elements}
-        renderItem={({ item }) => item}
-      />
+      <Suspense>
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{
+            paddingBottom: 150,
+          }}
+          showsVerticalScrollIndicator={false}
+          data={elements}
+          renderItem={({ item }) => item}
+        />
+      </Suspense>
     </SafeAreaProviderNoScroll>
   );
 };
 
-export default Profile;
+export default React.memo(Profile);

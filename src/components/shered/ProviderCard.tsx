@@ -105,4 +105,4 @@ const ProviderCard = ({ item }: { item: Service }) => {
   );
 };
 
-export default ProviderCard;
+export default React.memo(ProviderCard);

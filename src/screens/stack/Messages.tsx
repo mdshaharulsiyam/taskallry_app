@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, ImageSourcePropType, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ChatHeader from "../../components/message/ChatHeader";
@@ -99,7 +99,7 @@ const Messages = () => {
     };
   }, [socket, id, profileData]);
 
-  const handleSendMessage = async ({
+  const handleSendMessage = useCallback(async ({
     text,
     imageUrls,
     pdfUrls,
@@ -148,7 +148,18 @@ const Messages = () => {
         receiver: id,
       }
     );
-  };
+  }, [id, profileData, socket]);
+
+  const renderMessageItem = useCallback(
+    ({ item }: { item: MessageItem }) => <Message item={item} />,
+    []
+  );
+
+  const handleEndReached = useCallback(() => {
+    if (!isFetching && (data?.data?.meta?.total || 0) > messages.length) {
+      setLimit((prev) => prev + 10);
+    }
+  }, [data?.data?.meta?.total, isFetching, messages.length]);
 
   return (
     <SafeAreaProviderNoScroll>
@@ -168,32 +179,34 @@ const Messages = () => {
         {isLoading ? (
           <ActivityIndicator style={{ marginTop: 20 }} />
         ) : (
-          <FlatList
-            style={{
-              height: height,
-              maxHeight: height - (top + bottom + 60 + 15 + 60 + 40 + 50),
-            }}
-            keyExtractor={(item) => item._id}
-            inverted
-            showsVerticalScrollIndicator={false}
-            data={messages}
-            onEndReachedThreshold={0.1}
-            onEndReached={() => {
-              if (!isFetching && (data?.data?.meta?.total || 0) > messages.length) {
-                setLimit((prev) => prev + 10);
+          <Suspense>
+            <FlatList
+              style={{
+                height: height,
+                maxHeight: height - (top + bottom + 60 + 15 + 60 + 40 + 50),
+              }}
+              keyExtractor={(item) => item._id}
+              inverted
+              showsVerticalScrollIndicator={false}
+              data={messages}
+              onEndReachedThreshold={0.1}
+              onEndReached={handleEndReached}
+              ListFooterComponent={
+                isFetching && messages.length > 0 ? (
+                  <ActivityIndicator style={{ marginVertical: 8 }} />
+                ) : null
               }
-            }}
-            ListFooterComponent={
-              isFetching && messages.length > 0 ? (
-                <ActivityIndicator style={{ marginVertical: 8 }} />
-              ) : null
-            }
-            renderItem={({ item }) => <Message item={item} />}
-          />
+              renderItem={renderMessageItem}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={7}
+              removeClippedSubviews
+            />
+          </Suspense>
         )}
         <SendMessage onSend={handleSendMessage} />
       </View>
     </SafeAreaProviderNoScroll>
   );
 };
-export default Messages;
+export default React.memo(Messages);

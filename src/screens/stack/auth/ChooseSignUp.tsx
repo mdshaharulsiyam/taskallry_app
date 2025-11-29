@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, useCallback } from "react";
 import {
   Dimensions,
   ImageSourcePropType,
@@ -18,40 +18,40 @@ const ChooseSignUp = () => {
   const { height } = Dimensions.get("window");
   const { top, bottom } = useSafeAreaInsets();
   const navigate = Navigate();
+  const goCustomer = useCallback(() => navigate("CustomerSignUp"), [navigate]);
+  const goService = useCallback(() => navigate("ServiceSignUp"), [navigate]);
   return (
     <SafeAreaProvider backButtonText="Sign Up as">
-      <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-        <View
-          style={{
-            flex: 1,
-            gap: 6,
-            justifyContent: "center",
-            minHeight: height - top - bottom,
-            paddingBottom: 90,
-          }}
-        >
-          <HeaderDesign text="Choose Your Role to Get Started" />
-          <TextSecondary text="Select the profile that best suits your journey. Whether you're here to book reliable services or offer them, we’ve built the right tools just for you." />
-          <ImageButton
-            imageSource={otherIcons.Customer as ImageSourcePropType}
-            title="Customer"
-            onPress={() => navigate("CustomerSignUp")}
-          />
-          <ImageButton
-            imageSource={otherIcons.Service as ImageSourcePropType}
-            title="Service Provider"
-            onPress={() => navigate("ServiceSignUp")}
-          />
-          {/* <ButtonBG
-            text='Continue'
-            handler={() => { }}
-          /> */}
-        </View>
-      </ScrollView>
+      <Suspense>
+        <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+          <View
+            style={{
+              flex: 1,
+              gap: 6,
+              justifyContent: "center",
+              minHeight: height - top - bottom,
+              paddingBottom: 90,
+            }}
+          >
+            <HeaderDesign text="Choose Your Role to Get Started" />
+            <TextSecondary text="Select the profile that best suits your journey. Whether you're here to book reliable services or offer them, we’ve built the right tools just for you." />
+            <ImageButton
+              imageSource={otherIcons.Customer as ImageSourcePropType}
+              title="Customer"
+              onPress={goCustomer}
+            />
+            <ImageButton
+              imageSource={otherIcons.Service as ImageSourcePropType}
+              title="Service Provider"
+              onPress={goService}
+            />
+          </View>
+        </ScrollView>
+      </Suspense>
     </SafeAreaProvider>
   );
 };
 
-export default ChooseSignUp;
+export default React.memo(ChooseSignUp);
 
 const styles = StyleSheet.create({});

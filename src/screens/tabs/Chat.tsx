@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList, StyleSheet, View } from "react-native";
 
 import ChatItems from "../../components/chat/ChatItems";
@@ -16,6 +16,15 @@ const Chat = () => {
 
   const list = data?.data?.data || [];
   const { height } = Dimensions.get("window");
+
+  const handleEndReached = useCallback(() => {
+    const total = data?.data?.meta?.total || 0;
+    if (!isFetching && total > list.length) {
+      setLimit((prev) => prev + 20);
+    }
+  }, [data?.data?.meta?.total, isFetching, list.length]);
+
+  const renderItem = useCallback(({ item }: { item: any }) => <ChatItems item={item} />, []);
 
   const content = isLoading ? (
     <ActivityIndicator style={{ marginTop: 20 }} />
@@ -42,18 +51,17 @@ const Chat = () => {
       showsVerticalScrollIndicator={false}
       data={list}
       onEndReachedThreshold={0.1}
-      onEndReached={() => {
-        const total = data?.data?.meta?.total || 0;
-        if (!isFetching && total > list.length) {
-          setLimit((prev) => prev + 20);
-        }
-      }}
+      onEndReached={handleEndReached}
       ListFooterComponent={
         isFetching && list.length > 0 ? (
           <ActivityIndicator style={{ marginVertical: 8 }} />
         ) : null
       }
-      renderItem={({ item }) => <ChatItems item={item} />}
+      renderItem={renderItem}
+      initialNumToRender={10}
+      maxToRenderPerBatch={10}
+      windowSize={7}
+      removeClippedSubviews
     />
   );
 
@@ -66,6 +74,6 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default React.memo(Chat);
 
 const styles = StyleSheet.create({});

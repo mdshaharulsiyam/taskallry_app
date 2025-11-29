@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import HeaderDesign from "../../../components/shered/HeaderDesign";
@@ -18,34 +18,36 @@ const ResetPassword = () => {
   const navigate = Navigate();
   return (
     <SafeAreaProvider backButtonText="Set New Password">
-      <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-        <View
-          style={{
-            flex: 1,
-            gap: 6,
-            justifyContent: "center",
-            minHeight: height - top - bottom,
-          }}
-        >
-          <HeaderDesign text="Set Your New Password" />
-          <TextSecondary text="Create a secure password to protect your account and get started seamlessly!" />
-          {fields?.map((field: FieldsType) => RenderField(field, setFields))}
-          <ButtonBG
+      <Suspense>
+        <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+          <View
             style={{
-              marginTop: 10,
+              flex: 1,
+              gap: 6,
+              justifyContent: "center",
+              minHeight: height - top - bottom,
             }}
-            text="Confirm"
-            handler={() => {
-              navigate("Login");
-              handleResetPassword(fields, setFields);
-            }}
-          />
-        </View>
-      </ScrollView>
+          >
+            <HeaderDesign text="Set Your New Password" />
+            <TextSecondary text="Create a secure password to protect your account and get started seamlessly!" />
+            {fields?.map((field: FieldsType) => RenderField(field, setFields))}
+            <ButtonBG
+              style={{
+                marginTop: 10,
+              }}
+              text="Confirm"
+              handler={() => {
+                navigate("Login");
+                handleResetPassword(fields, setFields);
+              }}
+            />
+          </View>
+        </ScrollView>
+      </Suspense>
     </SafeAreaProvider>
   );
 };
 
-export default ResetPassword;
+export default React.memo(ResetPassword);
 
 const styles = StyleSheet.create({});

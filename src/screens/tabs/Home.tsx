@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { Suspense, useMemo } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import CategorySection from "../../components/home/CategorySection";
 import MyStats from "../../components/home/MyStats";
@@ -24,15 +24,17 @@ const Home = () => {
   );
   return (
     <SafeAreaProviderNoScroll>
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{
-          paddingBottom: 150,
-        }}
-        showsVerticalScrollIndicator={false}
-        data={elements}
-        renderItem={({ item }) => item}
-      />
+      <Suspense>
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{
+            paddingBottom: 150,
+          }}
+          showsVerticalScrollIndicator={false}
+          data={elements}
+          renderItem={({ item }) => item}
+        />
+      </Suspense>
     </SafeAreaProviderNoScroll>
   );
 };

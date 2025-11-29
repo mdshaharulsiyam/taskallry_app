@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import SectionHeading from "../../components/shered/SectionHeading";
 import TextPrimary from "../../components/shered/TextPrimary";
@@ -38,100 +38,111 @@ const AddUpdateService = () => {
     }
   }, [data]);
 
+  const handleRemoveExisting = useCallback(
+    (index: number, uri: string) => {
+      setExistingImages((prev) => prev.filter((_, i) => i !== index));
+      setRemovedImages((prev) => [...prev, uri]);
+    },
+    []
+  );
+
+  const handleRemoveFile = useCallback((index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const handleSubmit = useCallback(() => {
+    handleServiceAddUpdate(
+      fields,
+      setFields,
+      existingImages,
+      files,
+      removedImages,
+      id,
+      createService,
+      updateService,
+      navigate
+    );
+  }, [createService, existingImages, files, id, navigate, removedImages, setFields, updateService, fields]);
+
   return (
     <SafeAreaProvider backButtonText="Update Service">
-      <SectionHeading text="Add Service" showViewButton={false} />
-      <TextPrimary text="Upload Your Service Image" />
-      {existingImages.length + files.length < 5 && (
-        <ImageUploader
-          setFiels={setFiles}
-          maxFiles={5}
-          currentCount={existingImages.length + files.length}
+      <Suspense>
+        <SectionHeading text="Add Service" showViewButton={false} />
+        <TextPrimary text="Upload Your Service Image" />
+        {existingImages.length + files.length < 5 && (
+          <ImageUploader
+            setFiels={setFiles}
+            maxFiles={5}
+            currentCount={existingImages.length + files.length}
+          />
+        )}
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            marginTop: 12,
+            gap: 8,
+          }}
+        >
+          {existingImages.map((uri, index) => (
+            <View key={`existing-${index}`} style={{ position: "relative" }}>
+              <Image
+                source={{ uri: ImgUrl(uri) }}
+                style={{ width: 80, height: 80, borderRadius: 8 }}
+              />
+              <TouchableOpacity
+                onPress={() => handleRemoveExisting(index, uri)}
+                style={{
+                  position: "absolute",
+                  top: -6,
+                  right: -6,
+                  backgroundColor: "#EF4444",
+                  borderRadius: 999,
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
+                }}
+              >
+                <Text style={{ color: "#FFF", fontSize: 10 }}>X</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+
+          {files.map((file, index) => (
+            <View key={`file-${index}`} style={{ position: "relative" }}>
+              <Image
+                source={{ uri: file.uri }}
+                style={{ width: 80, height: 80, borderRadius: 8 }}
+              />
+              <TouchableOpacity
+                onPress={() => handleRemoveFile(index)}
+                style={{
+                  position: "absolute",
+                  top: -6,
+                  right: -6,
+                  backgroundColor: "#EF4444",
+                  borderRadius: 999,
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
+                }}
+              >
+                <Text style={{ color: "#FFF", fontSize: 10 }}>X</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+
+        {fields?.map((field: FieldsType) => RenderField(field, setFields))}
+
+        <ButtonBG
+          disabled={isCreateLoading || isUpdateLoading}
+          text={
+            isCreateLoading || isUpdateLoading ? "Loading..." : "Save Service"
+          }
+          handler={handleSubmit}
         />
-      )}
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          marginTop: 12,
-          gap: 8,
-        }}
-      >
-        {existingImages.map((uri, index) => (
-          <View key={`existing-${index}`} style={{ position: "relative" }}>
-            <Image
-              source={{ uri: ImgUrl(uri) }}
-              style={{ width: 80, height: 80, borderRadius: 8 }}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                setExistingImages((prev) => prev.filter((_, i) => i !== index));
-                setRemovedImages((prev) => [...prev, uri]);
-              }}
-              style={{
-                position: "absolute",
-                top: -6,
-                right: -6,
-                backgroundColor: "#EF4444",
-                borderRadius: 999,
-                paddingHorizontal: 6,
-                paddingVertical: 2,
-              }}
-            >
-              <Text style={{ color: "#FFF", fontSize: 10 }}>X</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-
-        {files.map((file, index) => (
-          <View key={`file-${index}`} style={{ position: "relative" }}>
-            <Image
-              source={{ uri: file.uri }}
-              style={{ width: 80, height: 80, borderRadius: 8 }}
-            />
-            <TouchableOpacity
-              onPress={() =>
-                setFiles((prev) => prev.filter((_, i) => i !== index))
-              }
-              style={{
-                position: "absolute",
-                top: -6,
-                right: -6,
-                backgroundColor: "#EF4444",
-                borderRadius: 999,
-                paddingHorizontal: 6,
-                paddingVertical: 2,
-              }}
-            >
-              <Text style={{ color: "#FFF", fontSize: 10 }}>X</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
-
-      {fields?.map((field: FieldsType) => RenderField(field, setFields))}
-
-      <ButtonBG
-        disabled={isCreateLoading || isUpdateLoading}
-        text={
-          isCreateLoading || isUpdateLoading ? "Loading..." : "Save Service"
-        }
-        handler={() => {
-          handleServiceAddUpdate(
-            fields,
-            setFields,
-            existingImages,
-            files,
-            removedImages,
-            id,
-            createService,
-            updateService,
-            navigate
-          );
-        }}
-      />
+      </Suspense>
     </SafeAreaProvider>
   );
 };
 
-export default AddUpdateService;
+export default React.memo(AddUpdateService);

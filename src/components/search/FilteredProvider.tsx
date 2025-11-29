@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useGetAllServicesQuery } from "../../redux/apis";
 import EmptyList from "../shered/EmptyList";
@@ -10,6 +10,9 @@ const FilteredProvider = () => {
   const { data, isFetching, isLoading, refetch } = useGetAllServicesQuery({ page: 1, limit });
 
   const services = data?.data?.result || [];
+
+  const keyExtractor = useCallback((_: any, index: number) => index.toString(), []);
+  const renderItem = useCallback(({ item }: { item: any }) => <ProviderCard item={item} />, []);
 
   return (
     <View style={{ marginTop: 10 }}>
@@ -24,7 +27,7 @@ const FilteredProvider = () => {
       ) : (
         <FlatList
           data={services}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={keyExtractor}
           onEndReachedThreshold={0.1}
           onEndReached={() => {
             const total = data?.data?.meta?.total || 0;
@@ -37,13 +40,20 @@ const FilteredProvider = () => {
               <ActivityIndicator style={{ marginVertical: 8 }} />
             ) : null
           }
-          renderItem={({ item }) => <ProviderCard item={item} />}
+          renderItem={renderItem}
+          initialNumToRender={8}
+          maxToRenderPerBatch={8}
+          windowSize={7}
+          removeClippedSubviews
+          updateCellsBatchingPeriod={50}
+          keyboardShouldPersistTaps="handled"
         />
       )}
     </View>
   );
 };
 
-export default FilteredProvider;
+export default React.memo(FilteredProvider);
 
 const styles = StyleSheet.create({});
+

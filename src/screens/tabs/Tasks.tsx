@@ -97,13 +97,17 @@ const Tasks = () => {
 
   return (
     <SafeAreaProviderNoScroll>
-      {isLoading || isFetching ? (
+      {isLoading && !data ? (
         <FlatList
           data={[]}
           keyExtractor={(_item, index) => index.toString()}
           contentContainerStyle={{
             paddingBottom: 150,
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={7}
+          removeClippedSubviews
           ListHeaderComponent={
             <>
               {header}
@@ -116,7 +120,7 @@ const Tasks = () => {
       ) : (
         <FlatList
           data={tasks}
-          keyExtractor={(_item, index) => index.toString()}
+          keyExtractor={(item: any, index) => (item?._id ? String(item._id) : index.toString())}
           contentContainerStyle={{
             paddingBottom: 150,
           }}
@@ -125,6 +129,13 @@ const Tasks = () => {
           onEndReachedThreshold={0.1}
           onEndReached={handleEndReached}
           renderItem={renderTaskItem}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={7}
+          removeClippedSubviews
+          ListFooterComponent={
+            isFetching && tasks.length > 0 ? <Loader /> : null
+          }
         />
       )}
     </SafeAreaProviderNoScroll>

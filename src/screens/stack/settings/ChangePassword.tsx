@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, useCallback } from "react";
 import { StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
@@ -13,7 +13,7 @@ const ChangePassword = () => {
   const { fields, setFields } = ChangePasswordFields();
   const [changePassword, { isLoading }] = useChangePasswordMutation();
 
-  const handleChangePassword = () => {
+  const handleChangePassword = useCallback(() => {
     const isValid = validateFields(fields, setFields);
     if (!isValid) return;
 
@@ -44,23 +44,25 @@ const ChangePassword = () => {
           text2: err?.data?.message || "Something went wrong",
         });
       });
-  };
+  }, [changePassword, fields, setFields]);
 
   return (
     <SafeAreaProvider backButtonText="Change Password">
-      {fields?.map((field: FieldsType) => RenderField(field, setFields))}
-      <ButtonBG
-        style={{
-          marginTop: 10,
-        }}
-        text={isLoading ? "Updating..." : "Update"}
-        handler={handleChangePassword}
-        disabled={isLoading}
-      />
+      <Suspense>
+        {fields?.map((field: FieldsType) => RenderField(field, setFields))}
+        <ButtonBG
+          style={{
+            marginTop: 10,
+          }}
+          text={isLoading ? "Updating..." : "Update"}
+          handler={handleChangePassword}
+          disabled={isLoading}
+        />
+      </Suspense>
     </SafeAreaProvider>
   );
 };
 
-export default ChangePassword;
+export default React.memo(ChangePassword);
 
 const styles = StyleSheet.create({});

@@ -1,4 +1,5 @@
 import { useRoute } from "@react-navigation/native";
+import React, { Suspense } from "react";
 import DetailsTask from "../../components/taskDetails/DetailsTask";
 
 const TaskDetails = () => {
@@ -11,7 +12,12 @@ const TaskDetails = () => {
       id: string;
     };
   };
-  return <DetailsTask heading={heading} from={from} id={id} />;
+  const DetailsTaskAny = DetailsTask as any;
+  return (
+    <Suspense>
+      <DetailsTaskAny heading={heading} from={from} id={id} />
+    </Suspense>
+  );
 };
 
-export default TaskDetails;
+export default React.memo(TaskDetails);

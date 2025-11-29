@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { View } from "react-native";
-import SafeAreaProvider from "../../../providers/SafeAreaProvider";
-import Input from "../../../components/ui/inputs/Input";
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
+import Input from "../../../components/ui/inputs/Input";
+import SafeAreaProvider from "../../../providers/SafeAreaProvider";
 import { Navigation } from "../../../utils/Navigate";
 
 const UpdateBankAccount = () => {
@@ -12,14 +12,14 @@ const UpdateBankAccount = () => {
   const [bankErr, setBankErr] = useState(false);
   const [acctErr, setAcctErr] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     const bankValid = bankName.trim().length > 1;
     const acctValid = /^\d{8,20}$/.test(accountNo.trim());
     setBankErr(!bankValid);
     setAcctErr(!acctValid);
     if (!bankValid || !acctValid) return;
     navigation.goBack();
-  };
+  }, [accountNo, bankName, navigation]);
 
   return (
     <SafeAreaProvider backButtonText="Update Bank Account">
@@ -62,4 +62,4 @@ const UpdateBankAccount = () => {
   );
 };
 
-export default UpdateBankAccount;
+export default React.memo(UpdateBankAccount);

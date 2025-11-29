@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+import React, { Suspense } from "react";
+import Loader from "../components/ui/loader/Loader";
 import AddUpdateService from "../screens/stack/AddUpdateService";
 import ChooseSignUp from "../screens/stack/auth/ChooseSignUp";
 import CustomerSignUp from "../screens/stack/auth/CustomerSignUp";
@@ -87,17 +88,26 @@ const StackLayout = () => {
       initialRouteName="Onboarding"
       screenOptions={{ headerShown: false }}
     >
-      {stacks?.map((item: any) => (
-        <Stack.Screen
-          name={item?.route}
-          component={item?.component}
-          options={{
-            headerShown: false,
-          }}
-        />
-      ))}
+      {stacks?.map((item: any) => {
+        const Component = item?.component;
+        return (
+          <Stack.Screen
+            key={item?.route}
+            name={item?.route}
+            options={{
+              headerShown: false,
+            }}
+          >
+            {() => (
+              <Suspense fallback={<Loader />}>
+                <Component />
+              </Suspense>
+            )}
+          </Stack.Screen>
+        );
+      })}
     </Stack.Navigator>
   );
 };
 
-export default StackLayout;
+export default React.memo(StackLayout);

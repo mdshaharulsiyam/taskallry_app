@@ -1,7 +1,7 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
 import { useLinkBuilder, useTheme } from "@react-navigation/native";
-import React from "react";
+import React, { useCallback } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TabItem from "./TabItem";
@@ -17,12 +17,12 @@ const Tabbar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         const isFocused = state.index === index;
 
-        const onPress = () => {
+        const onPress = useCallback(() => {
           const event = navigation.emit({
             type: "tabPress",
             target: route.key,
@@ -32,14 +32,14 @@ const Tabbar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
           if (!isFocused && !event.defaultPrevented) {
             navigation.navigate(route.name, route.params);
           }
-        };
+        }, [isFocused, navigation, route.key, route.name, route.params]);
 
-        const onLongPress = () => {
+        const onLongPress = useCallback(() => {
           navigation.emit({
             type: "tabLongPress",
             target: route.key,
           });
-        };
+        }, [navigation, route.key]);
 
         return (
           <PlatformPressable
@@ -66,4 +66,4 @@ const Tabbar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   );
 };
 
-export default Tabbar;
+export default React.memo(Tabbar);

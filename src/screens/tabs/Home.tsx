@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import CategorySection from "../../components/home/CategorySection";
 import MyStats from "../../components/home/MyStats";
@@ -11,14 +11,17 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 
 const Home = () => {
   const { role } = useGlobalContext();
-  const elements = [
-    <UserProfileHeader key={1} />,
-    <SearchBar key={2} />,
-    role == "service" ? <MyStats key={3} /> : <></>,
-    <CategorySection key={4} />,
-    <RecentlyAddedTask key={5} />,
-    role != "service" ? <PopularTaskProvider key={6} /> : <></>,
-  ];
+  const elements = useMemo(
+    () => [
+      <UserProfileHeader key={1} />,
+      <SearchBar key={2} />,
+      role == "service" ? <MyStats key={3} /> : <></>,
+      <CategorySection key={4} />,
+      <RecentlyAddedTask key={5} />,
+      role != "service" ? <PopularTaskProvider key={6} /> : <></>,
+    ],
+    [role]
+  );
   return (
     <SafeAreaProviderNoScroll>
       <FlatList
@@ -34,6 +37,6 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);
 
 const styles = StyleSheet.create({});

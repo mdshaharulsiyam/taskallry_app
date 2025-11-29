@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { FlatList } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import SectionHeading from "../../components/shered/SectionHeading";
 import TaskCard from "../../components/shered/TaskCard";
@@ -60,58 +60,77 @@ const Tasks = () => {
   );
 
   const tasks = data?.data?.result || [];
+  const header = useMemo(
+    () => (
+      <>
+        <SectionHeading
+          style={{
+            marginVertical: 10,
+          }}
+          text="My Task"
+          showViewButton={false}
+        />
+        <TabButton handler={(t) => setTab(t)} activeTab={tab} />
+      </>
+    ),
+    [tab]
+  );
 
-  const elements = [
-    <SectionHeading
-      style={{
-        marginVertical: 10,
-      }}
-      text="My Task"
-      showViewButton={false}
-      key={1}
-    />,
-
-    <TabButton handler={(tab) => setTab(tab)} key={2} />,
-    isLoading || isFetching ? (
-      <Loader />
-    ) : (
-      <FlatList
-        key={3}
-        data={tasks}
-        keyExtractor={(_item, index) => index.toString()}
-        onEndReachedThreshold={0.1}
-        onEndReached={() => {
-          const total = data?.data?.pagination?.total || 0;
-          if (!isFetching && total > tasks.length) {
-            setLimit((prev) => prev + 20);
-          }
-        }}
-        renderItem={({ item }) => (
-          <TaskCard
-            from={role === "service" ? "service" : "user"}
-            tab={tab}
-            showDetailsButton={true}
-            task={item}
-          />
-        )}
+  const renderTaskItem = useCallback(
+    ({ item }: { item: any }) => (
+      <TaskCard
+        from={role === "service" ? "service" : "user"}
+        tab={tab}
+        showDetailsButton={true}
+        task={item}
       />
     ),
-  ];
+    [role, tab]
+  );
+
+  const handleEndReached = useCallback(() => {
+    const total = data?.data?.pagination?.total || 0;
+    if (!isFetching && total > tasks.length) {
+      setLimit((prev) => prev + 20);
+    }
+  }, [data?.data?.pagination?.total, isFetching, tasks.length]);
+
   return (
     <SafeAreaProviderNoScroll>
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{
-          paddingBottom: 150,
-        }}
-        showsVerticalScrollIndicator={false}
-        data={elements}
-        renderItem={({ item }) => item}
-      />
+      {isLoading || isFetching ? (
+        <FlatList
+          data={[]}
+          keyExtractor={(_item, index) => index.toString()}
+          contentContainerStyle={{
+            paddingBottom: 150,
+          }}
+          ListHeaderComponent={
+            <>
+              {header}
+              <Loader />
+            </>
+          }
+          renderItem={null as any}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <FlatList
+          data={tasks}
+          keyExtractor={(_item, index) => index.toString()}
+          contentContainerStyle={{
+            paddingBottom: 150,
+          }}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={header}
+          onEndReachedThreshold={0.1}
+          onEndReached={handleEndReached}
+          renderItem={renderTaskItem}
+        />
+      )}
     </SafeAreaProviderNoScroll>
   );
-};
+}
+  ;
 
 export default Tasks;
 
-const styles = StyleSheet.create({});

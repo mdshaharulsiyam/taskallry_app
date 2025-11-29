@@ -41,12 +41,12 @@ const TaskCard = ({
         showDetailsButton
           ? null
           : navigate("TaskDetails", {
-              params: {
-                id: task?._id,
-                from,
-                heading: from == "user" ? "My Tasks Details" : "Tasks Details",
-              },
-            })
+            params: {
+              id: task?._id,
+              from,
+              heading: from == "user" ? "My Tasks Details" : "Tasks Details",
+            },
+          })
       }
       style={{
         backgroundColor: "#FFFFFF",
@@ -150,6 +150,6 @@ const TaskCard = ({
   );
 };
 
-export default TaskCard;
+export default React.memo(TaskCard);
 
 const styles = StyleSheet.create({});

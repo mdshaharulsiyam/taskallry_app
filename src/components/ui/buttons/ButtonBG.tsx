@@ -53,4 +53,4 @@ const ButtonBG = ({
   );
 };
 
-export default ButtonBG;
+export default React.memo(ButtonBG);

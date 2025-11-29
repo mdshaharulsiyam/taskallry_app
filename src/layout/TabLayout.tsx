@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, { Suspense } from "react";
 import Tabbar from "../components/tabbar/Tabbar";
+import Loader from "../components/ui/loader/Loader";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
 import Chat from "../screens/tabs/Chat";
 import Home from "../screens/tabs/Home";
@@ -45,19 +45,27 @@ const TabLayout = () => {
       screenOptions={{ headerShown: false }}
       tabBar={(props) => <Tabbar {...props} />}
     >
-      {tabs?.map((item: any) => (
-        <Tab.Screen
-          key={item?.route}
-          name={item?.route}
-          options={{
-            tabBarLabel: item?.label,
-            headerShown: false,
-          }}
-          component={item?.component}
-        />
-      ))}
+      {tabs?.map((item: any) => {
+        const Component = item?.component;
+        return (
+          <Tab.Screen
+            key={item?.route}
+            name={item?.route}
+            options={{
+              tabBarLabel: item?.label,
+              headerShown: false,
+            }}
+          >
+            {() => (
+              <Suspense fallback={<Loader />}>
+                <Component />
+              </Suspense>
+            )}
+          </Tab.Screen>
+        );
+      })}
     </Tab.Navigator>
   );
 };
 
-export default TabLayout;
+export default React.memo(TabLayout);

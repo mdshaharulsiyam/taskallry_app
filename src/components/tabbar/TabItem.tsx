@@ -1,12 +1,10 @@
 import React from "react";
 import {
-  Image,
-  ImageSourcePropType,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
-import { svgIcons, TabIcons } from "../../constant/images";
+import { svgIcons } from "../../constant/images";
 import SvgIcon from "../ui/SvgIcon";
 
 const TabItem = ({
@@ -56,6 +54,6 @@ const TabItem = ({
   );
 };
 
-export default TabItem;
+export default React.memo(TabItem);
 
 const styles = StyleSheet.create({});

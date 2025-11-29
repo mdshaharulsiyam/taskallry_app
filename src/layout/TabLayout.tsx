@@ -61,6 +61,7 @@ const TabLayout = () => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{ headerShown: false, lazy: true }}
+      detachInactiveScreens
       tabBar={renderTabBar}
     >
       {screens}

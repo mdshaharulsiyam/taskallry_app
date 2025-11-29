@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import RNRestart from "react-native-restart";
 import { useDispatch } from "react-redux";
 import ProfileOptions from "../../components/profile/ProfileOptions";
 import ProfilePictureName from "../../components/profile/ProfilePictureName";
@@ -29,10 +30,11 @@ const Profile = () => {
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("role");
     dispatch(clearToken());
-    navigate.reset({
-      index: 0,
-      routes: [{ name: "Login" }],
-    });
+    try {
+      RNRestart.restart();
+    } catch (e) {
+
+    }
   }, [dispatch, navigate, setRole]);
 
   const elements = useMemo(

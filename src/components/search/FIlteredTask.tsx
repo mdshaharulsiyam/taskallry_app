@@ -84,7 +84,10 @@ const FIlteredTask = ({ search }: { search: string }) => {
     page: 1,
     limit,
   });
-  const keyExtractor = useCallback((_: any, index: number) => index.toString(), []);
+  const keyExtractor = useCallback(
+    (item: any, index: number) => (item?._id || item?.id || index).toString(),
+    []
+  );
   const renderItem = useCallback(
     ({ item }: { item: any }) => <TaskCard task={item} from="user" />,
     []

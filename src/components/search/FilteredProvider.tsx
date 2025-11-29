@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useGetAllServicesQuery } from "../../redux/apis";
 import EmptyList from "../shered/EmptyList";
@@ -11,8 +11,21 @@ const FilteredProvider = () => {
 
   const services = data?.data?.result || [];
 
-  const keyExtractor = useCallback((_: any, index: number) => index.toString(), []);
+  const keyExtractor = useCallback((item: any, index: number) => (item?._id || item?.id || index).toString(), []);
   const renderItem = useCallback(({ item }: { item: any }) => <ProviderCard item={item} />, []);
+  const handleEndReached = useCallback(() => {
+    const total = data?.data?.meta?.total || 0;
+    if (!isFetching && total > services.length) {
+      setLimit((prev) => prev + 20);
+    }
+  }, [data?.data?.meta?.total, isFetching, services.length]);
+  const listFooter = useMemo(
+    () =>
+      isFetching && services.length > 0 ? (
+        <ActivityIndicator style={{ marginVertical: 8 }} />
+      ) : null,
+    [isFetching, services.length]
+  );
 
   return (
     <View style={{ marginTop: 10 }}>
@@ -29,17 +42,8 @@ const FilteredProvider = () => {
           data={services}
           keyExtractor={keyExtractor}
           onEndReachedThreshold={0.1}
-          onEndReached={() => {
-            const total = data?.data?.meta?.total || 0;
-            if (!isFetching && total > services.length) {
-              setLimit((prev) => prev + 20);
-            }
-          }}
-          ListFooterComponent={
-            isFetching && services.length > 0 ? (
-              <ActivityIndicator style={{ marginVertical: 8 }} />
-            ) : null
-          }
+          onEndReached={handleEndReached}
+          ListFooterComponent={listFooter}
           renderItem={renderItem}
           initialNumToRender={8}
           maxToRenderPerBatch={8}

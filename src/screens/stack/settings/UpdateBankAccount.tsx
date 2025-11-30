@@ -1,25 +1,46 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
 import Input from "../../../components/ui/inputs/Input";
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
+import {
+  useGetBankQuery,
+  useUpdateBankMutation,
+} from "../../../redux/apis/profileItemApi";
 import { Navigation } from "../../../utils/Navigate";
 
 const UpdateBankAccount = () => {
+  const { data } = useGetBankQuery();
+  const [updatebank, { isLoading }] = useUpdateBankMutation();
   const navigation = Navigation();
-  const [bankName, setBankName] = useState("");
-  const [accountNo, setAccountNo] = useState("");
+  const [bankName, setBankName] = useState(data?.data?.bankName || "");
+  const [accountNo, setAccountNo] = useState(
+    data?.data?.bankAccountNumber || ""
+  );
   const [bankErr, setBankErr] = useState(false);
   const [acctErr, setAcctErr] = useState(false);
-
-  const handleSave = useCallback(() => {
+  // console.log("Saved:", { bankName, accountNo });
+  const handleSave = async () => {
+    // console.log("Saved:", { bankName, accountNo });
     const bankValid = bankName.trim().length > 1;
     const acctValid = /^\d{8,20}$/.test(accountNo.trim());
     setBankErr(!bankValid);
     setAcctErr(!acctValid);
     if (!bankValid || !acctValid) return;
-    navigation.goBack();
-  }, [accountNo, bankName, navigation]);
+    // navigation.goBack(); const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+    try {
+      const res = await updatebank({
+        bankName,
+        bankAccountNumber: accountNo,
+      }).unwrap();
+
+      console.log("Updated Successfully:", res);
+
+      navigation.goBack();
+    } catch (error) {
+      console.log("Update failed:", error);
+    }
+  };
 
   return (
     <SafeAreaProvider backButtonText="Update Bank Account">
@@ -56,7 +77,10 @@ const UpdateBankAccount = () => {
           }}
         />
 
-        <ButtonBG text="Save" handler={handleSave} />
+        <ButtonBG
+          text={isLoading ? "Saving..." : "Save"}
+          handler={handleSave}
+        />
       </View>
     </SafeAreaProvider>
   );

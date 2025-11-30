@@ -50,6 +50,9 @@ interface UserProfile {
   city: string;
   street: string;
   profile_image: string;
+  bankName?: string;
+  bankAccountNumber?: string;
+  referralCode?: string;
 }
 
 interface UpdateProfileRequest {
@@ -125,6 +128,28 @@ interface ApplyReferralCodeResponse {
   data?: {
     discountAmount?: number;
     referralCredit?: number;
+  };
+}
+export interface ReferralItem {
+  _id: string;
+  referrer: string;
+  referrerFromModel: string;
+  referred: string;
+  referredFromModel: string;
+  status: string;
+  referral: string;
+  value: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  isMeReferrer: boolean;
+}
+
+export interface ReferralResponse {
+  success: boolean;
+  message: string;
+  data: {
+    result: ReferralItem[];
   };
 }
 
@@ -237,6 +262,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Profile"],
     }),
+    // {{local_url}}/referralUse/my-referral
+    getReferral: builder.query<ReferralResponse, void>({
+      query: () => ({
+        url: "/referralUse/my-referral",
+        method: "GET",
+      }),
+      providesTags: ["Profile"],
+    }),
   }),
 });
 
@@ -253,4 +286,5 @@ export const {
   useResetPasswordMutation,
   useVerifyResetOtpMutation,
   useUpdateProfileMutation,
+  useGetReferralQuery,
 } = authApi;

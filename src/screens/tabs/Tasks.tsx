@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
@@ -50,13 +51,24 @@ const Tasks = () => {
   const status = getStatusFromTab(tab, role);
 
   const [limit, setLimit] = useState(20);
+  const [shouldFetchTasks, setShouldFetchTasks] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    setLimit(20);
-  }, [status]);
+    if (isFocused && !shouldFetchTasks) {
+      setShouldFetchTasks(true);
+    }
+  }, [isFocused, shouldFetchTasks]);
+
+  useEffect(() => {
+    if (shouldFetchTasks) {
+      setLimit(20);
+    }
+  }, [status, shouldFetchTasks]);
 
   const { data, isLoading, isFetching } = useGetMyTaskQuery(
-    status ? { status, page: 1, limit } : { page: 1, limit }
+    status ? { status, page: 1, limit } : { page: 1, limit },
+    { skip: !shouldFetchTasks }
   );
 
   const tasks = data?.data?.result || [];
@@ -95,9 +107,11 @@ const Tasks = () => {
     }
   }, [data?.data?.pagination?.total, isFetching, tasks.length]);
 
+  const showPlaceholder = !shouldFetchTasks || (isLoading && !data);
+
   return (
     <SafeAreaProviderNoScroll>
-      {isLoading && !data ? (
+      {showPlaceholder ? (
         <FlatList
           data={[]}
           keyExtractor={(_item, index) => index.toString()}
@@ -120,7 +134,9 @@ const Tasks = () => {
       ) : (
         <FlatList
           data={tasks}
-          keyExtractor={(item: any, index) => (item?._id ? String(item._id) : index.toString())}
+          keyExtractor={(item: any, index) =>
+            item?._id ? String(item._id) : index.toString()
+          }
           contentContainerStyle={{
             paddingBottom: 150,
           }}

@@ -14,7 +14,7 @@ const SavedAccount = () => {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Saved Account</Text>
-          <TouchableOpacity onPress={handleUpdate} style={styles.updateBtn}>
+          <TouchableOpacity onPress={() => { }} style={styles.updateBtn}>
             <Text style={styles.updateBtnText}>Update</Text>
           </TouchableOpacity>
         </View>

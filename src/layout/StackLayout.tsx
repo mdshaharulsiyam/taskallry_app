@@ -1,40 +1,43 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useMemo } from "react";
-import AddUpdateService from "../screens/stack/AddUpdateService";
-import ChooseSignUp from "../screens/stack/auth/ChooseSignUp";
-import CustomerSignUp from "../screens/stack/auth/CustomerSignUp";
-import ForgetPassword from "../screens/stack/auth/ForgetPassword";
-import Login from "../screens/stack/auth/Login";
-import ResetPassword from "../screens/stack/auth/ResetPassword";
-import ServiceSignUp from "../screens/stack/auth/ServiceSignUp";
-import Verify from "../screens/stack/auth/Verify";
-import Category from "../screens/stack/Category";
-import ExtendDate from "../screens/stack/ExtendDate";
-import Messages from "../screens/stack/Messages";
-import MyTaskDetails from "../screens/stack/MyTaskDetails";
-import Onboarding from "../screens/stack/onboarding/Onboarding";
-import RealTimeBooking from "../screens/stack/onboarding/RealTimeBooking";
-import SecurePayments from "../screens/stack/onboarding/SecurePayments";
-import TrustedServices from "../screens/stack/onboarding/TrustedServices";
-import ProviderDetails from "../screens/stack/ProviderDetails";
-import ReferDiscounts from "../screens/stack/ReferDiscounts";
-import RegulationsCenter from "../screens/stack/RegulationsCenter";
-import RequestCancel from "../screens/stack/RequestCancel";
-import Search from "../screens/stack/Search";
-import ServiceDetails from "../screens/stack/ServiceDetails";
-import { AccountSetting } from "../screens/stack/settings/AccountSetting";
-import ChangePassword from "../screens/stack/settings/ChangePassword";
-import Earnings from "../screens/stack/settings/Earnings";
-import Help from "../screens/stack/settings/Help";
-import MyProfile from "../screens/stack/settings/MyProfile";
-import Notifications from "../screens/stack/settings/Notifications";
-import PrivacyPolicy from "../screens/stack/settings/PrivacyPolicy";
-import SavedAccount from "../screens/stack/settings/SavedAccount";
-import Terms from "../screens/stack/settings/Terms";
-import UpdateBankAccount from "../screens/stack/settings/UpdateBankAccount";
-import ViewProfile from "../screens/stack/settings/ViewProfile";
-import TaskDetails from "../screens/stack/TaskDetails";
-import TabLayout from "./TabLayout";
+import React, { Suspense, useMemo } from "react";
+import { ActivityIndicator, View } from "react-native";
+const AddUpdateService = React.lazy(() => import("../screens/stack/AddUpdateService"));
+const ChooseSignUp = React.lazy(() => import("../screens/stack/auth/ChooseSignUp"));
+const CustomerSignUp = React.lazy(() => import("../screens/stack/auth/CustomerSignUp"));
+const ForgetPassword = React.lazy(() => import("../screens/stack/auth/ForgetPassword"));
+const Login = React.lazy(() => import("../screens/stack/auth/Login"));
+const ResetPassword = React.lazy(() => import("../screens/stack/auth/ResetPassword"));
+const ServiceSignUp = React.lazy(() => import("../screens/stack/auth/ServiceSignUp"));
+const Verify = React.lazy(() => import("../screens/stack/auth/Verify"));
+const Category = React.lazy(() => import("../screens/stack/Category"));
+const ExtendDate = React.lazy(() => import("../screens/stack/ExtendDate"));
+const Messages = React.lazy(() => import("../screens/stack/Messages"));
+const MyTaskDetails = React.lazy(() => import("../screens/stack/MyTaskDetails"));
+const Onboarding = React.lazy(() => import("../screens/stack/onboarding/Onboarding"));
+const RealTimeBooking = React.lazy(() => import("../screens/stack/onboarding/RealTimeBooking"));
+const SecurePayments = React.lazy(() => import("../screens/stack/onboarding/SecurePayments"));
+const TrustedServices = React.lazy(() => import("../screens/stack/onboarding/TrustedServices"));
+const ProviderDetails = React.lazy(() => import("../screens/stack/ProviderDetails"));
+const ReferDiscounts = React.lazy(() => import("../screens/stack/ReferDiscounts"));
+const RegulationsCenter = React.lazy(() => import("../screens/stack/RegulationsCenter"));
+const RequestCancel = React.lazy(() => import("../screens/stack/RequestCancel"));
+const Search = React.lazy(() => import("../screens/stack/Search"));
+const ServiceDetails = React.lazy(() => import("../screens/stack/ServiceDetails"));
+const AccountSetting = React.lazy(() => import("../screens/stack/settings/AccountSetting"));
+const ChangePassword = React.lazy(() => import("../screens/stack/settings/ChangePassword"));
+const Earnings = React.lazy(() => import("../screens/stack/settings/Earnings"));
+const Help = React.lazy(() => import("../screens/stack/settings/Help"));
+const MyProfile = React.lazy(() => import("../screens/stack/settings/MyProfile"));
+const Notifications = React.lazy(() => import("../screens/stack/settings/Notifications"));
+const PrivacyPolicy = React.lazy(() => import("../screens/stack/settings/PrivacyPolicy"));
+const SavedAccount = React.lazy(() => import("../screens/stack/settings/SavedAccount"));
+const Terms = React.lazy(() => import("../screens/stack/settings/Terms"));
+const UpdateBankAccount = React.lazy(
+  () => import("../screens/stack/settings/UpdateBankAccount")
+);
+const ViewProfile = React.lazy(() => import("../screens/stack/settings/ViewProfile"));
+const TaskDetails = React.lazy(() => import("../screens/stack/TaskDetails"));
+const TabLayout = React.lazy(() => import("./TabLayout"));
 const Stack = createNativeStackNavigator();
 
 const StackLayout = () => {
@@ -102,12 +105,26 @@ const StackLayout = () => {
   );
 
   return (
-    <Stack.Navigator
-      initialRouteName="Onboarding"
-      screenOptions={{ headerShown: false }}
+    <Suspense
+      fallback={
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      }
     >
-      {screenElements}
-    </Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName="Onboarding"
+        screenOptions={{ headerShown: false }}
+      >
+        {screenElements}
+      </Stack.Navigator>
+    </Suspense>
   );
 };
 

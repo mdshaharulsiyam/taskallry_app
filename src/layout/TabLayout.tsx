@@ -1,13 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useCallback, useMemo } from "react";
+import React, { Suspense, useCallback, useMemo } from "react";
+import { View } from "react-native";
 import Tabbar from "../components/tabbar/Tabbar";
 import { useGlobalContext } from "../providers/GlobalContextProvider";
-import Chat from "../screens/tabs/Chat";
-import Home from "../screens/tabs/Home";
-import PostService from "../screens/tabs/PostService";
-import PostTask from "../screens/tabs/PostTask";
-import Profile from "../screens/tabs/Profile";
-import Tasks from "../screens/tabs/Tasks";
+const Home = React.lazy(() => import("../screens/tabs/Home"));
+const Tasks = React.lazy(() => import("../screens/tabs/Tasks"));
+const PostService = React.lazy(() => import("../screens/tabs/PostService"));
+const PostTask = React.lazy(() => import("../screens/tabs/PostTask"));
+const Chat = React.lazy(() => import("../screens/tabs/Chat"));
+const Profile = React.lazy(() => import("../screens/tabs/Profile"));
 const Tab = createBottomTabNavigator();
 const TabLayout = () => {
   const { role } = useGlobalContext();
@@ -58,14 +59,34 @@ const TabLayout = () => {
     [tabs]
   );
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={{ headerShown: false, lazy: true }}
-      detachInactiveScreens
-      tabBar={renderTabBar}
+    <Suspense
+      fallback={
+        <View style={{ flex: 1, backgroundColor: "#fff" }}>
+          <Tabbar
+            {...({
+              state: {
+                index: 0,
+                routes: [],
+              },
+              navigation: {
+                navigate: () => { },
+                emit: () => ({ defaultPrevented: false } as any),
+                dispatch: () => { },
+              },
+            } as any)}
+          />
+        </View>
+      }
     >
-      {screens}
-    </Tab.Navigator>
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={{ headerShown: false, lazy: true }}
+        detachInactiveScreens
+        tabBar={renderTabBar}
+      >
+        {screens}
+      </Tab.Navigator>
+    </Suspense>
   );
 };
 

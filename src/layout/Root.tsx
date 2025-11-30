@@ -1,4 +1,3 @@
-import { PortalProvider } from "@gorhom/portal";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import { StatusBar } from "react-native";
@@ -16,20 +15,20 @@ const Root = () => {
   return (
     <Provider store={store}>
       <GestureHandlerRootView>
-        <PortalProvider>
-          <KeyboardProvider>
-            <NavigationContainer>
-              <GlobalContextProvider>
-                <StatusBar
-                  barStyle={"light-content"}
-                  backgroundColor={`#111827`}
-                />
-                <DrawerLayout />
-                <Toast />
-              </GlobalContextProvider>
-            </NavigationContainer>
-          </KeyboardProvider>
-        </PortalProvider>
+        {/* <PortalProvider> */}
+        <KeyboardProvider>
+          <NavigationContainer>
+            <GlobalContextProvider>
+              <StatusBar
+                barStyle={"light-content"}
+                backgroundColor={`#111827`}
+              />
+              <DrawerLayout />
+              <Toast />
+            </GlobalContextProvider>
+          </NavigationContainer>
+        </KeyboardProvider>
+        {/* </PortalProvider> */}
       </GestureHandlerRootView>
     </Provider>
   );

@@ -11,17 +11,6 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 
 const Home = () => {
   const { role } = useGlobalContext();
-  const elements = useMemo(
-    () => [
-      <UserProfileHeader key={1} />,
-      <SearchBar key={2} />,
-      role == "service" ? <MyStats key={3} /> : <></>,
-      <CategorySection key={4} />,
-      <RecentlyAddedTask key={5} />,
-      role != "service" ? <PopularTaskProvider key={6} /> : <></>,
-    ],
-    [role]
-  );
   return (
     <SafeAreaProviderNoScroll>
       <Suspense>
@@ -31,7 +20,17 @@ const Home = () => {
             paddingBottom: 150,
           }}
           showsVerticalScrollIndicator={false}
-          data={elements}
+          data={useMemo(
+            () => [
+              <UserProfileHeader key={1} />,
+              <SearchBar key={2} />,
+              role == "service" ? <MyStats key={3} /> : <></>,
+              <CategorySection key={4} />,
+              <RecentlyAddedTask key={5} />,
+              role != "service" ? <PopularTaskProvider key={6} /> : <></>,
+            ],
+            [role]
+          )}
           renderItem={({ item }) => item}
         />
       </Suspense>

@@ -14,7 +14,6 @@ const PostService = () => {
   const { width } = ScreenSize();
   const navigate = Navigate();
   const { data, isLoading, isError } = useGetMyServicesQuery();
-  const service = data?.data || null;
 
   if (isLoading) {
     return (
@@ -36,7 +35,7 @@ const PostService = () => {
     );
   }
 
-  if (!service) {
+  if (!data?.data) {
     return (
       <SafeAreaProviderNoScroll backButtonText="My Service">
         <View style={{ padding: 16 }}>
@@ -71,7 +70,7 @@ const PostService = () => {
           }}
         >
           <Image
-            src={service.images?.[0] || "https://placehold.co/400x400/png"}
+            src={data?.data?.images?.[0] || "https://placehold.co/400x400/png"}
             style={{
               width: width - 60,
               height: (width / 3) * 1.7,
@@ -79,7 +78,7 @@ const PostService = () => {
             }}
           />
           <TextSecondary
-            text={service.category?.name || "Service"}
+            text={data?.data?.category?.name || "Service"}
             style={{
               backgroundColor: "#FFF",
               padding: 6,
@@ -90,7 +89,7 @@ const PostService = () => {
             }}
           />
           <TextSecondary
-            text={`⭐ ${service.averageRating ?? 0}`}
+            text={`⭐ ${data?.data?.averageRating ?? 0}`}
             style={{
               backgroundColor: "#FFF",
               padding: 6,
@@ -100,14 +99,14 @@ const PostService = () => {
               borderRadius: 6,
             }}
           />
-          <HeaderDesign text={service.title || "My Service"} />
+          <HeaderDesign text={data?.data?.title || "My Service"} />
           <FlexText
             style={{
               justifyContent: "space-between",
             }}
           >
             <TextPrimary text="Starting Price :" />
-            <TextSecondary text={`₦${service.price ?? 0}`} />
+            <TextSecondary text={`₦${data?.data?.price ?? 0}`} />
           </FlexText>
           <FlexText
             style={{
@@ -119,7 +118,7 @@ const PostService = () => {
               style={{
                 width: 150,
               }}
-              text={service.address || ""}
+              text={data?.data?.address || ""}
             />
           </FlexText>
           <FlexText style={{}}>

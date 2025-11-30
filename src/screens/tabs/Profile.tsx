@@ -37,52 +37,7 @@ const Profile = () => {
     }
   }, [dispatch, navigate, setRole]);
 
-  const elements = useMemo(
-    () => [
-      <ProfilePictureName key={1} />,
-      <ProfileOptions key={2} />,
-      <View
-        style={{
-          paddingHorizontal: 20,
-        }}
-      >
-        <TouchableOpacity
-          key={4}
-          onPress={handleLogout}
-          style={{
-            marginTop: 10,
-            padding: 10,
-            borderRadius: 10,
-            borderWidth: 1,
-            paddingVertical: 14,
-          }}
-        >
-          <FlexText
-            style={{
-              justifyContent: "space-between",
-            }}
-          >
-            <FlexText>
-              <Image
-                source={profileIcons.Logout as ImageSourcePropType}
-                style={{
-                  tintColor: "#FF0000",
-                }}
-              />
-              <TextSecondary
-                style={{
-                  color: "#FF0000",
-                }}
-                text={"Log Out"}
-              />
-            </FlexText>
-          </FlexText>
-        </TouchableOpacity>
-        ,
-      </View>,
-    ],
-    [dispatch, navigate, setRole, handleLogout]
-  );
+
   return (
     <SafeAreaProviderNoScroll zeroPadding={true}>
       <Suspense>
@@ -92,7 +47,52 @@ const Profile = () => {
             paddingBottom: 150,
           }}
           showsVerticalScrollIndicator={false}
-          data={elements}
+          data={useMemo(
+            () => [
+              <ProfilePictureName key={1} />,
+              <ProfileOptions key={2} />,
+              <View
+                style={{
+                  paddingHorizontal: 20,
+                }}
+              >
+                <TouchableOpacity
+                  key={4}
+                  onPress={handleLogout}
+                  style={{
+                    marginTop: 10,
+                    padding: 10,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    paddingVertical: 14,
+                  }}
+                >
+                  <FlexText
+                    style={{
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <FlexText>
+                      <Image
+                        source={profileIcons.Logout as ImageSourcePropType}
+                        style={{
+                          tintColor: "#FF0000",
+                        }}
+                      />
+                      <TextSecondary
+                        style={{
+                          color: "#FF0000",
+                        }}
+                        text={"Log Out"}
+                      />
+                    </FlexText>
+                  </FlexText>
+                </TouchableOpacity>
+                ,
+              </View>,
+            ],
+            [dispatch, navigate, setRole, handleLogout]
+          )}
           renderItem={({ item }) => item}
         />
       </Suspense>

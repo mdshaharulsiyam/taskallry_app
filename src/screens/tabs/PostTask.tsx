@@ -52,7 +52,6 @@ const PostTask = () => {
   const { fields, setFields } = PostTaskFields();
   const { top, bottom } = useSafeAreaInsets();
   const navigate = Navigate();
-  const isEditMode = !!task;
 
   useEffect(() => {
     if (!task) return;

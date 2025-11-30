@@ -1,6 +1,8 @@
 import { useRoute } from "@react-navigation/native";
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, ImageSourcePropType, View } from "react-native";
+import { KeyboardStickyView } from 'react-native-keyboard-controller';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ChatHeader from "../../components/message/ChatHeader";
 import Message from "../../components/message/Message";
@@ -13,7 +15,6 @@ import { useGetMessagesQuery } from "../../redux/apis/messageApi";
 import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
 import { getSocket } from "../../utils/socket";
-
 const Messages = () => {
   const {
     params: { id, name, image, email },
@@ -160,53 +161,67 @@ const Messages = () => {
       setLimit((prev) => prev + 10);
     }
   }, [data?.data?.meta?.total, isFetching, messages.length]);
-
+  console.log({
+    height,
+    top,
+    bottom,
+  });
   return (
-    <SafeAreaProviderNoScroll>
-      <View
-        style={{
-          flexDirection: "column",
-          height: height,
-        }}
-      >
-        <ChatHeader
-          show={true}
-          imageSource={otherIcons.ChatBlock as ImageSourcePropType}
-          name={name}
-          email={email}
-          avatar={image}
-        />
-        {isLoading ? (
-          <ActivityIndicator style={{ marginTop: 20 }} />
-        ) : (
-          <Suspense>
-            <FlatList
-              style={{
-                height: height,
-                maxHeight: height - (top + bottom + 60 + 15 + 60 + 40 + 50),
-              }}
-              keyExtractor={(item) => item._id}
-              inverted
-              showsVerticalScrollIndicator={false}
-              data={messages}
-              onEndReachedThreshold={0.1}
-              onEndReached={handleEndReached}
-              ListFooterComponent={
-                isFetching && messages.length > 0 ? (
-                  <ActivityIndicator style={{ marginVertical: 8 }} />
-                ) : null
-              }
-              renderItem={renderMessageItem}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              windowSize={7}
-              removeClippedSubviews
-            />
-          </Suspense>
-        )}
-        <SendMessage onSend={handleSendMessage} />
-      </View>
-    </SafeAreaProviderNoScroll>
+    <KeyboardStickyView>
+      <SafeAreaProviderNoScroll>
+        <View
+          style={{
+            flexDirection: "column",
+            height: hp("92%"),
+            position: "relative",
+          }}
+        >
+          <ChatHeader
+            show={true}
+            imageSource={otherIcons.ChatBlock as ImageSourcePropType}
+            name={name}
+            email={email}
+            avatar={image}
+          />
+          {isLoading ? (
+            <ActivityIndicator style={{ marginTop: 20 }} />
+          ) : (
+            <Suspense>
+              <FlatList
+                style={{
+                  height: height,
+                  maxHeight: height - (top + bottom + 250),
+                }}
+                keyExtractor={(item) => item._id}
+                inverted
+                showsVerticalScrollIndicator={false}
+                data={messages}
+                onEndReachedThreshold={0.1}
+                onEndReached={handleEndReached}
+                ListFooterComponent={
+                  isFetching && messages.length > 0 ? (
+                    <ActivityIndicator style={{ marginVertical: 8 }} />
+                  ) : null
+                }
+                renderItem={renderMessageItem}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={7}
+                removeClippedSubviews
+              />
+            </Suspense>
+          )}
+          <View style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }}>
+            <SendMessage onSend={handleSendMessage} />
+          </View>
+        </View>
+      </SafeAreaProviderNoScroll>
+    </KeyboardStickyView>
   );
 };
 export default React.memo(Messages);

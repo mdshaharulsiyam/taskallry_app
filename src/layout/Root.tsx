@@ -20,8 +20,9 @@ const Root = () => {
           <NavigationContainer>
             <GlobalContextProvider>
               <StatusBar
-                barStyle={"light-content"}
-                backgroundColor={`#111827`}
+                barStyle={"dark-content"}
+                backgroundColor={`#FAFBF9`}
+                hidden={false}
               />
               <DrawerLayout />
               <Toast />

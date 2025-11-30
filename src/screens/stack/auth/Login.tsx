@@ -9,6 +9,9 @@ import TextPrimary from "../../../components/shered/TextPrimary";
 import TextSecondary from "../../../components/shered/TextSecondary";
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
 import Divider from "../../../components/ui/devider/Divider";
+import Input from "../../../components/ui/inputs/Input";
+import InputCheckbox from "../../../components/ui/inputs/InputCheckbox";
+import PasswordInput from "../../../components/ui/inputs/PasswordInput";
 import LoginFields from "../../../formFields/LoginFields";
 import { handleSignIn } from "../../../handler/signIn";
 import { useGlobalContext } from "../../../providers/GlobalContextProvider";
@@ -16,9 +19,7 @@ import SafeAreaProvider from "../../../providers/SafeAreaProvider";
 import { useLoginMutation } from "../../../redux/apis";
 import { setToken } from "../../../redux/slices/authSlice";
 import type { AppDispatch } from "../../../redux/store";
-import { FieldsType } from "../../../types/Types";
 import Navigate from "../../../utils/Navigate";
-import { RenderField } from "../../../utils/RenderField";
 
 const Login = () => {
   const { height } = Dimensions.get("window");
@@ -30,6 +31,20 @@ const Login = () => {
   const navigate = Navigate();
   const handleForget = useCallback(() => navigate("Forget"), [navigate]);
   const handleGoSignup = useCallback(() => navigate("ChooseSignUp"), [navigate]);
+  const getField = useCallback(
+    (name: string) => fields.find((field) => field.name === name),
+    [fields]
+  );
+  const updateField = useCallback(
+    (name: string, value: string | boolean) => {
+      setFields((prev) =>
+        prev.map((field) =>
+          field.name === name ? { ...field, value, error: false } : field
+        )
+      );
+    },
+    [setFields]
+  );
   const handleLogin = useCallback(() => {
     handleSignIn(
       fields,
@@ -54,7 +69,30 @@ const Login = () => {
         >
           <HeaderDesign />
           <TextSecondary text="Log in with your credentials to access your account and manage everything from one place." />
-          {fields?.map((field: FieldsType) => RenderField(field, setFields))}
+          <Input
+            label="Email Address"
+            placeHolder="Enter Email Address"
+            keyboard="email-address"
+            name="email"
+            value={(getField("email")?.value as string) || ""}
+            handler={(_, value) => updateField("email", value)}
+            error={!!getField("email")?.error}
+          />
+          <PasswordInput
+            label="Password"
+            placeHolder="******"
+            name="password"
+            value={(getField("password")?.value as string) || ""}
+            handler={(_, value) => updateField("password", value)}
+            error={!!getField("password")?.error}
+            keyboard="default"
+          />
+          <InputCheckbox
+            label="Remember me"
+            name="remember"
+            value={!!getField("remember")?.value}
+            handler={(_, value) => updateField("remember", value)}
+          />
           <TouchableOpacity
             onPress={handleForget}
             style={[styles.forget]}

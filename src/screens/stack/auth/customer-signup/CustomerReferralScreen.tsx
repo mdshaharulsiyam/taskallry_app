@@ -1,29 +1,26 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 import RNRestart from "react-native-restart";
 import Toast from "react-native-toast-message";
 import HeaderDesign from "../../../../components/shered/HeaderDesign";
 import TextSecondary from "../../../../components/shered/TextSecondary";
 import ButtonBG from "../../../../components/ui/buttons/ButtonBG";
 import ButtonTransparentBG from "../../../../components/ui/buttons/ButtonTransparentBG";
-import CustomerSignUpFields from "../../../../formFields/CustomerSignUpFields";
+import Input from "../../../../components/ui/inputs/Input";
 import SafeAreaProvider from "../../../../providers/SafeAreaProvider";
 import { useApplyReferralCodeUseMutation } from "../../../../redux/apis";
-import { FieldsType } from "../../../../types/Types";
-import { RenderField } from "../../../../utils/RenderField";
 
 const CustomerReferralScreen = () => {
   const navigation = useNavigation<any>();
-  const { fields, setFields } = CustomerSignUpFields();
-  const slice = fields.slice(7, 7 + 1);
   const [applyReferral, { isLoading }] = useApplyReferralCodeUseMutation();
-  const getValue = (name: string) => fields.find(f => f.name === name)?.value as string;
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
 
   const goHome = () => RNRestart.Restart();
   const onApply = async () => {
-    const code = getValue("referralCode");
-    if (!code) return goHome();
-    applyReferral({ code })
+    const trimmed = code.trim();
+    if (!trimmed) return goHome();
+    applyReferral({ code: trimmed })
       .unwrap()
       .then((res: any) => {
         Toast.show({ type: "success", text1: "Referral applied", text2: res?.message || "Code applied successfully" });
@@ -38,7 +35,18 @@ const CustomerReferralScreen = () => {
     <SafeAreaProvider backButtonText="Customer Sign Up">
       <HeaderDesign text="Have a Referral Code? Unlock Your Reward" style={{ marginTop: 10 }} />
       <TextSecondary text="Apply a referral code and get 10% OFF your first task – up to ₦50!" />
-      {slice.map((field: FieldsType) => RenderField(field, setFields))}
+      <Input
+        keyboard="default"
+        label="Referral Code (Optional)"
+        placeHolder="Enter Referral Code"
+        value={code}
+        handler={(_, value) => {
+          setCode(value);
+          setError("");
+        }}
+        name="referralCode"
+        error={!!error}
+      />
       <ButtonBG
         style={{ marginTop: 12 }}
         text="Apply Code & Continue"

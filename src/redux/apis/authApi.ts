@@ -55,13 +55,15 @@ interface UserProfile {
   referralCode?: string;
 }
 
-interface UpdateProfileRequest {
-  name?: string;
-  email?: string;
-  city?: string;
-  street?: string;
-  profile_image?: string;
-}
+type UpdateProfileRequest =
+  | {
+    name?: string;
+    email?: string;
+    city?: string;
+    street?: string;
+    profile_image?: string;
+  }
+  | FormData;
 
 interface UpdateProfileResponse {
   message: string;

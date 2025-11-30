@@ -1,26 +1,32 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import Toast from "react-native-toast-message";
 import HeaderDesign from "../../../../components/shered/HeaderDesign";
 import TextSecondary from "../../../../components/shered/TextSecondary";
 import ButtonBG from "../../../../components/ui/buttons/ButtonBG";
-import ServiceSignUpFields from "../../../../formFields/ServiceSignUpFields";
+import Input from "../../../../components/ui/inputs/Input";
 import SafeAreaProvider from "../../../../providers/SafeAreaProvider";
 import { useVerifyBvnMutation } from "../../../../redux/apis";
-import { FieldsType } from "../../../../types/Types";
-import { RenderField } from "../../../../utils/RenderField";
 
 const BVNScreen = () => {
   const navigation = useNavigation<any>();
-  const { fields, setFields } = ServiceSignUpFields();
   const [verifyBvn, { isLoading }] = useVerifyBvnMutation();
-  const slice = fields.slice(6, 6 + 1);
+  const [bvn, setBvn] = useState("");
+  const [error, setError] = useState<string>("");
 
-  const getValue = (name: string) => fields.find(f => f.name === name)?.value as string;
+  const handleChange = useCallback((_: string, value: string) => {
+    setBvn(value);
+    setError("");
+  }, []);
 
   const onVerify = async () => {
-    const bvn = String(getValue("bvn") || "");
-    verifyBvn({ bvn })
+    const trimmed = bvn.trim();
+    if (trimmed.length !== 11 || !/^\d{11}$/.test(trimmed)) {
+      setError("BVN must be 11 digits");
+      return;
+    }
+
+    verifyBvn({ bvn: trimmed })
       .unwrap()
       .then((res: any) => {
         Toast.show({ type: "success", text1: "BVN verified", text2: res?.message || "Verification successful" });
@@ -35,7 +41,20 @@ const BVNScreen = () => {
     <SafeAreaProvider backButtonText="Service Sign Up">
       <HeaderDesign text="Verify Your BVN" style={{ marginTop: 10 }} />
       <TextSecondary text="Enter your 11-digit Bank Verification Number (BVN) for identity confirmation." />
-      {slice.map((field: FieldsType) => RenderField(field, setFields))}
+      <Input
+        keyboard="number-pad"
+        label="Bank Verification Number (BVN)"
+        placeHolder="Enter BVN"
+        value={bvn}
+        handler={handleChange}
+        name="bvn"
+        error={!!error}
+        onBlur={() => {
+          if (bvn.trim() && (bvn.trim().length !== 11 || !/^\d{11}$/.test(bvn.trim()))) {
+            setError("BVN must be 11 digits");
+          }
+        }}
+      />
       <ButtonBG
         style={{ marginTop: 12 }}
         text="Verify"

@@ -1,6 +1,5 @@
-import { useIsFocused } from "@react-navigation/native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FlatList } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import SectionHeading from "../../components/shered/SectionHeading";
 import TaskCard from "../../components/shered/TaskCard";
@@ -51,27 +50,17 @@ const Tasks = () => {
   const status = getStatusFromTab(tab, role);
 
   const [limit, setLimit] = useState(20);
-  const [shouldFetchTasks, setShouldFetchTasks] = useState(false);
-  const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused && !shouldFetchTasks) {
-      setShouldFetchTasks(true);
-    }
-  }, [isFocused, shouldFetchTasks]);
-
-  useEffect(() => {
-    if (shouldFetchTasks) {
-      setLimit(20);
-    }
-  }, [status, shouldFetchTasks]);
+    setLimit(20);
+  }, [status]);
 
   const { data, isLoading, isFetching } = useGetMyTaskQuery(
-    status ? { status, page: 1, limit } : { page: 1, limit },
-    { skip: !shouldFetchTasks }
+    status ? { status, page: 1, limit } : { page: 1, limit }
   );
 
   const tasks = data?.data?.result || [];
+
   const header = useMemo(
     () => (
       <>
@@ -107,57 +96,46 @@ const Tasks = () => {
     }
   }, [data?.data?.pagination?.total, isFetching, tasks.length]);
 
-  const showPlaceholder = !shouldFetchTasks || (isLoading && !data);
-
   return (
     <SafeAreaProviderNoScroll>
-      {showPlaceholder ? (
-        <FlatList
-          data={[]}
-          keyExtractor={(_item, index) => index.toString()}
-          contentContainerStyle={{
-            paddingBottom: 150,
-          }}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={7}
-          removeClippedSubviews
-          ListHeaderComponent={
-            <>
-              {header}
-              <Loader />
-            </>
-          }
-          renderItem={null as any}
-          showsVerticalScrollIndicator={false}
-        />
-      ) : (
-        <FlatList
-          data={tasks}
-          keyExtractor={(item: any, index) =>
-            item?._id ? String(item._id) : index.toString()
-          }
-          contentContainerStyle={{
-            paddingBottom: 150,
-          }}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={header}
-          onEndReachedThreshold={0.1}
-          onEndReached={handleEndReached}
-          renderItem={renderTaskItem}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={7}
-          removeClippedSubviews
-          ListFooterComponent={
-            isFetching && tasks.length > 0 ? <Loader /> : null
-          }
-        />
-      )}
+      <FlatList
+        data={tasks}
+        keyExtractor={(item: any, index) =>
+          item?._id ? String(item._id) : index.toString()
+        }
+        contentContainerStyle={{
+          paddingBottom: 150,
+        }}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={header}
+        onEndReachedThreshold={0.1}
+        onEndReached={handleEndReached}
+        renderItem={renderTaskItem}
+        ListEmptyComponent={
+          isLoading ? (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                paddingTop: 40,
+              }}
+            >
+              <ActivityIndicator size="large" />
+            </View>
+          ) : null
+        }
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={7}
+        removeClippedSubviews
+        ListFooterComponent={
+          isFetching && tasks.length > 0 ? <Loader /> : null
+        }
+      />
     </SafeAreaProviderNoScroll>
   );
-}
-  ;
+};
 
 export default Tasks;
 

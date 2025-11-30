@@ -6,25 +6,19 @@ import HeaderDesign from "../../../../components/shered/HeaderDesign";
 import TextSecondary from "../../../../components/shered/TextSecondary";
 import ButtonBG from "../../../../components/ui/buttons/ButtonBG";
 import ImageUploader from "../../../../components/ui/file/ImageUploader";
-import ServiceSignUpFields from "../../../../formFields/ServiceSignUpFields";
+import LocationInput from "../../../../components/ui/inputs/LocationInput";
 import SafeAreaProvider from "../../../../providers/SafeAreaProvider";
 import { useUpdateProfileMutation } from "../../../../redux/apis";
-import { FieldsType } from "../../../../types/Types";
-import { RenderField } from "../../../../utils/RenderField";
 
 const AddressScreen = () => {
   const navigation = useNavigation<any>();
-  const { fields, setFields } = ServiceSignUpFields();
+  const [address, setAddress] = useState("");
   const [fiels, setFiels] = useState<any>([]);
-
-  const slice = fields.filter((f) => ["address"].includes(f.name));
-
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
-  const getValue = (name: string) => fields.find(f => f.name === name)?.value as string;
 
   const onContinue = async () => {
-    const address = (getValue("address") || "").trim();
-    if (!address) {
+    const trimmed = (address || "").trim();
+    if (!trimmed) {
       Toast.show({ type: "error", text1: "Address required", text2: "Please select or enter your address" });
       return;
     }
@@ -39,7 +33,7 @@ const AddressScreen = () => {
     const type = ext === "png" ? "image/png" : ext === "pdf" ? "application/pdf" : "image/jpeg";
 
     const form = new FormData();
-    form.append("data", JSON.stringify({ address }));
+    form.append("data", JSON.stringify({ address: trimmed }));
     form.append("address_document", {
       uri: fileUri,
       name,
@@ -61,9 +55,15 @@ const AddressScreen = () => {
     <SafeAreaProvider backButtonText="Service Sign Up">
       <HeaderDesign text="Provide Your Address" style={{ marginTop: 10 }} />
       <TextSecondary text="Please provide your valid address, and verify it to confirm your identity." />
-      {slice.map((field: FieldsType) => RenderField(field, setFields))}
+      <LocationInput
+        label="Address"
+        placeHolder="Enter Address"
+        value={address}
+        handler={(_, value) => setAddress(value)}
+        name="address"
+      />
       <View style={{ marginTop: 8 }}>
-        <TextSecondary text={`Location: ${getValue("address") || ""}`} />
+        <TextSecondary text={`Location: ${address?.split("|")?.[0] || ""}`} />
       </View>
       <View style={{ marginTop: 10 }}>
         {fiels?.length > 0 && (

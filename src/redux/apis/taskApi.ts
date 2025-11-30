@@ -55,10 +55,12 @@ export interface Task {
   totalOffer: 1;
 }
 
-interface CreateTaskRequest {
-  title: string;
-  description: string;
-}
+type CreateTaskRequest =
+  | {
+    title: string;
+    description: string;
+  }
+  | FormData;
 
 interface CreateTaskResponse {
   message: string;

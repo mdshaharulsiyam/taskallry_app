@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
-
 import ChatItems from "../../components/chat/ChatItems";
 import EmptyList from "../../components/shered/EmptyList";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
@@ -13,9 +12,8 @@ const Chat = () => {
     page: 1,
     limit,
   });
-
-  const list = data?.data?.data || [];
   const { height } = Dimensions.get("window");
+  const list = data?.data?.data || [];
 
   const handleEndReached = useCallback(() => {
     const total = data?.data?.meta?.total || 0;
@@ -23,12 +21,16 @@ const Chat = () => {
       setLimit((prev) => prev + 20);
     }
   }, [data?.data?.meta?.total, isFetching, list.length]);
-  const renderItem = useCallback(({ item }: { item: any }) => <ChatItems item={item} />, []);
-
-
+  const renderItem = ({ item }: { item: any }) => <ChatItems item={item} />;
+  console.log({
+    isLoading,
+    isFetching,
+    list,
+    s: list?.length,
+  });
   return (
     <SafeAreaProviderNoScroll>
-      <View style={{ flex: 1 }}>
+      <View>
         {isLoading ? (
           <ActivityIndicator style={{ marginTop: 20 }} />
         ) : list.length === 0 ? (

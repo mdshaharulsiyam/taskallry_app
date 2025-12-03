@@ -17,25 +17,14 @@ export interface Service {
     email: string;
   };
   description: string;
-  location: {
-    type: "Point";
-    coordinates: [number, number];
-  };
-  address: string;
-  city: string;
-  availability: string;
-  experience: string;
-  onSiteSupport: boolean;
-  toolsProvided: boolean;
-  languages: [string];
+  isActive: boolean;
   price: number;
   status: string;
-  isActive: boolean;
   createdAt: string;
   updatedAt: string;
   __v: number;
   averageRating: number;
-  totalRating: number;
+  totalRating: number
 }
 
 interface CreateServiceRequest {
@@ -49,7 +38,15 @@ interface CreateServiceRequest {
 interface CreateServiceResponse {
   message: string;
   success: boolean;
-  data: Service;
+  data: {
+    meta: {
+      page: 1,
+      limit: 10,
+      total: 4,
+      totalPage: 1
+    },
+    result: Service[];
+  };
 }
 
 interface UpdateServiceRequest {
@@ -89,10 +86,22 @@ interface DeleteServiceResponse {
   message: string;
   success: boolean;
 }
+interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+interface PaginatedServices {
+  meta: PaginationMeta;
+  result: Service[];
+}
+
 interface GetMyServicesResponse {
   success: boolean;
   message: string;
-  data: Service;
+  data: PaginatedServices;
 }
 export const serviceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -146,10 +155,14 @@ export const serviceApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Service"],
     }),
-    getMyServices: builder.query<GetMyServicesResponse, void>({
-      query: () => ({
+    getMyServices: builder.query<
+      GetMyServicesResponse,
+      { page?: number; limit?: number }
+    >({
+      query: ({ page = 1, limit = 10 } = {}) => ({
         url: "/service/my-service",
         method: "GET",
+        params: { page, limit },
       }),
       providesTags: ["Service"],
     }),

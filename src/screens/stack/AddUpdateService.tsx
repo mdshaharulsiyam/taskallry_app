@@ -13,7 +13,7 @@ import SafeAreaProvider from "../../providers/SafeAreaProvider";
 import {
   useCreateServiceMutation,
   useGetAllCategoriesQuery,
-  useGetMyServicesQuery,
+  useGetSingleServiceQuery,
   useUpdateServiceMutation,
 } from "../../redux/apis";
 import { ImgUrl } from "../../redux/baseApi";
@@ -27,7 +27,9 @@ const AddUpdateService = () => {
   const [files, setFiles] = useState<any[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
-  const { data } = useGetMyServicesQuery();
+  const { data: serviceData } = useGetSingleServiceQuery(id as string, {
+    skip: !id,
+  });
   const { data: categoryData } = useGetAllCategoriesQuery({ limit: 9999999 });
   const [createService, { isLoading: isCreateLoading }] =
     useCreateServiceMutation();
@@ -56,8 +58,8 @@ const AddUpdateService = () => {
   );
 
   useEffect(() => {
-    if (!data?.data) return;
-    const service: any = data.data;
+    if (!serviceData?.data) return;
+    const service: any = serviceData.data;
     setFormState((prev) => ({
       ...prev,
       title: service?.title ?? "",
@@ -68,7 +70,7 @@ const AddUpdateService = () => {
     if (service?.images) {
       setExistingImages(service.images as string[]);
     }
-  }, [data]);
+  }, [serviceData]);
 
   const handleRemoveExisting = useCallback(
     (index: number, uri: string) => {

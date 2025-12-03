@@ -1,10 +1,4 @@
-import React, {
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { Suspense, useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -25,46 +19,30 @@ import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
 
 const PostService = () => {
-  const { width, height } = ScreenSize();
+  const { width } = ScreenSize();
   const navigate = Navigate();
-  const [page, setPage] = useState(1);
-  const [services, setServices] = useState<Service[]>([]);
-  const limit = 10;
+  const [limit, setLimit] = useState(10);
   const {
     data,
     isLoading,
     isError,
     isFetching,
     refetch,
-  } = useGetMyServicesQuery({ page, limit });
+  } = useGetMyServicesQuery({ page: 1, limit });
   const meta = data?.data?.meta;
   const totalPages = meta?.totalPage ?? 1;
-  const hasMore = page < totalPages;
-
-  useEffect(() => {
-    const next = data?.data?.result ?? [];
-    if (!next) return;
-    setServices((prev) => {
-      if (page === 1) return next;
-      const map = new Map(prev.map((item) => [item._id, item]));
-      next.forEach((item) => {
-        if (!map.has(item._id)) {
-          map.set(item._id, item);
-        }
-      });
-      return Array.from(map.values());
-    });
-  }, [data, page]);
+  const totalItems = meta?.total ?? 0;
+  const services = data?.data?.result ?? [];
+  const hasMore = services.length < totalItems && (meta?.page ?? 1) < totalPages;
 
   const handleRefresh = useCallback(() => {
-    setPage(1);
-    setServices([]);
+    setLimit(10);
     refetch();
   }, [refetch]);
 
   const handleLoadMore = useCallback(() => {
     if (hasMore && !isFetching) {
-      setPage((prev) => prev + 1);
+      setLimit((prev) => prev + 10);
     }
   }, [hasMore, isFetching]);
 
@@ -81,7 +59,7 @@ const PostService = () => {
         <ButtonBG
           style={styles.addButton}
           text="Add Service"
-          handler={() => navigate("CreateService")}
+          handler={() => navigate("AddUpdateService")}
         />
       </View>
     ),
@@ -89,13 +67,13 @@ const PostService = () => {
   );
 
   const listFooter = useMemo(() => {
-    if (!isFetching || page === 1) return null;
+    if (!isFetching || limit === 10) return null;
     return (
       <View style={styles.footerContainer}>
         <ActivityIndicator size="small" color="#1A56DB" />
       </View>
     );
-  }, [isFetching, page]);
+  }, [isFetching, limit]);
 
   const renderService = useCallback(
     ({ item }: { item: Service }) => (
@@ -154,7 +132,7 @@ const PostService = () => {
     [handleViewDetails, width]
   );
 
-  if (isLoading) {
+  if (isLoading && services.length === 0) {
     return (
       <SafeAreaProviderNoScroll backButtonText="My Service">
         <View style={{ padding: 16 }}>
@@ -178,24 +156,19 @@ const PostService = () => {
     <SafeAreaProviderNoScroll backButtonText="My Service">
       <Suspense>
         <FlatList
-          contentContainerStyle={{ height }}
+          contentContainerStyle={{ paddingBottom: 190, }}
           data={services}
           keyExtractor={(item) => item._id}
           renderItem={renderService}
           ListHeaderComponent={listHeader}
           ListFooterComponent={listFooter}
           onEndReached={handleLoadMore}
-          refreshing={isFetching && page === 1}
+          refreshing={isFetching && limit === 10}
           onRefresh={handleRefresh}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => (
             <View style={styles.emptyContainer}>
               <TextSecondary text="No service found" />
-              <ButtonBG
-                style={styles.addButton}
-                text="Create Service"
-                handler={() => navigate("CreateService")}
-              />
             </View>
           )}
         />

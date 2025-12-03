@@ -1,4 +1,5 @@
-import React, { Suspense, useState } from "react";
+import { useRoute } from "@react-navigation/native";
+import React, { Suspense, useMemo, useState } from "react";
 import { View } from "react-native";
 import TabButton from "../../components/mytask/TabButton";
 import FlexImages from "../../components/providerDetails/FlexImages";
@@ -10,13 +11,30 @@ import SectionHeading from "../../components/shered/SectionHeading";
 import TextPrimary from "../../components/shered/TextPrimary";
 import TextSecondary from "../../components/shered/TextSecondary";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
-import { useGetMyServicesQuery } from "../../redux/apis";
+import { useGetSingleServiceQuery } from "../../redux/apis";
+import type { Service } from "../../redux/apis/serviceApi";
 
 const ServiceDetails = () => {
+  const {
+    params: { id } = { id: undefined },
+  } = useRoute() as { params?: { id?: string } };
   const [tab, setTab] = useState("Description");
-  const { data, isLoading, isError } = useGetMyServicesQuery();
+  const {
+    data,
+    isLoading,
+    isError,
+  } = useGetSingleServiceQuery(id ?? "", { skip: !id });
+  const service = useMemo<Service | null>(() => data?.data ?? null, [data]);
 
-  const service = data?.data || null;
+  if (!id) {
+    return (
+      <SafeAreaProvider backButtonText="My Service Details">
+        <View style={{ padding: 16 }}>
+          <TextSecondary text="No service id provided" />
+        </View>
+      </SafeAreaProvider>
+    );
+  }
 
   if (isLoading) {
     return (

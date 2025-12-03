@@ -4,8 +4,16 @@ import { ImgUrl } from "../../redux/baseApi";
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 
-const FlexImages = ({ images }: { images: string[] }) => {
+const FlexImages = ({ images = [] as string[] }: { images?: string[] }) => {
   const { width } = ScreenSize();
+  const safeImages = (images || []).filter(Boolean);
+
+  if (safeImages.length === 0) {
+    return null;
+  }
+
+  const primaryImage = safeImages[0];
+  const secondaryImages = safeImages.slice(1);
   return (
     <FlexText
       style={{
@@ -19,7 +27,7 @@ const FlexImages = ({ images }: { images: string[] }) => {
           height: 150,
           borderRadius: 4,
         }}
-        source={{ uri: ImgUrl(images[0]) }}
+        source={{ uri: ImgUrl(primaryImage) }}
       />
       <FlexText
         style={{
@@ -29,15 +37,15 @@ const FlexImages = ({ images }: { images: string[] }) => {
           justifyContent: "flex-start",
         }}
       >
-        {[...Array(images.length - 1).keys()].map((item) => (
+        {secondaryImages.map((img, index) => (
           <Image
-            key={item}
+            key={`${img}-${index}`}
             style={{
               width: (width - 70) / 4,
               height: 70,
               borderRadius: 4,
             }}
-            source={{ uri: ImgUrl(images[item + 1]) }}
+            source={{ uri: ImgUrl(img) }}
           />
         ))}
       </FlexText>

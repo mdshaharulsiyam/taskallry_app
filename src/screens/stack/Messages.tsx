@@ -4,6 +4,7 @@ import { ActivityIndicator, FlatList, ImageSourcePropType, View } from "react-na
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useDispatch } from 'react-redux';
 import ChatHeader from "../../components/message/ChatHeader";
 import Message from "../../components/message/Message";
 import SendMessage from "../../components/message/SendMessage";
@@ -12,7 +13,7 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useGetMyProfileQuery } from "../../redux/apis";
 import type { MessageItem } from "../../redux/apis/messageApi";
 import { useGetMessagesQuery } from "../../redux/apis/messageApi";
-import Navigate from "../../utils/Navigate";
+import { baseApi } from '../../redux/baseApi';
 import ScreenSize from "../../utils/ScreenSize";
 import { getSocket } from "../../utils/socket";
 const Messages = () => {
@@ -24,7 +25,7 @@ const Messages = () => {
 
   const [limit, setLimit] = useState(10);
 
-  const { data, isLoading, isFetching } = useGetMessagesQuery({
+  const { data, isLoading, isFetching, refetch } = useGetMessagesQuery({
     conversationId: id,
     limit,
   });
@@ -34,7 +35,7 @@ const Messages = () => {
 
   const { data: profileData } = useGetMyProfileQuery();
 
-  const navigate = Navigate();
+  const dispatch = useDispatch();
   const { height } = ScreenSize();
   const { top, bottom } = useSafeAreaInsets();
 
@@ -78,13 +79,19 @@ const Messages = () => {
     const myId = profileData?.data?._id;
 
     const handleMessage = (message: MessageItem) => {
-      console.log("message", message);
+
       if (myId == message?.msgByUserId?._id) {
         return
       }
       const isMyMessage = myId ? message?.msgByUserId?._id === myId : message.isMyMessage;
       const next: MessageItem = { ...message, isMyMessage };
       setMessages((prev) => [next, ...prev]);
+      dispatch(
+        baseApi.util.invalidateTags([
+          { type: 'Conversation', id: 'LIST' },
+          { type: 'Message', id: 'LIST' },
+        ])
+      );
     };
 
     const handleError = (err: any) => {

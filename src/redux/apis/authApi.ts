@@ -53,6 +53,7 @@ interface UserProfile {
   bankName?: string;
   bankAccountNumber?: string;
   referralCode?: string;
+  address: string;
 }
 
 type UpdateProfileRequest =

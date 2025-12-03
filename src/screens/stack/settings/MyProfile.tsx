@@ -10,6 +10,7 @@ import {
 import Toast from "react-native-toast-message";
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
 import Input from "../../../components/ui/inputs/Input";
+import LocationInput from "../../../components/ui/inputs/LocationInput";
 import { otherIcons } from "../../../constant/images";
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
 import {
@@ -24,21 +25,18 @@ const MyProfile = () => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const [formState, setFormState] = useState({
     name: "",
-    street: "",
-    city: "",
+    address: "",
   });
   const [errors, setErrors] = useState({
     name: "",
-    street: "",
-    city: "",
+    address: "",
   });
 
   useEffect(() => {
     if (!data?.data) return;
     setFormState({
       name: data.data.name ?? "",
-      street: data.data.street ?? "",
-      city: data.data.city ?? "",
+      address: data.data.address ?? "",
     });
   }, [data]);
 
@@ -81,8 +79,7 @@ const MyProfile = () => {
     if (!validate()) return;
     const payload = {
       name: formState.name.trim(),
-      street: formState.street.trim(),
-      city: formState.city.trim(),
+      address: formState.address.trim(),
     };
     const formData = new FormData();
     formData.append("data", JSON.stringify(payload));
@@ -158,23 +155,13 @@ const MyProfile = () => {
           name="name"
           error={!!errors.name}
         />
-        <Input
-          keyboard="default"
-          label="Street Address"
-          placeHolder="Enter Street Address"
-          value={formState.street}
-          handler={(_, value) => setFieldValue("street", value)}
-          name="street"
-          error={!!errors.street}
-        />
-        <Input
-          keyboard="default"
-          label="City / LGA"
-          placeHolder="Enter City / LGA"
-          value={formState.city}
-          handler={(_, value) => setFieldValue("city", value)}
-          name="city"
-          error={!!errors.city}
+        <LocationInput
+          label="Address"
+          placeHolder="Enter Address"
+          value={formState.address}
+          handler={(_, value) => setFieldValue("address", value)}
+          name="address"
+          error={!!errors.address}
         />
         <ButtonBG
           style={{

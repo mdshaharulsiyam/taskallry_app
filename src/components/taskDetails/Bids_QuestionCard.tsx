@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { TabIcons } from "../../constant/images";
@@ -18,6 +18,7 @@ import {
   useGetMyProfileQuery,
   useUpdateBidMutation,
 } from "../../redux/apis";
+import { Navigation } from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
@@ -37,12 +38,12 @@ const Bids_QuestionCard = ({
 }: {
   type: "bids" | "question";
   status:
-    | "OPEN_FOR_BID"
-    | "IN_PROGRESS"
-    | "COMPLETED"
-    | "CANCELLED"
-    | "DISPUTE"
-    | "LATE";
+  | "OPEN_FOR_BID"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "DISPUTE"
+  | "LATE";
   item?: Bid;
   question?: Question;
   customer?: string;
@@ -51,6 +52,7 @@ const Bids_QuestionCard = ({
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState(item?.price ? String(item.price) : "");
   const [message, setMessage] = useState(item?.details || "");
+  const navigation = Navigation();
   const [updateBid, { isLoading: isUpdating }] = useUpdateBidMutation();
   const [acceptOffer, { isLoading: isAccepting }] =
     useAcceptByCustomerMutation();
@@ -74,10 +76,25 @@ const Bids_QuestionCard = ({
     acceptOffer(body)
       .unwrap()
       .then((res) => {
+        console.log("Payment link:", res?.data?.paymentLink);
+
         Toast.show({
           type: "success",
           text1: res?.message || "Offer accepted successfully",
         });
+        // Linking.openURL(res?.data?.paymentLink);
+        const paymentLink = res?.data?.paymentLink;
+        if (paymentLink) {
+          navigation.navigate("PaymentWebView", {
+            url: paymentLink,
+            title: "Complete Payment",
+          });
+        } else {
+          Toast.show({
+            type: "info",
+            text1: "Payment link not available",
+          });
+        }
       })
       .catch((error) => {
         Toast.show({

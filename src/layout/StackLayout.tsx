@@ -23,6 +23,9 @@ const RegulationsCenter = React.lazy(() => import("../screens/stack/RegulationsC
 const RequestCancel = React.lazy(() => import("../screens/stack/RequestCancel"));
 const Search = React.lazy(() => import("../screens/stack/Search"));
 const ServiceDetails = React.lazy(() => import("../screens/stack/ServiceDetails"));
+const PaymentWebView = React.lazy(
+  () => import("../screens/stack/PaymentWebView")
+);
 const AccountSetting = React.lazy(() => import("../screens/stack/settings/AccountSetting"));
 const ChangePassword = React.lazy(() => import("../screens/stack/settings/ChangePassword"));
 const Earnings = React.lazy(() => import("../screens/stack/settings/Earnings"));
@@ -72,6 +75,7 @@ const StackLayout = () => {
     Terms: Terms,
     Help: Help,
     ServiceDetails: ServiceDetails,
+    PaymentWebView: PaymentWebView,
     AddUpdateService: AddUpdateService,
     Earnings: Earnings,
     UpdateBankAccount: UpdateBankAccount,

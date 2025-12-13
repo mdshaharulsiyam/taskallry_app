@@ -1,6 +1,12 @@
 import { useRoute } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import FlexText from "../../components/shered/FlexText";
@@ -50,6 +56,10 @@ const RequestCancel = () => {
     []
   );
 
+  const handleRemoveEvidence = useCallback((index: number) => {
+    setUploadFiles((prev) => prev.filter((_, i) => i !== index));
+  }, []);
+
   const validate = () => {
     if (!formState.reason) {
       setErrors({ reason: "Select a reason" });
@@ -91,7 +101,47 @@ const RequestCancel = () => {
         />
         <View>
           <TextPrimary text="Evidence (Optional)" />
-          <ImageUploader setFiels={setUploadFiles} />
+          <FlexText
+            style={{
+              flexWrap: "wrap",
+              gap: 12,
+              marginTop: 12,
+            }}
+          >
+            {uploadFiles?.map((file, index) => (
+              <View key={`${file?.uri}-${index}`}>
+                <Image
+                  source={{ uri: file?.uri }}
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 10,
+                    marginBottom: 6,
+                  }}
+                />
+                <TouchableOpacity
+                  onPress={() => handleRemoveEvidence(index)}
+                  style={{
+                    alignSelf: "center",
+                    paddingVertical: 2,
+                    paddingHorizontal: 8,
+                    borderRadius: 999,
+                    backgroundColor: "#F87171",
+                  }}
+                >
+                  <TextSecondary
+                    text="Remove"
+                    style={{ color: "#FFF", fontSize: 12 }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ))}
+            <ImageUploader
+              setFiels={setUploadFiles}
+              currentCount={uploadFiles.length}
+              maxFiles={3}
+            />
+          </FlexText>
         </View>
         <FlexText
           style={{

@@ -102,9 +102,9 @@ const CancelRefundRequest = ({
   });
   const [makeExtensionDispute, { isLoading: isDisputing }] =
     useMakeExtensionDisputeMutation();
-  const [acceptCancelRequest, { isLoading: isAcceptingCancel }] =
+  const [acceptCancelRequest, { isLoading: isAcceptingCancelApi }] =
     useAcceptCancelRequestMutation();
-  const [rejectCancelRequest, { isLoading: isRejectingCancel }] =
+  const [rejectCancelRequest, { isLoading: isRejectingCancelApi }] =
     useRejectCancelRequestMutation();
 
   const resetRejectState = () => {
@@ -284,7 +284,12 @@ const CancelRefundRequest = ({
     }
   };
 
+  const isRejectingExtension = currentAction === "reject" && isUpdating;
+  const isRejectingCancel = currentCancelAction === "reject" && isRejectingCancelApi;
+  const isRejectingAny = isRejectingExtension || isRejectingCancel;
+
   const handleRejectSubmit = () => {
+    if (isRejectingAny) return;
     const nextErrors = { detail: "", evidence: "" };
     if (!rejectDetails.trim()) {
       nextErrors.detail = "Please provide a reason.";
@@ -322,8 +327,10 @@ const CancelRefundRequest = ({
 
   const cancelActionDisabled = useMemo(
     () =>
-      currentCancelAction !== null || isAcceptingCancel || isRejectingCancel,
-    [currentCancelAction, isAcceptingCancel, isRejectingCancel]
+      currentCancelAction !== null ||
+      isAcceptingCancelApi ||
+      isRejectingCancelApi,
+    [currentCancelAction, isAcceptingCancelApi, isRejectingCancelApi]
   );
 
   return (
@@ -437,7 +444,7 @@ const CancelRefundRequest = ({
             <>
               <ButtonTransparentBG
                 text={
-                  currentCancelAction === "reject" && isRejectingCancel
+                  currentCancelAction === "reject" && isRejectingCancelApi
                     ? "Submitting..."
                     : "Reject"
                 }
@@ -449,7 +456,7 @@ const CancelRefundRequest = ({
               />
               <ButtonBG
                 text={
-                  currentCancelAction === "accept" && isAcceptingCancel
+                  currentCancelAction === "accept" && isAcceptingCancelApi
                     ? "Submitting..."
                     : "Accept"
                 }
@@ -459,7 +466,7 @@ const CancelRefundRequest = ({
                 }}
                 disabled={cancelActionDisabled}
                 loading={
-                  currentCancelAction === "accept" && isAcceptingCancel
+                  currentCancelAction === "accept" && isAcceptingCancelApi
                 }
               />
             </>
@@ -607,18 +614,18 @@ const CancelRefundRequest = ({
                   resetRejectState();
                 }}
                 style={{ width: "auto" }}
-                disabled={currentAction === "reject" && isUpdating}
+                disabled={isRejectingAny}
               />
               <ButtonBG
                 text={
-                  currentAction === "reject" && isUpdating
+                  isRejectingAny
                     ? "Submitting..."
                     : "Submit Rejection"
                 }
                 handler={handleRejectSubmit}
                 style={{ width: "auto" }}
-                disabled={currentAction === "reject" && isUpdating}
-                loading={currentAction === "reject" && isUpdating}
+                disabled={isRejectingAny}
+                loading={isRejectingAny}
               />
             </FlexText>
           </View>

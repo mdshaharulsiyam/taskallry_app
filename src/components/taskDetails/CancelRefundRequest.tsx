@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
+import moment from "moment";
+import React from "react";
+import { Image, ImageSourcePropType, View } from "react-native";
 import { otherIcons } from "../../constant/images";
+import { ExtensionRequest } from "../../redux/apis";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
 import ImageFlex from "../shered/ImageFlex";
@@ -9,8 +11,40 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 import ButtonTransparentBG from "../ui/buttons/ButtonTransparentBG";
 import GreenLine from "../ui/line/GreenLine";
 
-const CancelRefundRequest = () => {
-  const [type, setType] = useState<"cancel" | "refund">("cancel");
+const formatDateTime = (value?: string) =>
+  value ? moment(value).format("DD MMM YYYY, hh:mm a") : "—";
+
+const CancelRefundRequest = ({
+  data,
+  type,
+  myProfileId,
+}: {
+  data: ExtensionRequest;
+  type: "cancel" | "extension";
+  myProfileId?: string;
+}) => {
+  const requestHeaderText =
+    type === "cancel"
+      ? "You requested to Cancel the task via Resolution Center"
+      : "You requested to Extend the task via Resolution Center";
+
+  const requestedBy = data?.requestFrom?.name || "Unknown";
+  const requestCreatedAt = formatDateTime(data?.createdAt);
+  const currentCompletionDate = formatDateTime(data?.currentDate);
+  const newCompletionDate = formatDateTime(data?.requestedDateTime);
+
+  const reasonLabel =
+    type === "cancel" ? "Reason for Cancel" : "Reason for Request";
+  const reasonText =
+    type === "cancel"
+      ? data?.reason || "No reason provided."
+      : data?.extensionReason || data?.reason || "No reason provided.";
+
+  const statusLabel =
+    type === "cancel" ? "Cancellation Status" : "Extensions Status";
+  const statusText = data?.status || "Pending";
+  const isRequesterMe = myProfileId && data?.requestFrom?._id === myProfileId;
+
   return (
     <View
       style={{
@@ -30,7 +64,7 @@ const CancelRefundRequest = () => {
             fontWeight: 700,
             lineHeight: 20,
           }}
-          text="You requested to Cancel the task Via resolution center"
+          text={requestHeaderText}
         />
       </FlexText>
       <GreenLine />
@@ -39,14 +73,14 @@ const CancelRefundRequest = () => {
           justifyContent: "space-between",
         }}
       >
-        <ImageFlex text1="Me" text="Requested By" />
+        <ImageFlex text1={requestedBy} text="Requested By" />
         <View>
-          <TextSecondary text="15 May" />
-          <TextSecondary text="2020 8:00 am" />
+          <TextSecondary text={requestCreatedAt.split(",")[0]} />
+          <TextSecondary text={requestCreatedAt.split(",")[1]?.trim()} />
         </View>
       </FlexText>
       <GreenLine />
-      {type == "refund" && (
+      {type == "extension" && (
         <View
           style={{
             padding: 10,
@@ -61,7 +95,7 @@ const CancelRefundRequest = () => {
             }}
             text="Current Completion Date"
           />
-          <TextSecondary text="15 May 2020 8:00 am" />
+          <TextSecondary text={currentCompletionDate} />
           <GreenLine />
           <HeaderSecondary
             style={{
@@ -69,61 +103,61 @@ const CancelRefundRequest = () => {
             }}
             text="New Proposed Date"
           />
-          <TextSecondary text="15 May 2020 8:00 am" />
+          <TextSecondary text={newCompletionDate} />
         </View>
       )}
       <HeaderSecondary
-        text={type == "cancel" ? "Reason for Cancel" : "Reason for Request"}
+        text={reasonLabel}
       />
       <TextSecondary
-        text={`I request the immediate cancellation of the project due to repeated breaches: poor communication, multiple missed meetings, delays without real progress, and deliverables not meeting agreed standards. I request a full refund and preservation of all evidence in accordance with Fiverr's Terms of Service, Article 5.3.`}
+        text={reasonText}
       />
       <GreenLine />
       <HeaderSecondary
         style={{
           width: 600,
         }}
-        text={type == "cancel" ? "Cancellation Status" : "Extensions Status"}
+        text={statusLabel}
       />
       <TextSecondary
         style={{
           color: "#0EA5E9",
         }}
-        text="In Progress"
+        text={statusText}
       />
       <GreenLine />
-      <FlexText>
-        {type == "cancel" ? (
-          <ButtonBG
-            text="Cancel the request"
-            handler={() => console.log("")}
-            style={{
-              width: "auto",
-            }}
-          />
-        ) : (
-          <>
-            <ButtonTransparentBG
-              text="Cancel"
-              handler={() => console.log("")}
-              style={{
-                width: "auto",
-              }}
-            />
+      {!isRequesterMe && (
+        <FlexText>
+          {type == "cancel" ? (
             <ButtonBG
-              text="Accept"
+              text="Cancel the request"
               handler={() => console.log("")}
               style={{
                 width: "auto",
               }}
             />
-          </>
-        )}
-      </FlexText>
+          ) : (
+            <>
+              <ButtonTransparentBG
+                text="Cancel"
+                handler={() => console.log("")}
+                style={{
+                  width: "auto",
+                }}
+              />
+              <ButtonBG
+                text="Accept"
+                handler={() => console.log("")}
+                style={{
+                  width: "auto",
+                }}
+              />
+            </>
+          )}
+        </FlexText>
+      )}
     </View>
   );
 };
 
 export default CancelRefundRequest;
-
-const styles = StyleSheet.create({});

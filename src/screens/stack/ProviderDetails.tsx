@@ -20,10 +20,9 @@ const ProviderDetails = () => {
     params: { id },
   } = useRoute() as { params: { id: string } };
 
-  const { data, isLoading, isError } = useGetSingleServiceQuery(id);
-  console.log(data);
+  const { data, isLoading, isError, error } = useGetSingleServiceQuery(id);
   const service = data?.data || null;
-
+  console.log(data, id, error)
   const navigate = Navigate();
 
   const goSubmitOffer = useCallback(() => {

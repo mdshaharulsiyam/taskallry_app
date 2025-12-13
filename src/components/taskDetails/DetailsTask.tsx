@@ -14,6 +14,7 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import {
   useDeleteTaskMutation,
+  useGetExtensionsByTaskQuery,
   useGetMyProfileQuery,
   useGetSingleTaskQuery,
 } from "../../redux/apis";
@@ -61,6 +62,8 @@ const DetailsTask = ({
   const { data: profileData } = useGetMyProfileQuery();
   const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
   const navigate = Navigate();
+  const { data: extensionsData } = useGetExtensionsByTaskQuery(id);
+  console.log({ extensionsData });
   const handleRemoveTask = () => {
     Alert.alert("Remove Task", "Are you sure you want to remove this task?", [
       {
@@ -335,9 +338,13 @@ const DetailsTask = ({
         {
           role == "service" && <FeedbackStatusButton status={data?.data?.status as any} id={id} />
         }
-        {data?.data?.status == "DISPUTE" && (
+        {extensionsData?.data?.length! > 0 && extensionsData?.data?.[0] && (
           <>
-            <CancelRefundRequest />
+            <CancelRefundRequest
+              data={extensionsData?.data?.[0]}
+              type={extensionsData?.data?.[0]?.type}
+              myProfileId={profileData?.data?._id}
+            />
           </>
         )}
       </>

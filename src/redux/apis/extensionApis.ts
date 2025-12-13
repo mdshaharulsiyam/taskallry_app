@@ -1,16 +1,35 @@
 import { baseApi } from "../baseApi";
 
 export interface ExtensionRequest {
-  _id: string;
-  task: string;
-  requestedBy: string;
-  previousDate: string;
-  newDate: string;
-  reason?: string;
-  status: "PENDING" | "ACCEPTED" | "REJECTED";
   createdAt: string;
+  currentDate: string;
+  extensionEvidence: any[];
+  extensionReason: string;
+  reason: string;
+  rejectDetails: string;
+  reject_evidence: string;
+  requestFrom: {
+    name: string
+    profile_image: string
+    _id: string
+  };
+  requestTo: {
+    name: string
+    profile_image: string
+    _id: string
+  };
+  requestToModel: string;
+  requestedDateTime: string;
+  requestedFromModel: string;
+  reviewedRequestAt: string | null;
+  status: string;
+  task: string;
   updatedAt: string;
+  type: "extension"
+  __v: number;
+  _id: string;
 }
+
 
 export interface CreateExtensionRequest {
   taskId: string;

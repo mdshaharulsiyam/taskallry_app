@@ -18,6 +18,7 @@ const ServiceDetails = () => {
   const {
     params: { id } = { id: undefined },
   } = useRoute() as { params?: { id?: string } };
+
   const [tab, setTab] = useState("Description");
   const {
     data,

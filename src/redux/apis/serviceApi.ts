@@ -124,7 +124,7 @@ export const serviceApi = baseApi.injectEndpoints({
         url: `/service/get-single-service/${id}`,
         method: "GET",
       }),
-      providesTags: (_result, _error, id) => [{ type: "Service", id }],
+      providesTags: ['Service'],
     }),
     createService: builder.mutation<
       CreateServiceResponse,

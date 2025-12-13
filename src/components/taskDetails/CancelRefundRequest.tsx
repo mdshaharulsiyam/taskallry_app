@@ -16,8 +16,10 @@ import { otherIcons } from "../../constant/images";
 import {
   CancelRequest,
   ExtensionRequest,
+  useAcceptCancelRequestMutation,
   useAcceptRejectExtensionRequestMutation,
   useMakeExtensionDisputeMutation,
+  useRejectCancelRequestMutation,
 } from "../../redux/apis";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
@@ -100,6 +102,10 @@ const CancelRefundRequest = ({
   });
   const [makeExtensionDispute, { isLoading: isDisputing }] =
     useMakeExtensionDisputeMutation();
+  const [acceptCancelRequest, { isLoading: isAcceptingCancel }] =
+    useAcceptCancelRequestMutation();
+  const [rejectCancelRequest, { isLoading: isRejectingCancel }] =
+    useRejectCancelRequestMutation();
 
   const resetRejectState = () => {
     setRejectDetails("");
@@ -137,7 +143,7 @@ const CancelRefundRequest = ({
     );
   };
 
-  const submitAction = useCallback(
+  const submitExtensionAction = useCallback(
     async (action: "accept" | "reject", payload?: any) => {
       if (!data?._id) return;
       try {
@@ -187,11 +193,75 @@ const CancelRefundRequest = ({
         { text: "Not Now", style: "cancel" },
         {
           text: "Accept",
-          onPress: () => submitAction("accept"),
+          onPress: () => submitExtensionAction("accept"),
         },
       ]
     );
-  }, [submitAction]);
+  }, [submitExtensionAction]);
+
+  const submitCancelAccept = useCallback(async () => {
+    if (!data?._id) return;
+    try {
+      setCurrentCancelAction("accept");
+      await acceptCancelRequest({
+        id: data._id,
+        body: { status: "ACCEPTED" },
+      }).unwrap();
+      Toast.show({
+        type: "success",
+        text1: "Cancellation Accepted",
+        text2: "You approved the cancellation request.",
+      });
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: "Failed to accept cancellation",
+        text2: error?.data?.message || "Please try again later",
+      });
+    } finally {
+      setCurrentCancelAction(null);
+    }
+  }, [acceptCancelRequest, data?._id]);
+
+  const handleCancelAccept = useCallback(() => {
+    Alert.alert(
+      "Accept cancellation?",
+      "This will approve cancelling the task. Continue?",
+      [
+        { text: "Not Now", style: "cancel" },
+        { text: "Accept", onPress: () => submitCancelAccept() },
+      ]
+    );
+  }, [submitCancelAccept]);
+
+  const submitCancelReject = useCallback(
+    async (payload: FormData) => {
+      if (!data?._id) return;
+      try {
+        setCurrentCancelAction("reject");
+        await rejectCancelRequest({
+          id: data._id,
+          body: payload,
+        }).unwrap();
+        Toast.show({
+          type: "success",
+          text1: "Cancellation Rejected",
+          text2: "You declined the cancellation request.",
+        });
+        resetRejectState();
+        setShowRejectModal(false);
+      } catch (error: any) {
+        Toast.show({
+          type: "error",
+          text1: "Failed to reject cancellation",
+          text2: error?.data?.message || "Please try again later",
+        });
+      } finally {
+        setCurrentCancelAction(null);
+      }
+    },
+    [data?._id, rejectCancelRequest, resetRejectState]
+  );
 
   const handleSelectEvidence = async () => {
     try {
@@ -238,7 +308,11 @@ const CancelRefundRequest = ({
       name: rejectEvidence?.name || "reject_evidence.jpg",
       type: rejectEvidence?.type || "image/jpeg",
     } as any);
-    submitAction("reject", formData);
+    if (isExtension) {
+      submitExtensionAction("reject", formData);
+    } else {
+      submitCancelReject(formData);
+    }
   };
 
   const actionDisabled = useMemo(
@@ -246,21 +320,10 @@ const CancelRefundRequest = ({
     [currentAction, isUpdating]
   );
 
-  const handleCancelRequestAction = useCallback(
-    (action: "accept" | "reject") => {
-      setCurrentCancelAction(action);
-      Alert.alert(
-        `${action === "accept" ? "Accept" : "Reject"} cancellation?`,
-        "Cancellation decision flow will be implemented next.",
-        [
-          {
-            text: "Okay",
-            onPress: () => setCurrentCancelAction(null),
-          },
-        ]
-      );
-    },
-    []
+  const cancelActionDisabled = useMemo(
+    () =>
+      currentCancelAction !== null || isAcceptingCancel || isRejectingCancel,
+    [currentCancelAction, isAcceptingCancel, isRejectingCancel]
   );
 
   return (
@@ -374,25 +437,30 @@ const CancelRefundRequest = ({
             <>
               <ButtonTransparentBG
                 text={
-                  currentCancelAction === "reject" ? "Reviewing..." : "Reject"
+                  currentCancelAction === "reject" && isRejectingCancel
+                    ? "Submitting..."
+                    : "Reject"
                 }
-                handler={() => handleCancelRequestAction("reject")}
+                handler={() => setShowRejectModal(true)}
                 style={{
                   width: "auto",
                 }}
-                disabled={!!currentCancelAction}
+                disabled={cancelActionDisabled}
               />
               <ButtonBG
                 text={
-                  currentCancelAction === "accept"
-                    ? "Processing..."
+                  currentCancelAction === "accept" && isAcceptingCancel
+                    ? "Submitting..."
                     : "Accept"
                 }
-                handler={() => handleCancelRequestAction("accept")}
+                handler={handleCancelAccept}
                 style={{
                   width: "auto",
                 }}
-                disabled={!!currentCancelAction}
+                disabled={cancelActionDisabled}
+                loading={
+                  currentCancelAction === "accept" && isAcceptingCancel
+                }
               />
             </>
           )}

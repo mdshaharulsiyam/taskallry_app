@@ -78,18 +78,26 @@ export const cancelApi = baseApi.injectEndpoints({
       invalidatesTags: ["Cancel", "Task"],
     }),
 
-    acceptCancelRequest: builder.mutation<UpdateCancelResponse, string>({
-      query: (id) => ({
-        url: `/cancel-request/acceptRequest/${id}`,
+    acceptCancelRequest: builder.mutation<
+      UpdateCancelResponse,
+      { id: string; body?: FormData | Record<string, any> }
+    >({
+      query: ({ id, body }) => ({
+        url: `/cancel-request/accept-reject/${id}`,
         method: "PATCH",
+        body,
       }),
       invalidatesTags: ["Cancel", "Task"],
     }),
 
-    rejectCancelRequest: builder.mutation<UpdateCancelResponse, string>({
-      query: (id) => ({
+    rejectCancelRequest: builder.mutation<
+      UpdateCancelResponse,
+      { id: string; body: FormData }
+    >({
+      query: ({ id, body }) => ({
         url: `/cancel-request/rejectRequest/${id}`,
         method: "PATCH",
+        body,
       }),
       invalidatesTags: ["Cancel", "Task"],
     }),

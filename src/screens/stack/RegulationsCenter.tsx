@@ -47,7 +47,7 @@ const RegulationsCenter = () => {
         </FlexText>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigate("RequestCancel")}
+        onPress={() => navigate("RequestCancel", { id })}
         style={{
           marginTop: 10,
           padding: 10,

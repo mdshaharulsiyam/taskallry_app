@@ -14,6 +14,7 @@ import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import {
   useDeleteTaskMutation,
+  useGetCancelsByTaskQuery,
   useGetExtensionsByTaskQuery,
   useGetMyProfileQuery,
   useGetSingleTaskQuery,
@@ -63,7 +64,8 @@ const DetailsTask = ({
   const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
   const navigate = Navigate();
   const { data: extensionsData } = useGetExtensionsByTaskQuery(id);
-  console.log({ extensionsData });
+  const { data: cancelData } = useGetCancelsByTaskQuery(id);
+  console.log({ cancelData });
   const handleRemoveTask = () => {
     Alert.alert("Remove Task", "Are you sure you want to remove this task?", [
       {
@@ -338,6 +340,16 @@ const DetailsTask = ({
         {
           role == "service" && <FeedbackStatusButton status={data?.data?.status as any} id={id} />
         }
+        {cancelData?.data && (
+          <>
+            <CancelRefundRequest
+              data={cancelData?.data}
+              type='cancel'
+              myProfileId={profileData?.data?._id}
+              id={id}
+            />
+          </>
+        )}
         {extensionsData?.data?.length! > 0 && extensionsData?.data?.[0] && (
           <>
             <CancelRefundRequest

@@ -59,6 +59,11 @@ interface DeleteExtensionResponse {
   message: string;
 }
 
+interface MakeDisputeResponse {
+  success: boolean;
+  message: string;
+}
+
 export const extensionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createExtensionRequest: builder.mutation<
@@ -98,6 +103,14 @@ export const extensionApi = baseApi.injectEndpoints({
       invalidatesTags: ["Extension", "Task"],
     }),
 
+    makeExtensionDispute: builder.mutation<MakeDisputeResponse, string>({
+      query: (id) => ({
+        url: `/extension-request/make-dispute-for-admin/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Extension", "Task"],
+    }),
+
   }),
 });
 
@@ -106,4 +119,5 @@ export const {
   useGetExtensionsByTaskQuery,
   useDeleteExtensionRequestMutation,
   useAcceptRejectExtensionRequestMutation,
+  useMakeExtensionDisputeMutation,
 } = extensionApi;

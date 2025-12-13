@@ -25,7 +25,7 @@ const Tasks = () => {
         case "Bids  Received":
           return "bidReceived" as const;
         case "dispute":
-          return "DISPUTE" as const;
+          return "DISPUTED" as const;
         default:
           return undefined;
       }
@@ -41,7 +41,7 @@ const Tasks = () => {
       case "cancelled":
         return "CANCELLED" as const;
       case "dispute":
-        return "DISPUTE" as const;
+        return "DISPUTED" as const;
       default:
         return undefined;
     }

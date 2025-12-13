@@ -14,8 +14,10 @@ import { launchImageLibrary } from "react-native-image-picker";
 import Toast from "react-native-toast-message";
 import { otherIcons } from "../../constant/images";
 import {
+  CancelRequest,
   ExtensionRequest,
   useAcceptRejectExtensionRequestMutation,
+  useMakeExtensionDisputeMutation,
 } from "../../redux/apis";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
@@ -35,7 +37,7 @@ const CancelRefundRequest = ({
   myProfileId,
   id,
 }: {
-  data: ExtensionRequest;
+  data: ExtensionRequest | CancelRequest;
   type: "cancel" | "extension";
   myProfileId?: string;
   id: string;
@@ -47,25 +49,44 @@ const CancelRefundRequest = ({
 
   const requestedBy = data?.requestFrom?.name || "Unknown";
   const requestCreatedAt = formatDateTime(data?.createdAt);
-  const currentCompletionDate = formatDateTime(data?.currentDate);
-  const newCompletionDate = formatDateTime(data?.requestedDateTime);
+  const isExtension = type === "extension";
+  const isCancel = type === "cancel";
+  const currentCompletionDate = isExtension
+    ? formatDateTime((data as ExtensionRequest)?.currentDate)
+    : "—";
+  const newCompletionDate = isExtension
+    ? formatDateTime((data as ExtensionRequest)?.requestedDateTime)
+    : "—";
 
   const reasonLabel =
     type === "cancel" ? "Reason for Cancel" : "Reason for Request";
   const reasonText =
     type === "cancel"
-      ? data?.reason || "No reason provided."
-      : data?.extensionReason || data?.reason || "No reason provided.";
+      ? (data as CancelRequest)?.reason ||
+      (data as CancelRequest)?.cancellationReason ||
+      "No reason provided."
+      : (data as ExtensionRequest)?.extensionReason ||
+      data?.reason ||
+      "No reason provided.";
 
   const statusLabel =
     type === "cancel" ? "Cancellation Status" : "Extensions Status";
   const statusText = data?.status || "Pending";
   const isRequesterMe = myProfileId && data?.requestFrom?._id === myProfileId;
+  const statusUpper = statusText?.toUpperCase?.() || "";
+  const canShowActions =
+    !isRequesterMe &&
+    statusUpper !== "ACCEPTED" &&
+    statusUpper !== "REJECTED" &&
+    statusUpper !== "DISPUTED";
   const [acceptRejectExtensionRequest, { isLoading: isUpdating }] =
     useAcceptRejectExtensionRequestMutation();
   const [currentAction, setCurrentAction] = useState<"accept" | "reject" | null>(
     null
   );
+  const [currentCancelAction, setCurrentCancelAction] = useState<
+    "accept" | "reject" | null
+  >(null);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectDetails, setRejectDetails] = useState("");
   const [rejectEvidence, setRejectEvidence] = useState<{
@@ -77,11 +98,43 @@ const CancelRefundRequest = ({
     detail: "",
     evidence: "",
   });
+  const [makeExtensionDispute, { isLoading: isDisputing }] =
+    useMakeExtensionDisputeMutation();
 
   const resetRejectState = () => {
     setRejectDetails("");
     setRejectEvidence(null);
     setRejectErrors({ detail: "", evidence: "" });
+  };
+
+  const handleDispute = () => {
+    if (!data?._id || currentAction) return;
+    Alert.alert(
+      "Escalate to Admin?",
+      "Submitting a dispute will notify the admin team to review this rejected request.",
+      [
+        { text: "Not Now", style: "cancel" },
+        {
+          text: "Submit",
+          onPress: async () => {
+            try {
+              await makeExtensionDispute(data._id).unwrap();
+              Toast.show({
+                type: "success",
+                text1: "Dispute submitted",
+                text2: "Admin team will review this request shortly.",
+              });
+            } catch (error: any) {
+              Toast.show({
+                type: "error",
+                text1: "Failed to submit dispute",
+                text2: error?.data?.message || "Please try again later",
+              });
+            }
+          },
+        },
+      ]
+    );
   };
 
   const submitAction = useCallback(
@@ -193,6 +246,23 @@ const CancelRefundRequest = ({
     [currentAction, isUpdating]
   );
 
+  const handleCancelRequestAction = useCallback(
+    (action: "accept" | "reject") => {
+      setCurrentCancelAction(action);
+      Alert.alert(
+        `${action === "accept" ? "Accept" : "Reject"} cancellation?`,
+        "Cancellation decision flow will be implemented next.",
+        [
+          {
+            text: "Okay",
+            onPress: () => setCurrentCancelAction(null),
+          },
+        ]
+      );
+    },
+    []
+  );
+
   return (
     <View
       style={{
@@ -228,7 +298,7 @@ const CancelRefundRequest = ({
         </View>
       </FlexText>
       <GreenLine />
-      {type == "extension" && (
+      {isExtension && (
         <View
           style={{
             padding: 10,
@@ -274,17 +344,9 @@ const CancelRefundRequest = ({
         text={statusText}
       />
       <GreenLine />
-      {!isRequesterMe && (
+      {canShowActions && (
         <FlexText>
-          {type == "cancel" ? (
-            <ButtonBG
-              text="Cancel the request"
-              handler={() => console.log("")}
-              style={{
-                width: "auto",
-              }}
-            />
-          ) : (
+          {isExtension ? (
             <>
               <ButtonTransparentBG
                 text={
@@ -308,8 +370,45 @@ const CancelRefundRequest = ({
                 disabled={actionDisabled}
               />
             </>
+          ) : (
+            <>
+              <ButtonTransparentBG
+                text={
+                  currentCancelAction === "reject" ? "Reviewing..." : "Reject"
+                }
+                handler={() => handleCancelRequestAction("reject")}
+                style={{
+                  width: "auto",
+                }}
+                disabled={!!currentCancelAction}
+              />
+              <ButtonBG
+                text={
+                  currentCancelAction === "accept"
+                    ? "Processing..."
+                    : "Accept"
+                }
+                handler={() => handleCancelRequestAction("accept")}
+                style={{
+                  width: "auto",
+                }}
+                disabled={!!currentCancelAction}
+              />
+            </>
           )}
         </FlexText>
+      )}
+      {isExtension && statusUpper === "REJECTED" && (
+        <>
+          <GreenLine />
+          <ButtonBG
+            text={isDisputing ? "Submitting..." : "Escalate to Admin"}
+            handler={handleDispute}
+            loading={isDisputing}
+            disabled={isDisputing}
+            style={{ marginTop: 10, width: "auto" }}
+          />
+        </>
       )}
       <Modal
         visible={showRejectModal}

@@ -1,21 +1,35 @@
 import { baseApi } from "../baseApi";
 
 export interface CancelRequest {
-  _id: string;
-  task: string;
-  requestedBy: string;
-  reason?: string;
-  status: "PENDING" | "ACCEPTED" | "REJECTED";
+  cancellationEvidence: string[];
+  cancellationReason: string;
   createdAt: string;
+  currentDate: string;
+  reason: string;
+  rejectDetails: string;
+  reject_evidence: string[];
+  requestFrom: {
+    _id: string;
+    name: string;
+    profile_image: string;
+  };
+  requestTo: {
+    name: string
+    profile_image: string
+    _id: string
+  };
+  requestToModel: string;
+  requestedFromModel: string;
+  reviewedRequestAt: string | null;
+  status: string;
+  task: string;
+  type: string;
   updatedAt: string;
+  __v: number;
+  _id: string;
 }
 
-export interface CreateCancelRequest {
-  taskId: string;
-  reason?: string;
-}
-
-interface CreateCancelResponse {
+export interface CreateCancelResponse {
   success: boolean;
   message: string;
   data: CancelRequest;
@@ -23,7 +37,7 @@ interface CreateCancelResponse {
 
 interface GetCancelsByTaskResponse {
   success: boolean;
-  data: CancelRequest[];
+  data: CancelRequest;
 }
 
 interface UpdateCancelResponse {
@@ -39,14 +53,11 @@ interface DeleteCancelResponse {
 
 export const cancelApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    createCancelRequest: builder.mutation<
-      CreateCancelResponse,
-      CreateCancelRequest
-    >({
-      query: (body) => ({
+    createCancelRequest: builder.mutation<CreateCancelResponse, FormData>({
+      query: (formData) => ({
         url: "/cancel-request/create",
         method: "POST",
-        body,
+        body: formData,
       }),
       invalidatesTags: ["Cancel", "Task"],
     }),

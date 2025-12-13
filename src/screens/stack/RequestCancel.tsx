@@ -1,6 +1,8 @@
+import { useRoute } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import FlexText from "../../components/shered/FlexText";
 import HeaderDesign from "../../components/shered/HeaderDesign";
 import TextPrimary from "../../components/shered/TextPrimary";
@@ -10,14 +12,16 @@ import ButtonGreenOpacity30 from "../../components/ui/buttons/ButtonGreenOpacity
 import ImageUploader from "../../components/ui/file/ImageUploader";
 import Input from "../../components/ui/inputs/Input";
 import SelectInput from "../../components/ui/inputs/SelectInput";
-import { handleRequestCancel } from "../../handler/requestCancel";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
+import { useCreateCancelRequestMutation } from "../../redux/apis";
 import { Navigation } from "../../utils/Navigate";
 
 const RequestCancel = () => {
   const { height } = Dimensions.get("window");
   const { top, bottom } = useSafeAreaInsets();
   const navigation = Navigation();
+  const route = useRoute() as { params?: { id?: string } };
+  const taskId = route?.params?.id;
   const [uploadFiles, setUploadFiles] = useState<any[]>([]);
   const [formState, setFormState] = useState({
     reason: "",
@@ -26,6 +30,8 @@ const RequestCancel = () => {
   const [errors, setErrors] = useState({
     reason: "",
   });
+  const [createCancelRequest, { isLoading }] =
+    useCreateCancelRequestMutation();
 
   const reasonOptions = [
     { label: "Client unresponsive", value: "CLIENT_UNRESPONSIVE" },
@@ -108,14 +114,45 @@ const RequestCancel = () => {
               marginTop: 10,
               width: "auto",
             }}
-            text="Submit"
-            handler={() => {
+            text={isLoading ? "Submitting..." : "Submit"}
+            disabled={isLoading}
+            handler={async () => {
               if (!validate()) return;
-              const fields = [
-                { name: "reason", value: formState.reason },
-                { name: "desc", value: formState.desc },
-              ] as any;
-              handleRequestCancel(fields, () => null);
+              if (!taskId) {
+                Toast.show({
+                  type: "error",
+                  text1: "Task missing",
+                  text2: "Unable to locate the task ID for this request.",
+                });
+                return;
+              }
+              try {
+                const formData = new FormData();
+                formData.append(
+                  "data",
+                  JSON.stringify({
+                    task: taskId,
+                    reason: formState.reason,
+                    description: formState.desc?.trim(),
+                  })
+                );
+                if (uploadFiles?.[0]) {
+                  formData.append("reject_evidence", uploadFiles[0]);
+                }
+                await createCancelRequest(formData).unwrap();
+                Toast.show({
+                  type: "success",
+                  text1: "Request submitted",
+                  text2: "Cancellation request has been sent for review.",
+                });
+                navigation.goBack();
+              } catch (error: any) {
+                Toast.show({
+                  type: "error",
+                  text1: "Failed to submit",
+                  text2: error?.data?.message || "Please try again later.",
+                });
+              }
             }}
           />
         </FlexText>

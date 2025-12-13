@@ -200,7 +200,7 @@ export const taskApi = baseApi.injectEndpoints({
         | "IN_PROGRESS"
         | "COMPLETED"
         | "CANCELLED"
-        | "DISPUTE"
+        | "DISPUTED"
         | "LATE"
         | "bidMade"
         | "bidReceived"

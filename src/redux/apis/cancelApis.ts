@@ -67,7 +67,7 @@ export const cancelApi = baseApi.injectEndpoints({
         url: `/cancel-request/byTask/${taskId}`,
         method: "GET",
       }),
-      providesTags: ["Cancel"],
+      providesTags: ["Cancel", "Task"],
     }),
 
     deleteCancelRequest: builder.mutation<DeleteCancelResponse, string>({

@@ -39,12 +39,15 @@ interface VerifyCodeResponse {
 
 interface UserProfile {
   _id: string;
-  user: string;
+  user: {
+    isMultiRole: boolean;
+    _id: string;
+  };
   name: string;
   email: string;
   phone: string;
   address_document: string;
-  isAddressProvided: true;
+  isAddressProvided: boolean;
   createdAt: string;
   updatedAt: string;
   city: string;

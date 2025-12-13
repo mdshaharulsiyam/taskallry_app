@@ -83,7 +83,7 @@ export const extensionApi = baseApi.injectEndpoints({
         url: `/extension-request/byTask/${taskId}`,
         method: "GET",
       }),
-      providesTags: ["Extension"],
+      providesTags: ["Extension", "Task"],
     }),
 
     deleteExtensionRequest: builder.mutation<DeleteExtensionResponse, string>({

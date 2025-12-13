@@ -344,6 +344,7 @@ const DetailsTask = ({
               data={extensionsData?.data?.[0]}
               type={extensionsData?.data?.[0]?.type}
               myProfileId={profileData?.data?._id}
+              id={id}
             />
           </>
         )}

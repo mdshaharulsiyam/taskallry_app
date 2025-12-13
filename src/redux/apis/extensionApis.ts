@@ -89,21 +89,15 @@ export const extensionApi = baseApi.injectEndpoints({
       invalidatesTags: ["Extension", "Task"],
     }),
 
-    acceptExtensionRequest: builder.mutation<UpdateExtensionResponse, string>({
-      query: (id) => ({
-        url: `/extension-request/acceptRequest/${id}`,
+    acceptRejectExtensionRequest: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/extension-request/accept-reject/${id}`,
         method: "PATCH",
+        body: body
       }),
       invalidatesTags: ["Extension", "Task"],
     }),
 
-    rejectExtensionRequest: builder.mutation<UpdateExtensionResponse, string>({
-      query: (id) => ({
-        url: `/extension-request/rejectRequest/${id}`,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["Extension", "Task"],
-    }),
   }),
 });
 
@@ -111,6 +105,5 @@ export const {
   useCreateExtensionRequestMutation,
   useGetExtensionsByTaskQuery,
   useDeleteExtensionRequestMutation,
-  useAcceptExtensionRequestMutation,
-  useRejectExtensionRequestMutation,
+  useAcceptRejectExtensionRequestMutation,
 } = extensionApi;

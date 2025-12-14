@@ -136,6 +136,19 @@ interface ApplyReferralCodeResponse {
     referralCredit?: number;
   };
 }
+
+interface UpgradeAccountResponse {
+  success: boolean;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    isBankNumberVerified: boolean;
+    isIdentificationDocumentVerified: boolean;
+    isAddressProvided: boolean;
+    role: "provider" | "customer";
+  };
+}
 export interface ReferralItem {
   _id: string;
   referrer: string;
@@ -268,6 +281,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Profile"],
     }),
+    upgradeAccount: builder.mutation<UpgradeAccountResponse, void>({
+      query: () => ({
+        url: "/user/upgrade-account",
+        method: "POST",
+        body: {}
+      }),
+      invalidatesTags: ["Profile", "Auth"],
+    }),
     // {{local_url}}/referralUse/my-referral
     getReferral: builder.query<ReferralResponse, void>({
       query: () => ({
@@ -293,4 +314,5 @@ export const {
   useVerifyResetOtpMutation,
   useUpdateProfileMutation,
   useGetReferralQuery,
+  useUpgradeAccountMutation,
 } = authApi;

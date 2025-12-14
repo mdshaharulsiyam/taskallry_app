@@ -1,10 +1,10 @@
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
+import { useGetAllCategoriesQuery } from "../../redux/apis";
 import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
 import CategoryButton from "../category/CategoryButton";
 import SectionHeading from "../shered/SectionHeading";
-import { useGetAllCategoriesQuery } from "../../redux/apis";
 
 const CategorySection = () => {
   const { data, isLoading } = useGetAllCategoriesQuery({});

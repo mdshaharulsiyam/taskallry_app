@@ -17,16 +17,16 @@ import TextSecondary from "../../components/shered/TextSecondary";
 import { otherIcons, profileIcons } from "../../constant/images";
 import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
-import { useGetMyProfileQuery } from "../../redux/apis";
-import { clearToken } from "../../redux/slices/authSlice";
+import { useUpgradeAccountMutation } from "../../redux/apis";
+import { clearToken, setToken } from "../../redux/slices/authSlice";
 import { AppDispatch } from "../../redux/store";
 import { Navigation } from "../../utils/Navigate";
 
 const Profile = () => {
   const navigation = Navigation();
   const dispatch = useDispatch<AppDispatch>();
-  const { role, setRole } = useGlobalContext();
-  const { data } = useGetMyProfileQuery();
+  const { setRole } = useGlobalContext();
+  const [upgradeAccount, { isLoading: isSwitching }] = useUpgradeAccountMutation();
   const handleLogout = useCallback(async () => {
     setRole(null);
     await AsyncStorage.removeItem("token");
@@ -40,61 +40,60 @@ const Profile = () => {
   }, [dispatch, setRole]);
   const handleSwitch = useCallback(async () => {
     try {
-      const storedRole = await AsyncStorage.getItem("role");
-      const currentRole = storedRole || role;
-      if (!currentRole) {
+      const response = await upgradeAccount().unwrap();
+      const payload = response?.data;
+      if (!payload?.accessToken || !payload?.role) {
         Toast.show({
           type: "error",
-          text1: "Role unavailable",
-          text2: "Please sign in again.",
+          text1: "Switch failed",
+          text2: "Missing data from server. Please try again.",
         });
         return;
       }
 
-      if (currentRole === "service") {
-        await AsyncStorage.setItem("role", "user");
-        setRole("user");
-        Toast.show({
-          type: "info",
-          text1: "Switched to Buyer",
-          text2: "Reloading to update experience.",
-        });
+      const nextRole = payload.role === "provider" ? "service" : "user";
+      await AsyncStorage.setItem("token", payload.accessToken);
+      await AsyncStorage.setItem("role", nextRole);
+      dispatch(setToken(payload.accessToken));
+      setRole(nextRole);
+
+      Toast.show({
+        type: "success",
+        text1: "Account switched",
+        text2:
+          nextRole === "service"
+            ? "You are now in provider mode."
+            : "You are now in buyer mode.",
+      });
+      if (payload.role === "provider") {
+        if (!payload.isBankNumberVerified) {
+          navigation.navigate("ServiceSignUp", { screen: "BVN" });
+          return;
+        }
+        if (!payload.isAddressProvided) {
+          navigation.navigate("ServiceSignUp", { screen: "Address" });
+          return;
+        }
         RNRestart.restart();
         return;
       }
 
-      const isAddressProvided = data?.data?.isAddressProvided;
-      if (typeof isAddressProvided === "undefined") {
-        Toast.show({
-          type: "error",
-          text1: "Profile missing",
-          text2: "Unable to determine address status.",
-        });
+      if (payload.role === "customer") {
+        if (!payload.isAddressProvided) {
+          navigation.navigate("CustomerSignUp", { screen: "CustomerAddress" });
+          return;
+        }
+        RNRestart.restart();
         return;
       }
-      if (!isAddressProvided) {
-        setRole("service");
-        await AsyncStorage.setItem("role", "service");
-        navigation.navigate("ServiceSignUp", { screen: "Address" });
-        return;
-      }
-
-      await AsyncStorage.setItem("role", "service");
-      setRole("service");
-      Toast.show({
-        type: "info",
-        text1: "Switched to Provider",
-        text2: "Reloading to update experience.",
-      });
-      RNRestart.restart();
-    } catch (error) {
+    } catch (error: any) {
       Toast.show({
         type: "error",
         text1: "Switch failed",
-        text2: "Please try again later.",
+        text2: error?.data?.message || "Please try again later.",
       });
     }
-  }, [data?.data?.isAddressProvided, navigation, role, setRole]);
+  }, [dispatch, navigation, setRole, upgradeAccount]);
 
   return (
     <SafeAreaProviderNoScroll zeroPadding={true}>
@@ -139,11 +138,13 @@ const Profile = () => {
                           width: 20,
                         }}
                       />
+                      {
+                      }
                       <TextSecondary
                         style={{
                           color: "#3585f5ff",
                         }}
-                        text={"Switch Role"}
+                        text={isSwitching ? "Switching..." : "Switch Role"}
                       />
                     </FlexText>
                   </FlexText>

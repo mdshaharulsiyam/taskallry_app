@@ -93,6 +93,7 @@ interface DeleteTaskResponse {
 interface AcceptOfferRequest {
   taskId?: string;
   offerId?: string;
+  promoCode?: string;
 }
 interface AcceptByCustomerRequest {
   bidID?: string;

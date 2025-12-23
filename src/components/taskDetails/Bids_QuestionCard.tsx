@@ -50,8 +50,10 @@ const Bids_QuestionCard = ({
 }) => {
   const { height, width } = ScreenSize();
   const [open, setOpen] = useState(false);
+  const [acceptModalOpen, setAcceptModalOpen] = useState(false);
   const [price, setPrice] = useState(item?.price ? String(item.price) : "");
   const [message, setMessage] = useState(item?.details || "");
+  const [promoCode, setPromoCode] = useState("");
   const navigation = Navigation();
   const [updateBid, { isLoading: isUpdating }] = useUpdateBidMutation();
   const [acceptOffer, { isLoading: isAccepting }] =
@@ -66,42 +68,55 @@ const Bids_QuestionCard = ({
     setOpen(true);
   };
 
-  const handleAcceptOffer = () => {
+  const handleAcceptOffer = async (code?: string) => {
     if (!item?._id || !item?.task) return;
-
-    const body = {
-      bidID: item._id,
-    };
-
-    acceptOffer(body)
-      .unwrap()
-      .then((res) => {
-        console.log("Payment link:", res?.data?.paymentLink);
-
-        Toast.show({
-          type: "success",
-          text1: res?.message || "Offer accepted successfully",
-        });
-        // Linking.openURL(res?.data?.paymentLink);
-        const paymentLink = res?.data?.paymentLink;
-        if (paymentLink) {
-          navigation.navigate("PaymentWebView", {
-            url: paymentLink,
-            title: "Complete Payment",
-          });
-        } else {
-          Toast.show({
-            type: "info",
-            text1: "Payment link not available",
-          });
-        }
-      })
-      .catch((error) => {
-        Toast.show({
-          type: "error",
-          text1: error?.data?.message || "Failed to accept offer",
-        });
+    try {
+      const body: { bidID: string; promoCode?: string } = {
+        bidID: item._id,
+      };
+      if (code) {
+        body.promoCode = code;
+      }
+      const res = await acceptOffer(body).unwrap();
+      setAcceptModalOpen(false);
+      setPromoCode("");
+      console.log("Payment link:", res?.data?.paymentLink);
+      Toast.show({
+        type: "success",
+        text1: res?.message || "Offer accepted successfully",
       });
+      const paymentLink = res?.data?.paymentLink;
+      if (paymentLink) {
+        navigation.navigate("PaymentWebView", {
+          url: paymentLink,
+          title: "Complete Payment",
+        });
+      } else {
+        Toast.show({
+          type: "info",
+          text1: "Payment link not available",
+        });
+      }
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: "Failed to accept offer",
+        text2: error?.data?.message || "Please try again later.",
+      });
+    }
+  };
+
+  const handlePromoAccept = () => {
+    const trimmed = promoCode.trim();
+    if (!trimmed) {
+      Toast.show({
+        type: "error",
+        text1: "Promo code required",
+        text2: "Please enter a promo code to apply.",
+      });
+      return;
+    }
+    handleAcceptOffer(trimmed);
   };
 
   const handleUpdateSubmit = () => {
@@ -174,7 +189,11 @@ const Bids_QuestionCard = ({
                       : "Accept"
                     : "Update Offer"
                 }
-                handler={role == "user" ? handleAcceptOffer : handleOpenUpdate}
+                handler={
+                  role == "user"
+                    ? () => setAcceptModalOpen(true)
+                    : handleOpenUpdate
+                }
               />
             )}
         </FlexText>
@@ -234,6 +253,56 @@ const Bids_QuestionCard = ({
                   text={isUpdating ? "Loading..." : "Update Offer"}
                   handler={handleUpdateSubmit}
                   style={{ marginTop: 16 }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        visible={acceptModalOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setAcceptModalOpen(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setAcceptModalOpen(false)}>
+          <View style={styles.backdrop}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContainer}>
+                <FlexText
+                  style={{
+                    justifyContent: "space-between",
+                    marginBottom: 12,
+                  }}
+                >
+                  <HeaderDesign text="Apply Promo Code" />
+                  <TouchableOpacity onPress={() => setAcceptModalOpen(false)}>
+                    <Text style={{ fontSize: 16, color: "red" }}>✕</Text>
+                  </TouchableOpacity>
+                </FlexText>
+
+                <Input
+                  name="promo"
+                  label="Promo Code"
+                  placeHolder="Enter promo code"
+                  value={promoCode}
+                  handler={(_, text) => setPromoCode(text.toUpperCase())}
+                  keyboard="default"
+                />
+
+                <ButtonBG
+                  text={isAccepting ? "Applying..." : "Apply Promo & Accept"}
+                  handler={handlePromoAccept}
+                  style={{ marginTop: 16 }}
+                  disabled={isAccepting}
+                />
+                <ButtonBG
+                  text={
+                    isAccepting ? "Accepting..." : "Accept without Promo Code"
+                  }
+                  handler={() => handleAcceptOffer()}
+                  style={{ marginTop: 10, backgroundColor: "#0EA5E9" }}
+                  disabled={isAccepting}
                 />
               </View>
             </TouchableWithoutFeedback>

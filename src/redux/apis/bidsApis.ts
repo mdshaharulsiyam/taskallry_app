@@ -8,6 +8,7 @@ export interface Bid {
     profile_image?: string;
     totalRatingCount: number;
     avgRating: number;
+    email: string;
   };
   task: string;
   price: number;

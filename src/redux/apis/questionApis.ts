@@ -6,6 +6,7 @@ export interface Question {
     _id: string;
     name: string;
     profile_image: string;
+    email: string;
   };
   task: string;
   details: string;

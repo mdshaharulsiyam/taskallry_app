@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ImageSourcePropType,
   Modal,
@@ -55,6 +55,22 @@ const Bids_QuestionCard = ({
   const [message, setMessage] = useState(item?.details || "");
   const [promoCode, setPromoCode] = useState("");
   const navigation = Navigation();
+  const targetProvider = item?.provider || question?.provider;
+  const goChatNow = useCallback(() => {
+    if (!targetProvider?._id) return;
+    navigation.navigate("Messages", {
+      id: targetProvider?._id ?? "",
+      name: targetProvider?.name ?? "",
+      image: targetProvider?.profile_image ?? "",
+      email: targetProvider?.email ?? "",
+    });
+  }, [
+    navigation,
+    targetProvider?._id,
+    targetProvider?.name,
+    targetProvider?.profile_image,
+    targetProvider?.email,
+  ]);
   const [updateBid, { isLoading: isUpdating }] = useUpdateBidMutation();
   const [acceptOffer, { isLoading: isAccepting }] =
     useAcceptByCustomerMutation();
@@ -206,7 +222,7 @@ const Bids_QuestionCard = ({
             width: 140,
           }}
           text="Chat Now"
-          handler={() => console.log("")}
+          handler={goChatNow}
           icon={TabIcons.Chat as ImageSourcePropType}
         />
       )}

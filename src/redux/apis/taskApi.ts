@@ -228,7 +228,9 @@ export const taskApi = baseApi.injectEndpoints({
         url: `/task/reject-offer/${taskId}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["Bid"],
+      invalidatesTags: (_result, _error, taskId) => [
+        { type: "Task", id: taskId },
+      ],
     }),
   }),
 });

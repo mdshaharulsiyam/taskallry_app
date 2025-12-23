@@ -10,18 +10,17 @@ const Bids = ({
   customer,
 }: {
   status:
-    | "OPEN_FOR_BID"
-    | "IN_PROGRESS"
-    | "COMPLETED"
-    | "CANCELLED"
-    | "DISPUTE"
-    | "LATE";
+  | "OPEN_FOR_BID"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "DISPUTE"
+  | "LATE";
   id: string;
   role?: "user" | "service";
   customer?: string;
 }) => {
   const { data } = useGetBidsByTaskIdQuery(id);
-  console.log(data);
   return (
     <View
       style={{

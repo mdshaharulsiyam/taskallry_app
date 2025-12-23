@@ -223,6 +223,13 @@ export const taskApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Task"],
     }),
+    rejectOffer: builder.mutation({
+      query: (taskId) => ({
+        url: `/task/reject-offer/${taskId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Bid"],
+    }),
   }),
 });
 
@@ -234,4 +241,5 @@ export const {
   useAcceptOfferMutation,
   useGetMyTaskQuery,
   useAcceptByCustomerMutation,
+  useRejectOfferMutation
 } = taskApi;

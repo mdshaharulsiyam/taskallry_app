@@ -37,6 +37,7 @@ import Loader from "../ui/loader/Loader";
 import Bids_Question from "./Bids_Question";
 import CancelRefundRequest from "./CancelRefundRequest";
 import FeedbackStatusButton from "./FeedbackStatusButton";
+import RejectOfferButton from "./RejectOfferButton";
 import SubmitBitButt from "./SubmitBitButt";
 import TaskProgress from "./TaskProgress";
 
@@ -316,7 +317,10 @@ const DetailsTask = ({
           <TextSecondary text="Task budget" />
           <HeaderDesign text={`₦${data?.data?.budget}`} />
         </View>
-        <FlexText>
+        <FlexText style={{ gap: 10 }}>
+          {
+            data?.data?.provider?._id && <RejectOfferButton id={id} />
+          }
           <SubmitBitButt accept={data?.data?.provider?._id} id={id} />
         </FlexText>
       </FlexText>

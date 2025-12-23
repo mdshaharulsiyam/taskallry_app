@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  StyleSheet,
-  View,
+  View
 } from "react-native";
 import { useGetAllTasksQuery } from "../../redux/apis";
 import { useAppSelector } from "../../redux/hooks";
@@ -89,7 +88,7 @@ const FIlteredTask = ({ search }: { search: string }) => {
     []
   );
   const renderItem = useCallback(
-    ({ item }: { item: any }) => <TaskCard task={item} from="user" />,
+    ({ item }: { item: any }) => <TaskCard task={item} />,
     []
   );
   return (
@@ -135,5 +134,4 @@ const FIlteredTask = ({ search }: { search: string }) => {
 
 export default React.memo(FIlteredTask);
 
-const styles = StyleSheet.create({});
 

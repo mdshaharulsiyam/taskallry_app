@@ -4,11 +4,11 @@ import {
   Image,
   ImageSourcePropType,
   ImageStyle,
-  StyleSheet,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { otherIcons } from "../../constant/images";
+import { useGlobalContext } from '../../providers/GlobalContextProvider';
 import { Task } from "../../redux/apis";
 import { ImgUrl } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
@@ -24,15 +24,14 @@ const TaskCard = ({
   imageStyle,
   showDetailsButton = false,
   tab,
-  from,
   task,
 }: {
   imageStyle?: ImageStyle;
   showDetailsButton?: boolean;
   tab?: string;
-  from: "user" | "service";
   task: Task;
 }) => {
+  const { role } = useGlobalContext()
   const navigate = Navigate();
   return (
     <TouchableOpacity
@@ -43,8 +42,8 @@ const TaskCard = ({
           : navigate("TaskDetails", {
             params: {
               id: task?._id,
-              from,
-              heading: from == "user" ? "My Tasks Details" : "Tasks Details",
+              from: role,
+              heading: role == "user" ? "My Tasks Details" : "Tasks Details",
             },
           })
       }
@@ -137,9 +136,9 @@ const TaskCard = ({
               navigate("TaskDetails", {
                 params: {
                   id: task?._id,
-                  from,
+                  from: role,
                   heading:
-                    from == "user" ? "My Tasks Details" : "Tasks Details",
+                    role == "user" ? "My Tasks Details" : "Tasks Details",
                 },
               })
             }
@@ -152,4 +151,3 @@ const TaskCard = ({
 
 export default React.memo(TaskCard);
 
-const styles = StyleSheet.create({});

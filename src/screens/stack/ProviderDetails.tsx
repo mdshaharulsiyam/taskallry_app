@@ -27,7 +27,14 @@ const ProviderDetails = () => {
 
   const goSubmitOffer = useCallback(() => {
     if (!service) return;
-    navigate("TabLayout", { screen: "PostTask", params: { id: service.provider?._id } });
+    navigate("TabLayout", {
+      screen: "PostTask",
+      params: {
+        id: service.provider?._id,
+        category: service.category?._id,
+        categoryName: service.category?.name,
+      },
+    });
   }, [navigate, service]);
 
   const goChatNow = useCallback(() => {

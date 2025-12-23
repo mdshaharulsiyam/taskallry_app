@@ -62,6 +62,7 @@ const PostTask = () => {
   const route = useRoute() as any;
   const task = route?.params?.task as Task | undefined;
   const provider = route?.params?.id as string | undefined;
+  const category = route?.params?.category as string | undefined;
   const [create, { isLoading }] = useCreateTaskMutation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fiels, setFiels] = useState<any>([]);
@@ -118,6 +119,15 @@ const PostTask = () => {
       offer: String(task.budget ?? prev.offer),
     }));
   }, [task]);
+
+  useEffect(() => {
+    if (category) {
+      setFormState((prev) => ({
+        ...prev,
+        task_category: category,
+      }));
+    }
+  }, [category]);
 
   const setFieldValue = useCallback(
     (name: keyof FormState, value: string | boolean) => {
@@ -231,6 +241,7 @@ const PostTask = () => {
               name="task_category"
               required
               error={!!errors.task_category}
+              disabled={!!category}
             />
           </>
         );

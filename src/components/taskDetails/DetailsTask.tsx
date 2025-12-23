@@ -65,7 +65,7 @@ const DetailsTask = ({
   const navigate = Navigate();
   const { data: extensionsData } = useGetExtensionsByTaskQuery(id);
   const { data: cancelData } = useGetCancelsByTaskQuery(id);
-  console.log({ cancelData });
+
   const handleRemoveTask = () => {
     Alert.alert("Remove Task", "Are you sure you want to remove this task?", [
       {
@@ -316,7 +316,9 @@ const DetailsTask = ({
           <TextSecondary text="Task budget" />
           <HeaderDesign text={`₦${data?.data?.budget}`} />
         </View>
-        <SubmitBitButt accept={data?.data?.provider?._id} id={id} />
+        <FlexText>
+          <SubmitBitButt accept={data?.data?.provider?._id} id={id} />
+        </FlexText>
       </FlexText>
     ) : (
       <></>

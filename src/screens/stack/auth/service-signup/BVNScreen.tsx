@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import Toast from "react-native-toast-message";
@@ -28,7 +29,8 @@ const BVNScreen = () => {
 
     verifyBvn({ bvn: trimmed })
       .unwrap()
-      .then((res: any) => {
+      .then(async (res: any) => {
+        await AsyncStorage.removeItem("isBankNumberVerified");
         Toast.show({ type: "success", text1: "BVN verified", text2: res?.message || "Verification successful" });
         navigation.navigate("Address");
       })

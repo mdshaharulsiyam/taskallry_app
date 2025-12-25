@@ -14,7 +14,7 @@ import ProfileOptions from "../../components/profile/ProfileOptions";
 import ProfilePictureName from "../../components/profile/ProfilePictureName";
 import FlexText from "../../components/shered/FlexText";
 import TextSecondary from "../../components/shered/TextSecondary";
-import { otherIcons, profileIcons } from "../../constant/images";
+import { profileIcons, TabIcons } from "../../constant/images";
 import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useUpgradeAccountMutation } from "../../redux/apis";
@@ -25,7 +25,7 @@ import { Navigation } from "../../utils/Navigate";
 const Profile = () => {
   const navigation = Navigation();
   const dispatch = useDispatch<AppDispatch>();
-  const { setRole } = useGlobalContext();
+  const { setRole, role } = useGlobalContext();
   const [upgradeAccount, { isLoading: isSwitching }] = useUpgradeAccountMutation();
   const handleLogout = useCallback(async () => {
     setRole(null);
@@ -52,10 +52,6 @@ const Profile = () => {
       }
 
       const nextRole = payload.role === "provider" ? "service" : "user";
-      await AsyncStorage.setItem("token", payload.accessToken);
-      await AsyncStorage.setItem("role", nextRole);
-      dispatch(setToken(payload.accessToken));
-      setRole(nextRole);
 
       Toast.show({
         type: "success",
@@ -65,8 +61,12 @@ const Profile = () => {
             ? "You are now in provider mode."
             : "You are now in buyer mode.",
       });
-      if (payload.role === "provider") {
+      if (role == "user") {
         if (!payload.isBankNumberVerified) {
+          await AsyncStorage.setItem("token", payload.accessToken);
+          await AsyncStorage.setItem("role", nextRole);
+          dispatch(setToken(payload.accessToken));
+          setRole(nextRole);
           navigation.navigate("ServiceSignUp", { screen: "BVN" });
           return;
         }
@@ -78,8 +78,12 @@ const Profile = () => {
         return;
       }
 
-      if (payload.role === "customer") {
+      if (role == "service") {
         if (!payload.isAddressProvided) {
+          await AsyncStorage.setItem("token", payload.accessToken);
+          await AsyncStorage.setItem("role", nextRole);
+          dispatch(setToken(payload.accessToken));
+          setRole(nextRole);
           navigation.navigate("CustomerSignUp", { screen: "CustomerAddress" });
           return;
         }
@@ -131,7 +135,7 @@ const Profile = () => {
                   >
                     <FlexText>
                       <Image
-                        source={otherIcons.Avater as ImageSourcePropType}
+                        source={TabIcons.Profile as ImageSourcePropType}
                         style={{
                           // tintColor: "#3585f5ff",
                           height: 20,
@@ -142,7 +146,7 @@ const Profile = () => {
                       }
                       <TextSecondary
                         style={{
-                          color: "#3585f5ff",
+                          color: "#115E59",
                         }}
                         text={isSwitching ? "Switching..." : "Switch Role"}
                       />

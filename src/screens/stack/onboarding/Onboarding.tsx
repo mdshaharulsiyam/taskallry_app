@@ -2,29 +2,35 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Suspense, useEffect } from "react";
 import { Image, View } from "react-native";
 import { useGlobalContext } from '../../../providers/GlobalContextProvider';
-import Navigate from '../../../utils/Navigate';
+import Navigate, { Navigation } from '../../../utils/Navigate';
 
 const Onboarding = () => {
   const [loading, setLoading] = React.useState(true);
-  const { setRole, role } = useGlobalContext();
+  const { setRole } = useGlobalContext();
   const navigate = Navigate();
+  const navigation = Navigation();
   useEffect(() => {
     setLoading(true);
     const getRole = async () => {
       const role = await AsyncStorage.getItem("role");
+      const isAddressProvided = await AsyncStorage.getItem("isAddressProvided");
+      const isBankNumberVerified = await AsyncStorage.getItem("isBankNumberVerified");
       if (role) {
-        setRole(role as "user" | "service" | null);
+        if (isAddressProvided) {
+          navigation.navigate("ServiceSignUp", { screen: "Address" });
+        } else if (isBankNumberVerified && role === "service") {
+          navigation.navigate("ServiceSignUp", { screen: "BVN" });
+        } else {
+          setRole(role as "user" | "service" | null);
+          navigate("TabLayout");
+        }
+      } else {
+        navigate("Login");
       }
     };
     getRole().then(() => setLoading(false));
   }, []);
-  if (role && !loading) {
-    navigate("TabLayout");
-    return null;
-  } else if (!loading) {
-    navigate("Login");
-    return null;
-  }
+
   return (
     <Suspense>
       <View
@@ -45,5 +51,7 @@ const Onboarding = () => {
 
 }
 export default React.memo(Onboarding);
+
+
 
 

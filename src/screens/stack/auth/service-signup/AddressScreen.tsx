@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Image, View } from "react-native";
@@ -42,7 +43,8 @@ const AddressScreen = () => {
 
     updateProfile(form as any)
       .unwrap()
-      .then((res: any) => {
+      .then(async (res: any) => {
+        await AsyncStorage.removeItem("isAddressProvided");
         Toast.show({ type: "success", text1: "Address saved", text2: res?.message || "Profile updated" });
         navigation.navigate("Referral");
       })

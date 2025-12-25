@@ -1,6 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Suspense, useCallback } from "react";
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import RNRestart from "react-native-restart";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from 'react-native-toast-message';
 import { useDispatch } from "react-redux";
 import FlexText from "../../../components/shered/FlexText";
 import HeaderDesign from "../../../components/shered/HeaderDesign";
@@ -13,14 +16,13 @@ import Input from "../../../components/ui/inputs/Input";
 import InputCheckbox from "../../../components/ui/inputs/InputCheckbox";
 import PasswordInput from "../../../components/ui/inputs/PasswordInput";
 import LoginFields from "../../../formFields/LoginFields";
-import { handleSignIn } from "../../../handler/signIn";
 import { useGlobalContext } from "../../../providers/GlobalContextProvider";
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
 import { useLoginMutation } from "../../../redux/apis";
-import { setToken } from "../../../redux/slices/authSlice";
+import { setToken } from '../../../redux/slices/authSlice';
 import type { AppDispatch } from "../../../redux/store";
-import Navigate from "../../../utils/Navigate";
-
+import Navigate, { Navigation } from "../../../utils/Navigate";
+import { validateFields } from '../../../utils/formValidate';
 const Login = () => {
   const { height } = Dimensions.get("window");
   const { fields, setFields } = LoginFields();
@@ -31,6 +33,7 @@ const Login = () => {
   const navigate = Navigate();
   const handleForget = useCallback(() => navigate("Forget"), [navigate]);
   const handleGoSignup = useCallback(() => navigate("ChooseSignUp"), [navigate]);
+  const navigation = Navigation();
   const getField = useCallback(
     (name: string) => fields.find((field) => field.name === name),
     [fields]
@@ -45,16 +48,80 @@ const Login = () => {
     },
     [setFields]
   );
-  const handleLogin = useCallback(() => {
-    handleSignIn(
-      fields,
-      setFields,
-      login,
-      setRole,
-      () => navigate("TabLayout"),
-      (token) => dispatch(setToken(token))
-    );
-  }, [dispatch, fields, login, navigate, setFields, setRole]);
+  // (token) => dispatch(setToken(token))
+  const handleLogin = () => {
+    const isValid = validateFields(fields, setFields);
+    if (!isValid) {
+      return isValid;
+    }
+    const values = fields.reduce((acc, field) => {
+      acc[field.name] = field.value;
+      return acc;
+    }, {} as any);
+    login(values)
+      .unwrap()
+      .then(async (res: any) => {
+        const payload = res?.data;
+        await AsyncStorage.setItem("token", payload.accessToken);
+        await AsyncStorage.setItem(
+          "role",
+          res?.data?.role === "customer" ? "user" : "service"
+        );
+        dispatch(setToken(payload.accessToken));
+        if (payload?.role == "provider") {
+          setRole("user");
+          if (!payload.isBankNumberVerified) {
+            await AsyncStorage.setItem("isBankNumberVerified", "false");
+            navigation.navigate("ServiceSignUp", { screen: "BVN" });
+            return;
+          }
+          if (!payload.isAddressProvided) {
+            await AsyncStorage.setItem("isAddressProvided", "false");
+            navigation.navigate("ServiceSignUp", { screen: "Address" });
+            return;
+          } else {
+            setRole("user");
+            RNRestart.restart();
+          }
+          return;
+        } else {
+          setRole("service");
+          if (!payload.isAddressProvided) {
+            await AsyncStorage.setItem("isAddressProvided", "false");
+            navigation.navigate("CustomerSignUp", { screen: "CustomerAddress" });
+            return;
+          } else {
+            RNRestart.restart();
+          }
+          return;
+        }
+
+        // if (res?.data?.role === "customer") {
+        //   setRole("user");
+        // } else {
+        //   setRole("service");
+        // }
+
+        // Toast.show({
+        //   type: "success",
+        //   text1: "Login successfully",
+        //   text2: res?.message || `${res?.data?.role} logged in successfully`,
+        // });
+        // await AsyncStorage.setItem("token", res?.data?.accessToken);
+        // await AsyncStorage.setItem(
+        //   "role",
+        //   res?.data?.role === "customer" ? "user" : "service"
+        // );
+        // dispatch(setToken(res?.data?.accessToken))
+      })
+      .catch((err: any) => {
+        Toast.show({
+          type: "error",
+          text1: "Failed to login",
+          text2: err?.data?.message || "Something went wrong",
+        });
+      });
+  };
 
   return (
     <SafeAreaProvider>

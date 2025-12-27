@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from "react";
 import Toast from "react-native-toast-message";
 import { FieldsType } from "../types/Types";
@@ -46,12 +47,14 @@ export const handleProviderSignUp = (
 
   register(payload)
     .unwrap()
-    .then((res: any) => {
+    .then(async (res: any) => {
       Toast.show({
         type: "success",
         text1: "Registered successfully",
         text2: res?.message || "Provider registered successfully",
       });
+      await AsyncStorage.setItem("isAddressProvided", "false");
+      await AsyncStorage.setItem("isBankNumberVerified", "false");
       successHandler?.(values?.email as string);
     })
     .catch((err: any) => {

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import Toast from "react-native-toast-message";
@@ -87,8 +88,9 @@ const CustomerAccountScreen = () => {
       role: "customer",
     })
       .unwrap()
-      .then((res: any) => {
+      .then(async (res: any) => {
         Toast.show({ type: "success", text1: "Account created", text2: res?.message || "Customer registered successfully" });
+        await AsyncStorage.setItem("isAddressProvided", "false");
         sucessNavigate(navigation, formState.email.trim());
       })
       .catch((err: any) => {

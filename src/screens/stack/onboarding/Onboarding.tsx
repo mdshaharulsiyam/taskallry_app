@@ -22,10 +22,19 @@ const Onboarding = () => {
           navigation.navigate("ServiceSignUp", { screen: "BVN" });
         } else {
           setRole(role as "user" | "service" | null);
-          navigate("TabLayout");
+          // navigate("TabLayout");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'TabLayout' }],
+          });
+
         }
       } else {
-        navigate("Login");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        });
+        // navigate("Login");
       }
     };
     getRole().then(() => setLoading(false));

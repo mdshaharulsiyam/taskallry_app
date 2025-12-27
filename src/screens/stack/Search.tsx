@@ -36,11 +36,11 @@ const Search = () => {
       />,
       combinedType === "Provider"
         ? (
-          <FilteredProvider key={3} />
+          <FilteredProvider key={3} search={searchText} />
         )
         : filterState?.viewMode === "map"
           ? (
-            <ProvidersMap key={3} />
+            <ProvidersMap search={searchText} key={3} />
           )
           : (
             <FIlteredTask key={2} search={searchText} />

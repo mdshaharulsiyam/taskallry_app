@@ -4,12 +4,21 @@ import { useGetAllServicesQuery } from "../../redux/apis";
 import EmptyList from "../shered/EmptyList";
 import ProviderCard from "../shered/ProviderCard";
 
-const FilteredProvider = () => {
+const FilteredProvider = ({ search }: { search: string }) => {
   const [limit, setLimit] = useState(20);
 
   const { data, isFetching, isLoading, refetch } = useGetAllServicesQuery({ page: 1, limit });
 
   const services = data?.data?.result || [];
+  const filteredServices = useMemo(() => {
+    if (!search?.trim()) return services;
+    const term = search.trim().toLowerCase();
+    return services.filter((service: any) => {
+      const title = service?.title?.toLowerCase() || "";
+      const providerName = service?.provider?.name?.toLowerCase() || "";
+      return title.includes(term) || providerName.includes(term);
+    });
+  }, [search, services]);
 
   const keyExtractor = useCallback((item: any, index: number) => (item?._id || item?.id || index).toString(), []);
   const renderItem = useCallback(({ item }: { item: any }) => <ProviderCard item={item} />, []);
@@ -29,7 +38,7 @@ const FilteredProvider = () => {
 
   return (
     <View style={{ marginTop: 10 }}>
-      {services.length === 0 ? (
+      {filteredServices.length === 0 ? (
         <EmptyList
           title="No providers found"
           description="Try adjusting your filters or pull to refresh."
@@ -39,7 +48,12 @@ const FilteredProvider = () => {
         />
       ) : (
         <FlatList
-          data={services}
+          ListHeaderComponent={
+            isFetching && (data?.data?.result?.length || 0) > 0 ? (
+              <ActivityIndicator style={{ marginVertical: 8 }} />
+            ) : null
+          }
+          data={filteredServices}
           keyExtractor={keyExtractor}
           onEndReachedThreshold={0.1}
           onEndReached={handleEndReached}

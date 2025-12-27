@@ -114,7 +114,7 @@ const FIlteredTask = ({ search }: { search: string }) => {
               setLimit((prev) => prev + 20);
             }
           }}
-          ListFooterComponent={
+          ListHeaderComponent={
             isFetching && (data?.data?.result?.length || 0) > 0 ? (
               <ActivityIndicator style={{ marginVertical: 8 }} />
             ) : null

@@ -5,7 +5,7 @@ import { CONFIG } from "../../constant/config";
 import { useGetAllTasksQuery } from "../../redux/apis";
 import { useAppSelector } from "../../redux/hooks";
 
-const ProvidersMap = () => {
+const ProvidersMap = ({ search }: { search: string }) => {
   const hasApiKey = !!CONFIG.GOOGLE_MAPS_API_KEY;
 
   const {
@@ -29,6 +29,8 @@ const ProvidersMap = () => {
     status?: string;
     minPrice?: number;
     maxPrice?: number;
+    longitude?: number;
+    latitude?: number;
     doneBy?: string;
     searchTerm?: string;
     maxDistance?: number;
@@ -38,6 +40,8 @@ const ProvidersMap = () => {
         ...(category ? { category } : {}),
         ...(latino
           ? {
+            latitude: latino?.lat,
+            longitude: latino?.lng,
             maxDistance:
               Number(distance_range) <= 0 ? 20 : Number(distance_range),
           }
@@ -54,12 +58,15 @@ const ProvidersMap = () => {
         ...(category ? { category } : {}),
         ...(latino
           ? {
+            latitude: latino?.lat,
+            longitude: latino?.lng,
             maxDistance:
               Number(distance_range) <= 0 ? 20 : Number(distance_range),
           }
           : {}),
         minPrice: 5000,
         maxPrice: Number(price_range) < 5000 ? 500000 : Number(price_range),
+        ...(search ? { searchTerm: search } : {}),
         ...(to_be_done
           ? { doneBy: to_be_done == "in-person" ? "IN_PERSON" : "ONLINE" }
           : {}),

@@ -16,10 +16,11 @@ const TaskProgress = ({ data }: { data: Task | undefined }) => {
     })) || [];
 
   const complete_find = progress_data.find((item) => item.name === "COMPLETED");
+  const cancelled_find = progress_data.find((item) => item.name === "CANCELLED");
 
-  if (!complete_find) {
+  if (!complete_find && !cancelled_find) {
     progress_data.push({
-      name: "COMPLETED",
+      name: "COMPLETE ON",
       status: "pending",
       date: "",
     });

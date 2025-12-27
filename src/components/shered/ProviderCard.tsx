@@ -15,6 +15,7 @@ import TextSecondary from "./TextSecondary";
 const ProviderCard = ({ item }: { item: Service }) => {
   const { width } = ScreenSize();
   const navigate = Navigate();
+  console.log(item);
   return (
     <View
       style={{
@@ -43,7 +44,7 @@ const ProviderCard = ({ item }: { item: Service }) => {
           image={otherIcons.Location as ImageSourcePropType}
           text={item?.address}
         />
-        <TextPrimary text="⭐ 4.5" />
+        <TextPrimary text={`⭐ ${item?.averageRating}`} />
       </FlexText>
       <HeaderDesign
         style={{

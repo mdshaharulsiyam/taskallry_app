@@ -50,6 +50,18 @@ const color = {
     backgroundColor: "#E0F2FE",
     color: "#0EA5E9",
   },
+  COMPLETED: {
+    backgroundColor: "#DCFCE7",
+    color: "#22C55E",
+  },
+  CANCELLED: {
+    backgroundColor: "#FEE2E2",
+    color: "#EF4444",
+  },
+  DISPUTED: {
+    backgroundColor: "#FEF9C3",
+    color: "#EAB308",
+  },
 };
 
 const DetailsTask = ({
@@ -60,7 +72,7 @@ const DetailsTask = ({
   id: string;
 }) => {
   const { role } = useGlobalContext();
-  const { data, isLoading, isFetching } = useGetSingleTaskQuery(id);
+  const { data, isLoading, isFetching, refetch } = useGetSingleTaskQuery(id);
   const { data: profileData } = useGetMyProfileQuery();
   const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
   const navigate = Navigate();
@@ -372,6 +384,9 @@ const DetailsTask = ({
       <></>
     ),
   ];
+  const onRefresh = () => {
+    refetch()
+  }
   if (isLoading) {
     return <Loader />;
   }
@@ -390,6 +405,8 @@ const DetailsTask = ({
         showsVerticalScrollIndicator={false}
         data={elements}
         renderItem={({ item }) => item}
+        onRefresh={onRefresh}
+        refreshing={isFetching}
       />
     </SafeAreaProviderNoScroll>
   );

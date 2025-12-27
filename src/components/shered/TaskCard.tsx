@@ -79,11 +79,11 @@ const TaskCard = ({
         image={otherIcons.Location as ImageSourcePropType}
       />
       <FlexCardIcon
-        text={moment(task?.preferredDate).format("DD-MM-YYYY")}
+        text={moment(task?.preferredDeliveryDateTime).format("DD-MM-YYYY")}
         image={otherIcons.Calendar as ImageSourcePropType}
       />
       <FlexCardIcon
-        text={task?.preferredTime}
+        text={moment(task?.preferredDeliveryDateTime).format("h:mm A")}
         image={otherIcons.Watch as ImageSourcePropType}
       />
       <FlexText

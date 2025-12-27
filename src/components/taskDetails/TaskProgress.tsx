@@ -14,10 +14,12 @@ const TaskProgress = ({ data }: { data: Task | undefined }) => {
       status: "complete",
       date: moment(item?.date).format("MMM DD, YYYY"),
     })) || [];
-  const complete_find = progress_data.find((item) => item.name === "COMPLETE");
+
+  const complete_find = progress_data.find((item) => item.name === "COMPLETED");
+
   if (!complete_find) {
     progress_data.push({
-      name: "COMPLETE",
+      name: "COMPLETED",
       status: "pending",
       date: "",
     });
@@ -34,7 +36,7 @@ const TaskProgress = ({ data }: { data: Task | undefined }) => {
         }}
       >
         <TextPrimary text="Offered price" />
-        <TextSecondary text={"₦ " + data?.budget} />
+        <TextSecondary text={"₦ " + data?.acceptedBidAmount} />
       </FlexText>
       {/* <FlexText
         style={{

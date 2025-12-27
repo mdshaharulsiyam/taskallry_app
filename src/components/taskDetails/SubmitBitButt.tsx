@@ -16,7 +16,7 @@ import ButtonBG from "../ui/buttons/ButtonBG";
 import Input from "../ui/inputs/Input";
 import TextArea from "../ui/inputs/TextArea";
 
-const SubmitBitButt = ({ id, accept }: { id: string; accept: string }) => {
+const SubmitBitButt = ({ id, accept }: { id: string; accept?: string }) => {
   const { height, width } = ScreenSize();
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState("");

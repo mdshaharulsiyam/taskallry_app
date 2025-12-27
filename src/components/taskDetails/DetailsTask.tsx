@@ -321,7 +321,8 @@ const DetailsTask = ({
           {
             data?.data?.provider?._id && <RejectOfferButton id={id} />
           }
-          <SubmitBitButt accept={data?.data?.provider?._id} id={id} />
+          <SubmitBitButt id={id} />
+          {/* <SubmitBitButt accept={data?.data?.provider?._id} id={id} /> */}
         </FlexText>
       </FlexText>
     ) : (
@@ -344,7 +345,7 @@ const DetailsTask = ({
       <>
         <TaskProgress data={data?.data} key={11} />
         {
-          role == "service" && <FeedbackStatusButton status={data?.data?.status as any} id={id} />
+          role == "user" && <FeedbackStatusButton status={data?.data?.status as any} id={id} />
         }
         {cancelData?.data && (
           <>

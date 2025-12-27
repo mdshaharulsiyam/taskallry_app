@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from 'react-native-toast-message';
+import { useCompleteTaskMutation } from '../../redux/apis';
 import ButtonBG from "../ui/buttons/ButtonBG";
 
 const FeedbackStatusButton = ({
@@ -19,7 +21,7 @@ const FeedbackStatusButton = ({
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
-
+  const [completeTask, { isLoading }] = useCompleteTaskMutation()
   const handleStarPress = (index: number) => {
     setRating(index + 1);
   };
@@ -32,13 +34,34 @@ const FeedbackStatusButton = ({
     setReview("");
     setOpen(false);
   };
+  const handleCompleteTask = () => {
+    completeTask(id).unwrap()
+      .then((res: any) => {
+        Toast.show({
+          type: "success",
+          text1: "Task completed",
+          text2: res?.message || "Task has been completed successfully",
+        })
+      }).catch((err) => {
 
+        Toast.show({
+          type: "error",
+          text1: "Unable to complete Task",
+          text2: err?.data?.message || "Something went wrong",
+        })
+      })
+
+  }
   return (
     <View style={{ flexDirection: "row", marginTop: 10 }}>
       <ButtonBG
+        loading={isLoading}
         handler={() => {
           if (status == "COMPLETED") {
             setOpen(true);
+          }
+          if (status == "IN_PROGRESS") {
+            handleCompleteTask()
           }
         }}
         text={status == "COMPLETED" ? "Send Feedback" : "Mark As Complete"}

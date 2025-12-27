@@ -13,7 +13,9 @@ export interface Task {
     _id: string;
     name: string;
   };
+  preferredDeliveryDateTime: string;
   budget: number;
+  acceptedBidAmount: number;
   status:
   | "OPEN_FOR_BID"
   | "IN_PROGRESS"
@@ -233,6 +235,16 @@ export const taskApi = baseApi.injectEndpoints({
         { type: "Task", id: taskId },
       ],
     }),
+    completeTask: builder.mutation({
+      query: (taskId) => ({
+        url: `/task/complete-task`,
+        method: "PATCH",
+        body: { taskId }
+      }),
+      invalidatesTags: (_result, _error, taskId) => [
+        { type: "Task", id: taskId },
+      ],
+    }),
   }),
 });
 
@@ -244,5 +256,6 @@ export const {
   useAcceptOfferMutation,
   useGetMyTaskQuery,
   useAcceptByCustomerMutation,
-  useRejectOfferMutation
+  useRejectOfferMutation,
+  useCompleteTaskMutation
 } = taskApi;

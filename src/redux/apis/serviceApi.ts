@@ -16,6 +16,7 @@ export interface Service {
     profile_image: string;
     email: string;
   };
+  address: string;
   description: string;
   isActive: boolean;
   price: number;

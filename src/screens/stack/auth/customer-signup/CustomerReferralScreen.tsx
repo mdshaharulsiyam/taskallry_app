@@ -23,12 +23,13 @@ const CustomerReferralScreen = () => {
     applyReferral({ code: trimmed })
       .unwrap()
       .then((res: any) => {
+        goHome()
         Toast.show({ type: "success", text1: "Referral applied", text2: res?.message || "Code applied successfully" });
       })
       .catch((err: any) => {
         Toast.show({ type: "error", text1: "Failed to apply code", text2: err?.data?.message || "Invalid referral code" });
       })
-      .finally(() => goHome());
+
   };
 
   return (

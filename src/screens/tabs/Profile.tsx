@@ -31,6 +31,8 @@ const Profile = () => {
     setRole(null);
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("role");
+    await AsyncStorage.removeItem("isAddressProvided")
+    await AsyncStorage.removeItem("isBankNumberVerified")
     dispatch(clearToken());
     try {
       RNRestart.restart();
@@ -62,9 +64,9 @@ const Profile = () => {
             : "You are now in buyer mode.",
       });
       if (role == "user") {
+        await AsyncStorage.setItem("token", payload.accessToken);
+        await AsyncStorage.setItem("role", nextRole);
         if (!payload.isBankNumberVerified) {
-          await AsyncStorage.setItem("token", payload.accessToken);
-          await AsyncStorage.setItem("role", nextRole);
           dispatch(setToken(payload.accessToken));
           setRole(nextRole);
           navigation.navigate("ServiceSignUp", { screen: "BVN" });
@@ -79,14 +81,8 @@ const Profile = () => {
       }
 
       if (role == "service") {
-        if (!payload.isAddressProvided) {
-          await AsyncStorage.setItem("token", payload.accessToken);
-          await AsyncStorage.setItem("role", nextRole);
-          dispatch(setToken(payload.accessToken));
-          setRole(nextRole);
-          navigation.navigate("CustomerSignUp", { screen: "CustomerAddress" });
-          return;
-        }
+        await AsyncStorage.setItem("token", payload.accessToken);
+        await AsyncStorage.setItem("role", nextRole);
         RNRestart.restart();
         return;
       }

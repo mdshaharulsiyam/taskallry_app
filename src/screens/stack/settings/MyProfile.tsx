@@ -3,9 +3,8 @@ import React, { Suspense, useCallback, useEffect, useState } from "react";
 import {
   Image,
   ImageSourcePropType,
-  StyleSheet,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import Toast from "react-native-toast-message";
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
@@ -178,4 +177,3 @@ const MyProfile = () => {
 
 export default React.memo(MyProfile);
 
-const styles = StyleSheet.create({});

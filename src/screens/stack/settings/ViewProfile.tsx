@@ -36,7 +36,7 @@ const ViewProfile = () => {
     {
       key: "address",
       icon: otherIcons.Location,
-      text: data?.data?.address,
+      text: data?.data?.address?.split("|")[0],
     },
   ];
   return (

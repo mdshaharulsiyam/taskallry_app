@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -99,7 +99,11 @@ const LocationInput = ({
     setLocationSuggestions([]);
     handler(name, locationValue + "|" + geometry);
   };
-
+  useEffect(() => {
+    if (value) {
+      setQuery(value);
+    }
+  }, [value]);
   return (
     <View
       style={{

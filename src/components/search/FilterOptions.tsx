@@ -1,5 +1,9 @@
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { ParamListBase, useNavigation } from "@react-navigation/native";
+import {
+  DrawerActions,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
 import React from "react";
 import { ImageSourcePropType, StyleSheet } from "react-native";
 import { otherIcons } from "../../constant/images";
@@ -19,6 +23,9 @@ const FilterOptions = ({
 }) => {
   const navigation = Navigation();
   const navigate = useNavigation<DrawerNavigationProp<ParamListBase>>();
+  const toggleDrawer = React.useCallback(() => {
+    navigate.dispatch(DrawerActions.toggleDrawer());
+  }, [navigate]);
   return (
     <FlexText
       style={{
@@ -56,7 +63,7 @@ const FilterOptions = ({
           borderWidth: 1,
         }}
         imageSource={otherIcons.Filter as ImageSourcePropType}
-        onPress={() => navigate.openDrawer()}
+        onPress={toggleDrawer}
       />
     </FlexText>
   );

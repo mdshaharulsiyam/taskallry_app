@@ -1,24 +1,59 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useGetAllServicesQuery } from "../../redux/apis";
+import { useAppSelector } from "../../redux/hooks";
 import EmptyList from "../shered/EmptyList";
 import ProviderCard from "../shered/ProviderCard";
 
 const FilteredProvider = ({ search }: { search: string }) => {
   const [limit, setLimit] = useState(20);
+  const { category, sort } = useAppSelector((state) => state.filter);
 
   const { data, isFetching, isLoading, refetch } = useGetAllServicesQuery({ page: 1, limit });
 
   const services = data?.data?.result || [];
   const filteredServices = useMemo(() => {
-    if (!search?.trim()) return services;
-    const term = search.trim().toLowerCase();
-    return services.filter((service: any) => {
-      const title = service?.title?.toLowerCase() || "";
-      const providerName = service?.provider?.name?.toLowerCase() || "";
-      return title.includes(term) || providerName.includes(term);
-    });
-  }, [search, services]);
+    let filtered = services;
+    if (category) {
+      filtered = filtered.filter(
+        (service: any) => service?.category?._id === category
+      );
+    }
+    if (search?.trim()) {
+      const term = search.trim().toLowerCase();
+      filtered = filtered.filter((service: any) => {
+        const title = service?.title?.toLowerCase() || "";
+        const providerName = service?.provider?.name?.toLowerCase() || "";
+        return title.includes(term) || providerName.includes(term);
+      });
+    }
+
+    const sorted = [...filtered];
+    switch (sort) {
+      case "TOP_RATED":
+        sorted.sort(
+          (a: any, b: any) =>
+            (b?.averageRating || 0) - (a?.averageRating || 0)
+        );
+        break;
+      case "PRICE_HIGH_TO_LOW":
+        sorted.sort((a: any, b: any) => (b?.price || 0) - (a?.price || 0));
+        break;
+      case "PRICE_LOW_TO_HIGH":
+        sorted.sort((a: any, b: any) => (a?.price || 0) - (b?.price || 0));
+        break;
+      case "NEWEST_SERVICE":
+        sorted.sort(
+          (a: any, b: any) =>
+            new Date(b?.createdAt || "").getTime() -
+            new Date(a?.createdAt || "").getTime()
+        );
+        break;
+      default:
+        break;
+    }
+    return sorted;
+  }, [category, search, services, sort]);
 
   const keyExtractor = useCallback((item: any, index: number) => (item?._id || item?.id || index).toString(), []);
   const renderItem = useCallback(({ item }: { item: any }) => <ProviderCard item={item} />, []);

@@ -78,7 +78,7 @@ const MyProfile = () => {
     if (!validate()) return;
     const payload = {
       name: formState.name.trim(),
-      address: formState.address.trim(),
+      address: formState.address.trim()?.split("|")[0],
     };
     const formData = new FormData();
     formData.append("data", JSON.stringify(payload));

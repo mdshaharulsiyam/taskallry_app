@@ -51,6 +51,7 @@ const FIlterOptions = (props: any) => {
   const dispatch = useAppDispatch();
   const filterState = useAppSelector(selectFilters);
   const searchType = useAppSelector(selectSearchType);
+  const isProviderSearch = searchType === "Provider";
   const { data: categoryData } = useGetAllCategoriesQuery({ limit: 9999999 });
 
   const categoryOptions = useMemo(
@@ -125,7 +126,7 @@ const FIlterOptions = (props: any) => {
       dispatch(setFilterSort(formState.sort));
     }
 
-    props?.navigation?.closeDrawer();
+    props?.navigation?.closeDrawer?.();
   };
 
   const handleReset = () => {
@@ -138,8 +139,17 @@ const FIlterOptions = (props: any) => {
       price_range: 5000000,
       sort: "",
     });
-    props?.navigation?.closeDrawer();
+    props?.navigation?.closeDrawer?.();
   };
+
+  const handleViewModeChange = (mode: "map" | "list") => {
+    if (filterState.viewMode !== mode) {
+      dispatch(setViewMode(mode));
+    }
+    props?.navigation?.closeDrawer?.();
+  };
+  const showViewToggle = searchType !== "Provider";
+
   return (
     <View
       style={{
@@ -158,38 +168,42 @@ const FIlterOptions = (props: any) => {
         name="category"
         required
       />
-      <OptionGridInput
-        label="To be done"
-        name="to_be_done"
-        options={TO_BE_DONE_OPTIONS}
-        value={formState.to_be_done}
-        handler={handleFieldChange}
-      />
-      <LocationInput
-        label="Work location"
-        name="work_location"
-        placeHolder="Work location"
-        value={formState.work_location}
-        handler={handleFieldChange}
-      />
-      <RangeSelect
-        label="Distance Range"
-        name="distance_range"
-        min={0}
-        max={200}
-        step={1}
-        value={formState.distance_range}
-        handler={handleFieldChange}
-      />
-      <RangeSelect
-        label="Price Range"
-        name="price_range"
-        min={5000}
-        max={5000000}
-        step={1000}
-        value={formState.price_range}
-        handler={handleFieldChange}
-      />
+      {!isProviderSearch && (
+        <>
+          <OptionGridInput
+            label="To be done"
+            name="to_be_done"
+            options={TO_BE_DONE_OPTIONS}
+            value={formState.to_be_done}
+            handler={handleFieldChange}
+          />
+          <LocationInput
+            label="Work location"
+            name="work_location"
+            placeHolder="Work location"
+            value={formState.work_location}
+            handler={handleFieldChange}
+          />
+          <RangeSelect
+            label="Distance Range"
+            name="distance_range"
+            min={0}
+            max={200}
+            step={1}
+            value={formState.distance_range}
+            handler={handleFieldChange}
+          />
+          <RangeSelect
+            label="Price Range"
+            name="price_range"
+            min={5000}
+            max={5000000}
+            step={1000}
+            value={formState.price_range}
+            handler={handleFieldChange}
+          />
+        </>
+      )}
       <SelectInput
         label="Sort By"
         placeHolder="Sort By"
@@ -203,32 +217,34 @@ const FIlterOptions = (props: any) => {
         name="sort"
         required
       />
-      <FlexText
-        style={{
-          justifyContent: "space-between",
-          marginTop: 20,
-        }}
-      >
-        <IconButtonBG
+      {showViewToggle && (
+        <FlexText
           style={{
-            width: "auto",
-            backgroundColor:
-              filterState.viewMode === "map" ? "#115E59" : "#38a19cff",
+            justifyContent: "space-between",
+            marginTop: 20,
           }}
-          text="Map View"
-          handler={() => dispatch(setViewMode("map"))}
-        />
-        <IconButtonBG
-          icon={otherIcons.List as ImageSourcePropType}
-          style={{
-            width: "auto",
-            backgroundColor:
-              filterState.viewMode === "list" ? "#115E59" : "#38a19cff",
-          }}
-          text="List View"
-          handler={() => dispatch(setViewMode("list"))}
-        />
-      </FlexText>
+        >
+          <IconButtonBG
+            style={{
+              width: "auto",
+              backgroundColor:
+                filterState.viewMode === "map" ? "#115E59" : "#38a19cff",
+            }}
+            text="Map View"
+            handler={() => handleViewModeChange("map")}
+          />
+          <IconButtonBG
+            icon={otherIcons.List as ImageSourcePropType}
+            style={{
+              width: "auto",
+              backgroundColor:
+                filterState.viewMode === "list" ? "#115E59" : "#38a19cff",
+            }}
+            text="List View"
+            handler={() => handleViewModeChange("list")}
+          />
+        </FlexText>
+      )}
       <ButtonBG text="Apply" handler={handleApply} />
       <ButtonGreenOpacity30 text="Reset Filters" handler={handleReset} />
     </View>

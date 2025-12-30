@@ -1,5 +1,5 @@
-import React, { Suspense, useMemo } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import React, { Suspense, useCallback, useMemo, useState } from "react";
+import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import CategorySection from "../../components/home/CategorySection";
 import MyStats from "../../components/home/MyStats";
 import PopularTaskProvider from "../../components/home/PopularTaskProvider";
@@ -8,9 +8,28 @@ import UserProfileHeader from "../../components/home/UserProfileHeader";
 import SearchBar from "../../components/shered/SearchBar";
 import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+import { baseApi } from "../../redux/baseApi";
+import { useAppDispatch } from "../../redux/hooks";
 
 const Home = () => {
   const { role } = useGlobalContext();
+  const dispatch = useAppDispatch();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    dispatch(
+      baseApi.util.invalidateTags([
+        "Profile",
+        "Category",
+        "Task",
+        "Service",
+        "Auth",
+      ])
+    );
+    setTimeout(() => setRefreshing(false), 500);
+  }, [dispatch]);
+
   return (
     <SafeAreaProviderNoScroll>
       <Suspense>
@@ -20,6 +39,14 @@ const Home = () => {
             paddingBottom: 150,
           }}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              tintColor="#115E59"
+              colors={["#115E59"]}
+            />
+          }
           data={useMemo(
             () => [
               <UserProfileHeader key={1} />,

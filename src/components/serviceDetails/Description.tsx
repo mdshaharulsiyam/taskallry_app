@@ -29,7 +29,11 @@ const Description = ({ service }: { service?: Service }) => {
       {data.map((item, index) => (
         <TextSecondary key={index} text={item} />
       ))}
-      <FlexText>
+      <FlexText
+        style={{
+          flexWrap: "wrap"
+        }}
+      >
         <IconButtonTransparent
           style={{
             width: "auto",
@@ -39,7 +43,7 @@ const Description = ({ service }: { service?: Service }) => {
           text="Update Details"
         />
         <IconButtonTransparent
-          icon={otherIcons.Block as ImageSourcePropType}
+          icon={service?.isActive ? otherIcons.Block as ImageSourcePropType : otherIcons.Check_green as ImageSourcePropType}
           style={{
             width: "auto",
             borderColor: service?.isActive ? "red" : "green",
@@ -64,8 +68,8 @@ const Description = ({ service }: { service?: Service }) => {
             isLoading
               ? "Updating..."
               : service?.isActive
-              ? "Make Inactive"
-              : "Make Active"
+                ? "Make Inactive"
+                : "Make Active"
           }
         />
       </FlexText>

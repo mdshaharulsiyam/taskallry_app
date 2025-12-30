@@ -10,19 +10,19 @@ const MyStats = () => {
   const statsData = [
     {
       name: "Total Tasks Completed",
-      value: providerMetaData?.data?.completedCount + "",
+      value: providerMetaData?.data?.completedCount ? providerMetaData?.data?.completedCount + "" : "0",
     },
     {
       name: "Tasks in Progress",
-      value: providerMetaData?.data?.inProgressCount + "",
+      value: providerMetaData?.data?.inProgressCount ? providerMetaData?.data?.inProgressCount + "" : "0",
     },
     {
       name: "Pending Tasks",
-      value: providerMetaData?.data?.pendingCount + "",
+      value: providerMetaData?.data?.pendingCount ? providerMetaData?.data?.pendingCount + "" : "0",
     },
     {
       name: "Offers Made",
-      value: providerMetaData?.data?.bidOpenForBidCount + "",
+      value: providerMetaData?.data?.bidOpenForBidCount ? providerMetaData?.data?.bidOpenForBidCount + "" : "0",
     },
   ];
   return (

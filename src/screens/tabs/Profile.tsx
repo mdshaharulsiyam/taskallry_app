@@ -14,7 +14,7 @@ import ProfileOptions from "../../components/profile/ProfileOptions";
 import ProfilePictureName from "../../components/profile/ProfilePictureName";
 import FlexText from "../../components/shered/FlexText";
 import TextSecondary from "../../components/shered/TextSecondary";
-import { profileIcons, TabIcons } from "../../constant/images";
+import { profileIcons } from "../../constant/images";
 import { useGlobalContext } from "../../providers/GlobalContextProvider";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
 import { useUpgradeAccountMutation } from "../../redux/apis";
@@ -67,6 +67,7 @@ const Profile = () => {
         await AsyncStorage.setItem("token", payload.accessToken);
         await AsyncStorage.setItem("role", nextRole);
         if (!payload.isBankNumberVerified) {
+          await AsyncStorage.setItem("isBankNumberVerified", "false");
           dispatch(setToken(payload.accessToken));
           setRole(nextRole);
           navigation.navigate("ServiceSignUp", { screen: "BVN" });
@@ -74,6 +75,7 @@ const Profile = () => {
         }
         if (!payload.isAddressProvided) {
           navigation.navigate("ServiceSignUp", { screen: "Address" });
+          await AsyncStorage.setItem("isAddressProvided", "false");
           return;
         }
         RNRestart.restart();
@@ -131,7 +133,7 @@ const Profile = () => {
                   >
                     <FlexText>
                       <Image
-                        source={TabIcons.Profile as ImageSourcePropType}
+                        source={profileIcons.Switch as ImageSourcePropType}
                         style={{
                           // tintColor: "#3585f5ff",
                           height: 20,

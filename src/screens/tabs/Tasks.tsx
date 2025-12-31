@@ -55,7 +55,12 @@ const Tasks = () => {
     setLimit(20);
   }, [status]);
 
-  const { data, isLoading, isFetching } = useGetMyTaskQuery(
+  const {
+    data,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetMyTaskQuery(
     status ? { status, page: 1, limit } : { page: 1, limit }
   );
 
@@ -80,7 +85,7 @@ const Tasks = () => {
   const renderTaskItem = useCallback(
     ({ item }: { item: any }) => (
       <TaskCard
-        from={role === "service" ? "service" : "user"}
+        // from={role === "service" ? "service" : "user"}
         tab={tab}
         showDetailsButton={true}
         task={item}
@@ -132,6 +137,12 @@ const Tasks = () => {
         ListFooterComponent={
           isFetching && tasks.length > 0 ? <Loader /> : null
         }
+        refreshing={isFetching && tasks.length === 0}
+        onRefresh={() => {
+          if (!isFetching) {
+            refetch();
+          }
+        }}
       />
     </SafeAreaProviderNoScroll>
   );

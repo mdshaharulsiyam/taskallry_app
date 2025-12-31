@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import WebView from "react-native-webview";
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+import Navigate from "../../utils/Navigate";
 
 const PaymentWebView = () => {
   const {
@@ -16,6 +17,10 @@ const PaymentWebView = () => {
 
 
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = Navigate();
+  const TARGET_URL = "https://taskalley-deploy-5lzv.vercel.app/";
+
+  const normalizeUrl = (value: string) => value.replace(/\/+$/, "");
 
   const sanitizedUrl = useMemo(() => {
     if (!url || typeof url !== "string") return undefined;
@@ -39,11 +44,19 @@ const PaymentWebView = () => {
     );
   }
   const handleNavigationChange = (navState: any) => {
-    const currentUrl = navState.url;
+    const currentUrl = navState?.url;
+    if (!currentUrl) return;
 
-    if (currentUrl.includes('success')) {
+    if (
+      normalizeUrl(currentUrl) === normalizeUrl(TARGET_URL)
+    ) {
+      navigate("Task");
+      return;
+    }
+
+    if (currentUrl.includes("success")) {
       // setPaymentStatus('success');
-    } else if (currentUrl.includes('cancel')) {
+    } else if (currentUrl.includes("cancel")) {
       // setPaymentStatus('cancel');
     }
   };

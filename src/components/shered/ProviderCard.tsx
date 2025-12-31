@@ -42,7 +42,7 @@ const ProviderCard = ({ item }: { item: Service }) => {
       >
         <FlexCardIcon
           image={otherIcons.Location as ImageSourcePropType}
-          text={item?.address}
+          text={item?.address ? item?.address : "Online"}
         />
         <TextPrimary text={`⭐ ${item?.averageRating}`} />
       </FlexText>

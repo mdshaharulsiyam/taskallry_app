@@ -24,7 +24,14 @@ const TabButton = ({
           "cancelled",
           "dispute",
         ]
-        : ["Ongoing Tasks", "Bids  Made", "Bids  Received", "dispute"],
+        : [
+          "Ongoing Tasks",
+          "Bids  Made",
+          "Bids  Received",
+          "Completed",
+          "Cancelled",
+          "dispute",
+        ],
     [role]
   );
   const [internalActiveTab, setInternalActiveTab] = useState<string>(

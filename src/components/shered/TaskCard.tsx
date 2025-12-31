@@ -72,18 +72,19 @@ const TaskCard = ({
           text={task?.budget + ""}
         />
       </FlexText>
+
       {showDetailsButton && <GreenLine />}
 
       <FlexCardIcon
-        text={task?.address}
+        text={task?.address ? task?.address : "Online"}
         image={otherIcons.Location as ImageSourcePropType}
       />
       <FlexCardIcon
-        text={moment(task?.preferredDeliveryDateTime).format("DD-MM-YYYY")}
+        text={task?.preferredDeliveryDateTime ? moment(task?.preferredDeliveryDateTime).format("DD-MM-YYYY") : "Flexible"}
         image={otherIcons.Calendar as ImageSourcePropType}
       />
       <FlexCardIcon
-        text={moment(task?.preferredDeliveryDateTime).format("h:mm A")}
+        text={task?.preferredDeliveryDateTime ? moment(task?.preferredDeliveryDateTime).format("h:mm A") : "Flexible"}
         image={otherIcons.Watch as ImageSourcePropType}
       />
       <FlexText

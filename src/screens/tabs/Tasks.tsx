@@ -24,6 +24,10 @@ const Tasks = () => {
           return "bidMade" as const;
         case "Bids  Received":
           return "bidReceived" as const;
+        case "Completed":
+          return "COMPLETED" as const;
+        case "Cancelled":
+          return "CANCELLED" as const;
         case "dispute":
           return "DISPUTED" as const;
         default:

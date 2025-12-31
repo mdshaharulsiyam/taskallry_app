@@ -1,18 +1,15 @@
 import React from "react";
 import {
   Image,
-  ImageSourcePropType,
-  StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
+  ViewStyle
 } from "react-native";
-import { otherIcons } from "../../constant/images";
+import { ImgUrl } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
 import FlexText from "../shered/FlexText";
 import TextPrimary from "../shered/TextPrimary";
 import TextSecondary from "../shered/TextSecondary";
-import { ImgUrl } from "../../redux/baseApi";
 
 const CategorySquareButton = ({
   style,
@@ -75,6 +72,7 @@ const CategorySquareButton = ({
         <TextSecondary
           style={{
             marginTop: -6,
+            textAlign: "center",
           }}
           text={`${totalProviders} Providers`}
         />

@@ -2,6 +2,7 @@ import { useRoute } from "@react-navigation/native";
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { Image, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from 'react-native-toast-message';
 import FlexText from "../../components/shered/FlexText";
 import SectionHeading from "../../components/shered/SectionHeading";
 import TextPrimary from "../../components/shered/TextPrimary";
@@ -58,6 +59,32 @@ type FormState = {
   confirm: boolean;
 };
 
+const getInitialFormState = (): FormState => ({
+  title: "",
+  task_category: "",
+  desc: "",
+  type: "",
+  place: "",
+  flexible: "",
+  date: "",
+  time: "",
+  offer: "1000",
+  confirm: true,
+});
+
+const getInitialErrors = (): Record<keyof FormState, string | undefined> => ({
+  title: undefined,
+  task_category: undefined,
+  desc: undefined,
+  type: undefined,
+  place: undefined,
+  flexible: undefined,
+  date: undefined,
+  time: undefined,
+  offer: undefined,
+  confirm: undefined,
+});
+
 const PostTask = () => {
   const route = useRoute() as any;
   const task = route?.params?.task as Task | undefined;
@@ -70,30 +97,8 @@ const PostTask = () => {
   const { data: categoryData } = useGetAllCategoriesQuery({ limit: 9999999 });
   const { top, bottom } = useSafeAreaInsets();
   const navigate = Navigate();
-  const [formState, setFormState] = useState<FormState>({
-    title: "",
-    task_category: "",
-    desc: "",
-    type: "",
-    place: "",
-    flexible: "",
-    date: "",
-    time: "",
-    offer: "1000",
-    confirm: true,
-  });
-  const [errors, setErrors] = useState<Record<keyof FormState, string | undefined>>({
-    title: undefined,
-    task_category: undefined,
-    desc: undefined,
-    type: undefined,
-    place: undefined,
-    flexible: undefined,
-    date: undefined,
-    time: undefined,
-    offer: undefined,
-    confirm: undefined,
-  });
+  const [formState, setFormState] = useState<FormState>(getInitialFormState);
+  const [errors, setErrors] = useState<Record<keyof FormState, string | undefined>>(getInitialErrors);
 
   const categoryOptions = useMemo(
     () =>
@@ -131,8 +136,24 @@ const PostTask = () => {
 
   const setFieldValue = useCallback(
     (name: keyof FormState, value: string | boolean) => {
-      setFormState((prev) => ({ ...prev, [name]: value }));
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
+      setFormState((prev) => {
+        const next = { ...prev, [name]: value };
+        if (name === "type" && value === "ONLINE") {
+          next.place = "";
+        }
+        if (name === "flexible" && value === "FLEXIBLE") {
+          next.date = "";
+          next.time = "";
+        }
+        return next;
+      });
+      setErrors((prev) => {
+        const next = { ...prev, [name]: undefined };
+        if (name === "type" && value === "ONLINE") {
+          next.place = undefined;
+        }
+        return next;
+      });
     },
     []
   );
@@ -153,6 +174,14 @@ const PostTask = () => {
           }
           return;
         }
+        if (field === "place" && formState.type === "ONLINE") {
+          newErrors[field] = undefined;
+          return;
+        }
+        if ((field === "date" || field === "time") && formState.flexible === "FLEXIBLE") {
+          newErrors[field] = undefined;
+          return;
+        }
         if (!value || (typeof value === "string" && value.trim() === "")) {
           newErrors[field] = "Required";
           isValid = false;
@@ -167,28 +196,40 @@ const PostTask = () => {
   );
 
   const buildFormData = () => {
-    const latino = formState.place?.split("|")?.[1]
+    const isInPerson = formState.type === "IN_PERSON";
+    const latino = isInPerson && formState.place?.split("|")?.[1]
       ? JSON.parse(formState.place.split("|")[1])
-      : { lat: 0, lng: 0 };
+      : undefined;
 
-    const data = {
+    const data: Record<string, any> = {
       title: formState.title,
       category: formState.task_category,
       budget: Number(formState.offer) || 0,
       payOn: "completion",
       ...(provider && { provider }),
-      location: {
+      doneBy: formState.type || "ONLINE",
+      scheduleType: formState.flexible,
+      // preferredDate: formState.flexible === "FLEXIBLE" ? undefined : formState.date,
+      // preferredTime: formState.flexible === "FLEXIBLE" ? undefined : formState.time,
+      description: formState.desc,
+      // preferredDeliveryDateTime:
+      //   formState.flexible === "FLEXIBLE"
+      //     ? undefined
+      //     : `${formState.date} ${formState.time}`,
+    };
+    if (formState.flexible != "FLEXIBLE") {
+      // Only add date and time if not flexible
+      data.preferredDate = formState.date;
+      data.preferredTime = formState.time;
+      data.preferredDeliveryDateTime = `${formState.date} ${formState.time}`;
+    }
+    if (isInPerson && latino) {
+      data.location = {
         type: "Point",
         coordinates: [latino?.lng ?? 0, latino?.lat ?? 0],
-      },
-      doneBy: formState.type || "ONLINE",
-      address: formState.place?.split("|")?.[0] ?? "",
-      scheduleType: formState.flexible,
-      preferredDate: formState.date,
-      preferredTime: formState.time,
-      description: formState.desc,
-      preferredDeliveryDateTime: `${formState.date} ${formState.time}`,
-    };
+      };
+      data.address = formState.place?.split("|")?.[0] ?? "";
+    }
 
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
@@ -204,16 +245,27 @@ const PostTask = () => {
       setCurrentSlide((prev) => prev + 1);
       return;
     }
-
     const formData = buildFormData();
     create(formData)
       .unwrap()
       .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Task posted successfully",
+        });
         navigate("Task");
         setCurrentSlide(0);
         setFiels([]);
+        setFormState(getInitialFormState());
+        setErrors(getInitialErrors());
       })
-      .catch(() => { });
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: "Failed to post task",
+          text2: error?.data?.message || "Please try again.",
+        });
+      });
   };
 
   const renderSlideContent = () => {
@@ -241,7 +293,7 @@ const PostTask = () => {
               name="task_category"
               required
               error={!!errors.task_category}
-              disabled={!!category}
+            // disabled={!!category}
             />
           </>
         );
@@ -288,14 +340,16 @@ const PostTask = () => {
               name="type"
               required
             />
-            <LocationInput
-              label="Where to Go to Complete the Task"
-              placeHolder="Enter address"
-              value={formState.place}
-              handler={(name, value) => setFieldValue("place", value)}
-              name="place"
-              error={!!errors.place}
-            />
+            {formState.type !== "ONLINE" && (
+              <LocationInput
+                label="Where to Go to Complete the Task"
+                placeHolder="Enter address"
+                value={formState.place}
+                handler={(name, value) => setFieldValue("place", value)}
+                name="place"
+                error={!!errors.place}
+              />
+            )}
             <OptionGridInput
               label="When should the task be done?"
               options={FLEXIBILITY_OPTIONS}
@@ -304,20 +358,24 @@ const PostTask = () => {
               name="flexible"
               required
             />
-            <DatePicker
-              label="Preferred Date"
-              value={formState.date}
-              handler={(name, value) => setFieldValue("date", value)}
-              name="date"
-              error={!!errors.date}
-            />
-            <TimePicker
-              label="Preferred Time"
-              value={formState.time}
-              handler={(name, value) => setFieldValue("time", value)}
-              name="time"
-              error={!!errors.time}
-            />
+            {formState.flexible !== "FLEXIBLE" && (
+              <>
+                <DatePicker
+                  label="Preferred Date"
+                  value={formState.date}
+                  handler={(name, value) => setFieldValue("date", value)}
+                  name="date"
+                  error={!!errors.date}
+                />
+                <TimePicker
+                  label="Preferred Time"
+                  value={formState.time}
+                  handler={(name, value) => setFieldValue("time", value)}
+                  name="time"
+                  error={!!errors.time}
+                />
+              </>
+            )}
           </>
         );
       case 3:

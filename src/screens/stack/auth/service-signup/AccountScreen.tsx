@@ -6,6 +6,7 @@ import ButtonBG from "../../../../components/ui/buttons/ButtonBG";
 import Input from "../../../../components/ui/inputs/Input";
 import InputCheckbox from "../../../../components/ui/inputs/InputCheckbox";
 import PasswordInput from "../../../../components/ui/inputs/PasswordInput";
+import PhoneInput, { PhoneCountryCode } from "../../../../components/ui/inputs/PhoneInput";
 import { sucessNavigate } from "../../../../handler/customerSignUp";
 import SafeAreaProvider from "../../../../providers/SafeAreaProvider";
 import { useRegisterMutation } from "../../../../redux/apis";
@@ -20,6 +21,15 @@ const AccountScreen = () => {
     password: "",
     confirmPassword: "",
     agree: false,
+  });
+  const [phoneMeta, setPhoneMeta] = useState<{
+    country: PhoneCountryCode;
+    number: string;
+    dialCode: string;
+  }>({
+    country: "US",
+    number: "",
+    dialCode: "+1",
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -120,14 +130,15 @@ const AccountScreen = () => {
         name="email"
         error={!!errors.email}
       />
-      <Input
-        keyboard="phone-pad"
-        label="Phone Number"
-        placeHolder="Enter Phone Number"
-        value={formState.phone}
-        handler={(_, value) => setFieldValue("phone", value)}
-        name="phone"
+      <PhoneInput
+        country={phoneMeta.country}
+        number={phoneMeta.number}
+        onChange={({ country, dialCode, number }) => {
+          setPhoneMeta({ country, dialCode, number });
+          setFieldValue("phone", number ? `${dialCode}${number}` : "");
+        }}
         error={!!errors.phone}
+        countryError={!!errors.phone}
       />
       <PasswordInput
         keyboard="default"

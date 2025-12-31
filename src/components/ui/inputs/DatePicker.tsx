@@ -1,5 +1,5 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Platform,
   StyleSheet,
@@ -32,8 +32,36 @@ const DatePicker = ({
   required?: boolean;
   showLabel?: boolean;
 }) => {
-  const [date, setDate] = useState(new Date(1598051730000));
+  const formatDate = (d: Date) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const parseDateString = (str?: string) => {
+    if (!str) return undefined;
+    const match = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) return undefined;
+    const [_, year, month, day] = match;
+    const parsed = new Date();
+    parsed.setSeconds(0, 0);
+    parsed.setFullYear(Number(year), Number(month) - 1, Number(day));
+    return parsed;
+  };
+
+  const [date, setDate] = useState<Date>(
+    () => parseDateString(value) || new Date()
+  );
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const parsed = parseDateString(value);
+    if (parsed) {
+      setDate(parsed);
+    }
+  }, [value]);
+
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || date;
     if (Platform.OS === "android") {
@@ -42,14 +70,8 @@ const DatePicker = ({
       setShow(true);
     }
     setDate(currentDate);
-    console.log(event);
-
     if (selectedDate && handler && name) {
-      const year = selectedDate.getFullYear();
-      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-      const day = String(selectedDate.getDate()).padStart(2, "0");
-      const formatted = `${year}-${month}-${day}`;
-      handler(name, formatted);
+      handler(name, formatDate(selectedDate));
     }
   };
   return (
@@ -78,14 +100,14 @@ const DatePicker = ({
             borderRadius: 8,
             ...(error
               ? {
-                  borderColor: "red",
-                  borderWidth: 1,
-                }
+                borderColor: "red",
+                borderWidth: 1,
+              }
               : {}),
             ...inputStyle,
           }}
         >
-          {value != "" ? value : placeHolder}
+          {value && value.length > 0 ? value : formatDate(date)}
         </Text>
       </TouchableOpacity>
       {show && (

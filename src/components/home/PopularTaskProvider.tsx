@@ -19,7 +19,7 @@ const PopularTaskProvider = () => {
           })
         }
         color="#115E59"
-        text="Popular Task Provider"
+        text="Popular Freelancer's"
       />
       {items.length === 0 ? (
         <EmptyList

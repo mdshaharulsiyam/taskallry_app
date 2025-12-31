@@ -18,7 +18,7 @@ import SelectInput from "../../components/ui/inputs/SelectInput";
 import TextArea from "../../components/ui/inputs/TextArea";
 import TimePicker from "../../components/ui/inputs/TimePicker";
 import SafeAreaProvider from "../../providers/SafeAreaProvider";
-import { Task, useCreateTaskMutation, useGetAllCategoriesQuery } from "../../redux/apis";
+import { Task, useCreateTaskMutation, useGetAllCategoriesQuery, useUpdateTaskMutation } from "../../redux/apis";
 import Navigate from "../../utils/Navigate";
 import ScreenSize from "../../utils/ScreenSize";
 
@@ -90,7 +90,8 @@ const PostTask = () => {
   const task = route?.params?.task as Task | undefined;
   const provider = route?.params?.id as string | undefined;
   const category = route?.params?.category as string | undefined;
-  const [create, { isLoading }] = useCreateTaskMutation();
+  const [create, { isLoading: isCreating }] = useCreateTaskMutation();
+  const [updateTask, { isLoading: isUpdating }] = useUpdateTaskMutation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fiels, setFiels] = useState<any>([]);
   const { height } = ScreenSize();
@@ -246,12 +247,15 @@ const PostTask = () => {
       return;
     }
     const formData = buildFormData();
-    create(formData)
+    const mutation = task?._id
+      ? updateTask({ id: task._id, task: formData })
+      : create(formData);
+    mutation
       .unwrap()
       .then(() => {
         Toast.show({
           type: "success",
-          text1: "Task posted successfully",
+          text1: task?._id ? "Task updated successfully" : "Task posted successfully",
         });
         navigate("Task");
         setCurrentSlide(0);
@@ -259,10 +263,10 @@ const PostTask = () => {
         setFormState(getInitialFormState());
         setErrors(getInitialErrors());
       })
-      .catch((error) => {
+      .catch((error: any) => {
         Toast.show({
           type: "error",
-          text1: "Failed to post task",
+          text1: task?._id ? "Failed to update task" : "Failed to post task",
           text2: error?.data?.message || "Please try again.",
         });
       });
@@ -424,7 +428,7 @@ const PostTask = () => {
           >
             {currentSlide != 0 && (
               <ButtonTransparentBG
-                disabled={isLoading}
+                disabled={isCreating || isUpdating}
                 style={{
                   width: "auto",
                 }}
@@ -433,15 +437,17 @@ const PostTask = () => {
               />
             )}
             <ButtonBG
-              disabled={isLoading}
+              disabled={isCreating || isUpdating}
               style={{
                 width: "auto",
               }}
               text={
                 currentSlide === SLIDE_TITLES.length - 1
-                  ? isLoading
-                    ? "loading..."
-                    : "Post"
+                  ? (isCreating || isUpdating)
+                    ? "Loading..."
+                    : task?._id
+                      ? "Update"
+                      : "Post"
                   : "Continue"
               }
               handler={handleSubmit}

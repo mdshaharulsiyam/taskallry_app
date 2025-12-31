@@ -356,9 +356,13 @@ const DetailsTask = ({
         profileData?.data?._id == data?.data?.customer?._id) ? (
       <>
         <TaskProgress data={data?.data} key={11} />
-        {
-          role == "user" && <FeedbackStatusButton status={data?.data?.status as any} id={id} />
-        }
+        {role == "user" && (
+          <FeedbackStatusButton
+            status={data?.data?.status as any}
+            id={id}
+            onRefetch={refetch}
+          />
+        )}
         {cancelData?.data && (
           <>
             <CancelRefundRequest

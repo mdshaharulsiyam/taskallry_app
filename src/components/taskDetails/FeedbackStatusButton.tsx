@@ -7,51 +7,85 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Toast from 'react-native-toast-message';
-import { useCompleteTaskMutation } from '../../redux/apis';
+import Toast from "react-native-toast-message";
+import {
+  useCompleteTaskMutation,
+  useCreateFeedbackMutation,
+} from "../../redux/apis";
 import ButtonBG from "../ui/buttons/ButtonBG";
 
 const FeedbackStatusButton = ({
   status,
   id,
+  onRefetch,
 }: {
   status: "IN_PROGRESS" | "COMPLETED" | "CANCELLED" | "DISPUTE" | "LATE";
   id: string;
+  onRefetch?: () => void;
 }) => {
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
-  const [completeTask, { isLoading }] = useCompleteTaskMutation()
+  const [completeTask, { isLoading }] = useCompleteTaskMutation();
+  const [createFeedback, { isLoading: isSubmitting }] =
+    useCreateFeedbackMutation();
   const handleStarPress = (index: number) => {
     setRating(index + 1);
   };
 
   const handleSubmit = () => {
-    console.log("⭐ Rating:", rating);
-    console.log("📝 Review:", review);
+    if (rating === 0) {
+      Toast.show({
+        type: "error",
+        text1: "Please add a rating",
+      });
+      return;
+    }
 
-    setRating(0);
-    setReview("");
-    setOpen(false);
+    createFeedback({
+      taskId: id,
+      rating,
+      comment: review.trim() || undefined,
+    })
+      .unwrap()
+      .then((res: any) => {
+        Toast.show({
+          type: "success",
+          text1: "Feedback submitted",
+          text2: res?.message || "Thanks for sharing your experience.",
+        });
+        setRating(0);
+        setReview("");
+        setOpen(false);
+        onRefetch?.();
+      })
+      .catch((err: any) => {
+        Toast.show({
+          type: "error",
+          text1: "Unable to submit feedback",
+          text2: err?.data?.message || "Please try again.",
+        });
+      });
   };
   const handleCompleteTask = () => {
-    completeTask(id).unwrap()
+    completeTask(id)
+      .unwrap()
       .then((res: any) => {
         Toast.show({
           type: "success",
           text1: "Task completed",
           text2: res?.message || "Task has been completed successfully",
-        })
-      }).catch((err) => {
-
+        });
+        onRefetch?.();
+      })
+      .catch((err) => {
         Toast.show({
           type: "error",
           text1: "Unable to complete Task",
           text2: err?.data?.message || "Something went wrong",
-        })
-      })
-
-  }
+        });
+      });
+  };
   return (
     <View style={{ flexDirection: "row", marginTop: 10 }}>
       <ButtonBG
@@ -61,7 +95,7 @@ const FeedbackStatusButton = ({
             setOpen(true);
           }
           if (status == "IN_PROGRESS") {
-            handleCompleteTask()
+            handleCompleteTask();
           }
         }}
         text={status == "COMPLETED" ? "Send Feedback" : "Mark As Complete"}
@@ -122,6 +156,8 @@ const FeedbackStatusButton = ({
 
             {/* Submit */}
             <ButtonBG
+              loading={isSubmitting}
+              disabled={isSubmitting}
               handler={handleSubmit}
               text="Submit Review"
               style={{ marginTop: 20 }}

@@ -143,9 +143,9 @@ const Profile = () => {
                       {
                       }
                       <TextSecondary
-                        style={{
-                          color: "#115E59",
-                        }}
+                        // style={{
+                        //   color: "#115E59",
+                        // }}
                         text={isSwitching ? "Switching..." : "Switch Role"}
                       />
                     </FlexText>

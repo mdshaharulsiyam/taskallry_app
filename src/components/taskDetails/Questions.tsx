@@ -11,24 +11,25 @@ const Questions = ({
   customer,
 }: {
   status:
-    | "OPEN_FOR_BID"
-    | "IN_PROGRESS"
-    | "COMPLETED"
-    | "CANCELLED"
-    | "DISPUTE"
-    | "LATE";
+  | "OPEN_FOR_BID"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "DISPUTE"
+  | "LATE";
   id: string;
   role?: "user" | "service";
   customer?: string;
 }) => {
   const { data } = useGetQuestionsByTaskIdQuery(id);
+  // role != "user" &&
   return (
     <View
       style={{
         marginTop: role != "user" ? 0 : 10,
       }}
     >
-      {role != "user" && <QuestionForm taskId={id} />}
+      {<QuestionForm taskId={id} />}
       {data?.data?.map((item) => (
         <Bids_QuestionCard
           type="question"

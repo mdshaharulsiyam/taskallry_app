@@ -116,7 +116,7 @@ const DetailsTask = ({
     <ButtonGreenOpacity30
       key={1}
       activeOpacity={1}
-      text={data?.data?.status}
+      text={data?.data?.status == "IN_PROGRESS" ? "In Progress" : data?.data?.status == "OPEN_FOR_BID" ? "Open" : data?.data?.status || ""}
       style={{
         backgroundColor:
           color[data?.data?.status as keyof typeof color]?.backgroundColor,

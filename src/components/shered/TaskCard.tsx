@@ -118,7 +118,7 @@ const TaskCard = ({
                 color: "#F97316",
                 fontWeight: "700",
               }}
-              text={task?.status}
+              text={task?.status == "IN_PROGRESS" ? "In Progress" : task?.status == "OPEN_FOR_BID" ? "Open" : task?.status || ""}
             />
             <TextPrimary text={task?.totalOffer + " offered"} />
           </FlexText>

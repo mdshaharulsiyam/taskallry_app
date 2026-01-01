@@ -12,7 +12,7 @@ const Notifications = () => {
   const { data, isLoading } = useGetNotificationQuery();
   // useReadAllMutation
   const [readAllMutation, { isLoading: isReadingAll }] = useReadAllMutation();
-
+  console.log("Notifications data:", data);
   const readAll = async () => {
     try {
       const res = await readAllMutation().unwrap();
@@ -22,7 +22,6 @@ const Notifications = () => {
     }
   };
 
-  // console.log("Notification data:", data?.data?.result, isLoading);
   return (
     <SafeAreaProviderNoScroll backButtonText="Notifications">
       <TouchableOpacity

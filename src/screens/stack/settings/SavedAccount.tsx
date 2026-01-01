@@ -7,14 +7,22 @@ import Navigate from "../../../utils/Navigate";
 const SavedAccount = () => {
   const navigate = Navigate();
   const { data, isLoading } = useGetBankQuery();
-
+  console.log("Bank data:", data);
   return (
     <SafeAreaProviderNoScroll backButtonText="Saved Account">
       <View style={styles.card}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Saved Account</Text>
-          <TouchableOpacity onPress={() => { }} style={styles.updateBtn}>
+          <TouchableOpacity
+            onPress={() =>
+              navigate("ServiceSignUp", {
+                screen: "BVN",
+                params: { from: "SavedAccount" },
+              })
+            }
+            style={styles.updateBtn}
+          >
             <Text style={styles.updateBtnText}>Update</Text>
           </TouchableOpacity>
         </View>
@@ -30,7 +38,7 @@ const SavedAccount = () => {
         <View style={[styles.row, { borderBottomWidth: 0 }]}>
           <Text style={styles.label}>Account No</Text>
           <View style={styles.divider} />
-          <Text style={styles.value}>{data?.data?.bankAccountNumber}</Text>
+          <Text style={styles.value}>{data?.data?.bankVerificationNumber}</Text>
         </View>
       </View>
     </SafeAreaProviderNoScroll>

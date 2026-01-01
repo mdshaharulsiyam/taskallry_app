@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import Toast from "react-native-toast-message";
 import HeaderDesign from "../../../../components/shered/HeaderDesign";
@@ -11,10 +11,11 @@ import { useVerifyBvnMutation } from "../../../../redux/apis";
 
 const BVNScreen = () => {
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
   const [verifyBvn, { isLoading }] = useVerifyBvnMutation();
   const [bvn, setBvn] = useState("");
   const [error, setError] = useState<string>("");
-
+  const fromScreen = route?.params?.from;
   const handleChange = useCallback((_: string, value: string) => {
     setBvn(value);
     setError("");
@@ -32,6 +33,10 @@ const BVNScreen = () => {
       .then(async (res: any) => {
         await AsyncStorage.removeItem("isBankNumberVerified");
         Toast.show({ type: "success", text1: "BVN verified", text2: res?.message || "Verification successful" });
+        if (fromScreen === "SavedAccount") {
+          navigation.navigate("SavedAccount");
+          return;
+        }
         navigation.navigate("Identity");
       })
       .catch((err: any) => {

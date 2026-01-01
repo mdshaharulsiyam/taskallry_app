@@ -3,6 +3,7 @@ interface UserProfile {
   _id: string;
   bankAccountNumber: string;
   bankName: string;
+  bankVerificationNumber: string;
 }
 interface UpdateProfileResponse {
   message: string;

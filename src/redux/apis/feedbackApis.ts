@@ -14,9 +14,9 @@ export interface Feedback {
 }
 
 export interface CreateFeedbackRequest {
-  taskId: string;
+  task: string;
   rating: number;
-  comment?: string;
+  details?: string;
 }
 
 interface CreateFeedbackResponse {

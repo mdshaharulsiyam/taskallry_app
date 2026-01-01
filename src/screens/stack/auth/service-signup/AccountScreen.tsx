@@ -104,7 +104,7 @@ const AccountScreen = () => {
       .catch(() => { });
   };
   return (
-    <SafeAreaProvider backButtonText="Service Sign Up">
+    <SafeAreaProvider backButtonText="Freelancer Sign Up">
       <HeaderDesign
         text="Create Your Account"
         style={{

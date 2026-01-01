@@ -109,7 +109,7 @@ const CustomerAccountScreen = () => {
   };
 
   return (
-    <SafeAreaProvider backButtonText="Customer Sign Up">
+    <SafeAreaProvider backButtonText="Tasker Sign Up">
       <HeaderDesign text="Create Your Account" style={{ marginTop: 10 }} />
       <TextSecondary text="Join our community to easily find and book the services you need, with a smooth and personalized experience from start to finish." />
       <Input

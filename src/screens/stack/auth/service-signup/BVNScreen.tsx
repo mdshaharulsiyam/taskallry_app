@@ -40,7 +40,7 @@ const BVNScreen = () => {
   };
 
   return (
-    <SafeAreaProvider backButtonText="Service Sign Up">
+    <SafeAreaProvider backButtonText="Freelancer Sign Up">
       <HeaderDesign text="Verify Your BVN" style={{ marginTop: 10 }} />
       <TextSecondary text="Enter your 11-digit Bank Verification Number (BVN) for identity confirmation." />
       <Input

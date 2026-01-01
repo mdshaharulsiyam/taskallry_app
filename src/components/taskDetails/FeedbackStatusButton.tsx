@@ -43,9 +43,9 @@ const FeedbackStatusButton = ({
     }
 
     createFeedback({
-      taskId: id,
+      task: id,
       rating,
-      comment: review.trim() || undefined,
+      details: review.trim() || undefined,
     })
       .unwrap()
       .then((res: any) => {
@@ -68,7 +68,7 @@ const FeedbackStatusButton = ({
       });
   };
   const handleCompleteTask = () => {
-    completeTask(id)
+    completeTask({ taskId: id })
       .unwrap()
       .then((res: any) => {
         Toast.show({

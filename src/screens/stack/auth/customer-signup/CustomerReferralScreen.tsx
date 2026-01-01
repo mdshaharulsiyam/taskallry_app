@@ -33,7 +33,7 @@ const CustomerReferralScreen = () => {
   };
 
   return (
-    <SafeAreaProvider backButtonText="Customer Sign Up">
+    <SafeAreaProvider backButtonText="Tasker Sign Up">
       <HeaderDesign text="Have a Referral Code? Unlock Your Reward" style={{ marginTop: 10 }} />
       <TextSecondary text="Apply a referral code and get 10% OFF your first task – up to ₦50!" />
       <Input

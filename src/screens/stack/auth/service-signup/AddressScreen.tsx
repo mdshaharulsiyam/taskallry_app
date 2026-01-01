@@ -54,7 +54,7 @@ const AddressScreen = () => {
   };
 
   return (
-    <SafeAreaProvider backButtonText="Service Sign Up">
+    <SafeAreaProvider backButtonText="Freelancer Sign Up">
       <HeaderDesign text="Provide Your Address" style={{ marginTop: 10 }} />
       <TextSecondary text="Please provide your valid address, and verify it to confirm your identity." />
       <LocationInput

@@ -37,12 +37,12 @@ const ChooseSignUp = () => {
             <TextSecondary text="Select the profile that best suits your journey. Whether you're here to book reliable services or offer them, we’ve built the right tools just for you." />
             <ImageButton
               imageSource={otherIcons.Customer as ImageSourcePropType}
-              title="Customer"
+              title="TASKER"
               onPress={goCustomer}
             />
             <ImageButton
               imageSource={otherIcons.Service as ImageSourcePropType}
-              title="Service Provider"
+              title="FREELANCER"
               onPress={goService}
             />
           </View>

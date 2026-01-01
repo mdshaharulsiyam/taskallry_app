@@ -34,7 +34,7 @@ const ReferralScreen = () => {
   };
 
   return (
-    <SafeAreaProvider backButtonText="Service Sign Up">
+    <SafeAreaProvider backButtonText="Freelancer Sign Up">
       <HeaderDesign text="Have a Referral Code? Unlock Your Reward" />
       <TextSecondary text="Use a referral code and earn 10% EXTRA payout on your first Completed task (done within 48 hours)!" />
       <Input

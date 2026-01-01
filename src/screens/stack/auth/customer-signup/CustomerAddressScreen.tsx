@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Image, View } from "react-native";
@@ -42,8 +43,9 @@ const CustomerAddressScreen = () => {
 
     updateProfile(form as any)
       .unwrap()
-      .then((res: any) => {
+      .then(async (res: any) => {
         Toast.show({ type: "success", text1: "Address saved", text2: res?.message || "Profile updated" });
+        await AsyncStorage.removeItem("isAddressProvided")
         navigation.navigate("CustomerReferral");
       })
       .catch((err: any) => {
@@ -52,7 +54,7 @@ const CustomerAddressScreen = () => {
   };
 
   return (
-    <SafeAreaProvider backButtonText="Customer Sign Up">
+    <SafeAreaProvider backButtonText="Tasker Sign Up">
       <HeaderDesign text="Provide Your Address" style={{ marginTop: 10 }} />
       <TextSecondary text="Please provide your valid address, and verify it to confirm your identity." />
       <LocationInput

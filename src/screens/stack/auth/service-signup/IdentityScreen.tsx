@@ -54,7 +54,7 @@ const IdentityScreen = () => {
   };
 
   return (
-    <SafeAreaProvider backButtonText="Service Sign Up">
+    <SafeAreaProvider backButtonText="Freelancer Sign Up">
       <HeaderDesign text="Complete Identity Verification" style={{ marginTop: 10 }} />
       <TextSecondary text="Verify your identity with NIN or other accepted documents using Smile ID’s secure process." />
       <SelectInput

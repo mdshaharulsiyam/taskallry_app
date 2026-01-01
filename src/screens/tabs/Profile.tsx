@@ -4,6 +4,7 @@ import {
   FlatList,
   Image,
   ImageSourcePropType,
+  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -109,6 +110,19 @@ const Profile = () => {
           data={useMemo(
             () => [
               <ProfilePictureName key={1} />,
+              <Text style={{
+                marginLeft: 20,
+                backgroundColor: "#115E59",
+                width: 120,
+                textAlign: "center",
+                padding: 5,
+                fontWeight: "bold",
+                fontSize: 14,
+                color: "#FFFFFF",
+                borderRadius: 4
+              }} key={23}>
+                {role == "service" ? "Freelancer" : "Tasker"}
+              </Text>,
               <ProfileOptions key={2} />,
               <View
                 style={{

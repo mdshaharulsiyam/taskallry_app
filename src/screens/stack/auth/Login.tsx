@@ -75,6 +75,11 @@ const Login = () => {
             navigation.navigate("ServiceSignUp", { screen: "BVN" });
             return;
           }
+          if (!payload.isIdentificationDocumentVerified) {
+            await AsyncStorage.setItem("isIdentificationDocumentVerified", "false");
+            navigation.navigate("ServiceSignUp", { screen: "Identity" });
+            return;
+          }
           if (!payload.isAddressProvided) {
             await AsyncStorage.setItem("isAddressProvided", "false");
             navigation.navigate("ServiceSignUp", { screen: "Address" });

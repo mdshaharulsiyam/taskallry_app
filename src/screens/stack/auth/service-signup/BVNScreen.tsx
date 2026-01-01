@@ -32,7 +32,7 @@ const BVNScreen = () => {
       .then(async (res: any) => {
         await AsyncStorage.removeItem("isBankNumberVerified");
         Toast.show({ type: "success", text1: "BVN verified", text2: res?.message || "Verification successful" });
-        navigation.navigate("Address");
+        navigation.navigate("Identity");
       })
       .catch((err: any) => {
         Toast.show({ type: "error", text1: "BVN verification failed", text2: err?.data?.message || "Something went wrong" });

@@ -66,6 +66,8 @@ const Verify = () => {
                   if (role === "provider") {
                     if (!d?.isBankNumberVerified) {
                       navigate("ServiceSignUp", { screen: "BVN" });
+                    } else if (!d?.isIdentificationDocumentVerified) {
+                      navigate("ServiceSignUp", { screen: "Identity" });
                     } else if (!d?.isAddressProvided) {
                       navigate("ServiceSignUp", { screen: "Address" });
                     } else {

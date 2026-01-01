@@ -55,6 +55,8 @@ export const handleProviderSignUp = (
       });
       await AsyncStorage.setItem("isAddressProvided", "false");
       await AsyncStorage.setItem("isBankNumberVerified", "false");
+      await AsyncStorage.setItem("isIdentificationDocumentVerified", "false");
+
       successHandler?.(values?.email as string);
     })
     .catch((err: any) => {

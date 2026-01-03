@@ -28,7 +28,7 @@ const PaymentWebView = React.lazy(
 );
 const AccountSetting = React.lazy(() => import("../screens/stack/settings/AccountSetting"));
 const ChangePassword = React.lazy(() => import("../screens/stack/settings/ChangePassword"));
-const Earnings = React.lazy(() => import("../screens/stack/settings/Earnings"));
+const EarningsUpdated = React.lazy(() => import("../screens/stack/settings/EarningsUpdated"));
 const Help = React.lazy(() => import("../screens/stack/settings/Help"));
 const MyProfile = React.lazy(() => import("../screens/stack/settings/MyProfile"));
 const Notifications = React.lazy(() => import("../screens/stack/settings/Notifications"));
@@ -77,7 +77,7 @@ const StackLayout = () => {
     ServiceDetails: ServiceDetails,
     PaymentWebView: PaymentWebView,
     AddUpdateService: AddUpdateService,
-    Earnings: Earnings,
+    Earnings: EarningsUpdated,
     UpdateBankAccount: UpdateBankAccount,
     ViewProfile: ViewProfile,
     AccountSetting: AccountSetting,

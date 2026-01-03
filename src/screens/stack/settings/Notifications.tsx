@@ -1,5 +1,11 @@
 import React from "react";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import NotificationCard from "../../../components/notification/NotificationCard";
 import TextPrimary from "../../../components/shered/TextPrimary";
 import SafeAreaProviderNoScroll from "../../../providers/SafeAreaProviderNoScroll";
@@ -24,30 +30,51 @@ const Notifications = () => {
 
   return (
     <SafeAreaProviderNoScroll backButtonText="Notifications">
-      <TouchableOpacity
-        onPress={readAll}
-        style={{
-          marginLeft: "auto",
-        }}
-      >
-        <TextPrimary
-          style={{
-            color: "#0EA5E9",
-          }}
-          text="Read All"
+      <View style={styles.headerRow}>
+        <TouchableOpacity
+          onPress={readAll}
+          disabled={isReadingAll}
+          style={styles.readAllBtn}
+        >
+          {isReadingAll ? (
+            <ActivityIndicator size="small" color="#0EA5E9" />
+          ) : (
+            <TextPrimary style={styles.readAllText} text="Read All" />
+          )}
+        </TouchableOpacity>
+      </View>
+
+      {isLoading ? (
+        <ActivityIndicator style={{ marginTop: 40 }} />
+      ) : (
+        <FlatList
+          data={data?.data?.result}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => <NotificationCard notification={item} />}
+          ListEmptyComponent={
+            <TextPrimary
+              style={{ textAlign: "center", marginTop: 40 }}
+              text="No notifications found."
+            />
+          }
         />
-      </TouchableOpacity>
-      <FlatList
-        data={data?.data?.result}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item, index }) => (
-          <NotificationCard notification={item} />
-        )}
-      />
+      )}
     </SafeAreaProviderNoScroll>
   );
 };
 
 export default React.memo(Notifications);
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  readAllBtn: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  readAllText: {
+    color: "#0EA5E9",
+  },
+});

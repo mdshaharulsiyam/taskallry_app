@@ -7,6 +7,7 @@ export * from "./extensionApis";
 export * from "./feedbackApis";
 export * from "./manageApis";
 export * from "./messageApi";
+export * from "./paymentApi";
 export * from "./providerApi";
 export * from "./questionApis";
 export * from "./serviceApi";

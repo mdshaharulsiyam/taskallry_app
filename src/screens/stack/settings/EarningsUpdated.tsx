@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { useMemo, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
@@ -13,14 +14,9 @@ import HeaderSecondary from "../../../components/shered/HeaderSecondary";
 import TextPrimary from "../../../components/shered/TextPrimary";
 import TextSecondary from "../../../components/shered/TextSecondary";
 import SafeAreaProviderNoScroll from "../../../providers/SafeAreaProviderNoScroll";
+import { useGetProviderEarningsQuery } from "../../../redux/apis";
 
 const tabs = ["Daily", "Weekly", "Monthly", "Yearly", "Lifetime"] as const;
-
-const mockTransactions = [
-  { id: "tx-001", name: "DF", amount: 4000, date: "2026-01-03" },
-  { id: "tx-002", name: "Premium clean up", amount: 18500, date: "2026-01-02" },
-  { id: "tx-003", name: "DF", amount: 2500, date: "2025-12-30" },
-];
 
 const ArrowButton = ({
   direction,
@@ -38,6 +34,55 @@ const EarningsUpdated = () => {
   const [activeTab, setActiveTab] =
     useState<(typeof tabs)[number]>("Daily");
   const [referenceDate, setReferenceDate] = useState(moment());
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  const queryInput = useMemo(() => {
+    const base = { page, limit };
+    switch (activeTab) {
+      case "Daily":
+        return {
+          ...base,
+          type: "daily" as const,
+          day: referenceDate.date(),
+          month: referenceDate.month() + 1,
+          year: referenceDate.year(),
+        };
+      case "Weekly":
+        return {
+          ...base,
+          type: "weekly" as const,
+          week: referenceDate.isoWeek(),
+          year: referenceDate.year(),
+        };
+      case "Monthly":
+        return {
+          ...base,
+          type: "monthly" as const,
+          month: referenceDate.month() + 1,
+          year: referenceDate.year(),
+        };
+      case "Yearly":
+        return {
+          ...base,
+          type: "yearly" as const,
+          year: referenceDate.year(),
+        };
+      default:
+        return base;
+    }
+  }, [activeTab, limit, page, referenceDate]);
+
+  const {
+    data,
+    isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = useGetProviderEarningsQuery(queryInput);
+
+  const earnings = data?.data?.data ?? [];
+  const showNav = activeTab !== "Lifetime";
 
   const displayLabel = useMemo(() => {
     switch (activeTab) {
@@ -76,6 +121,12 @@ const EarningsUpdated = () => {
     }
   };
 
+  const handleTabPress = (tab: (typeof tabs)[number]) => {
+    setActiveTab(tab);
+    setReferenceDate(moment());
+    setPage(1);
+  };
+
   return (
     <SafeAreaProviderNoScroll backButtonText="Earnings">
       <View style={styles.card}>
@@ -93,10 +144,7 @@ const EarningsUpdated = () => {
                 styles.tabButton,
                 activeTab === tab && styles.tabButtonActive,
               ]}
-              onPress={() => {
-                setActiveTab(tab);
-                setReferenceDate(moment());
-              }}
+              onPress={() => handleTabPress(tab)}
             >
               <Text
                 style={[
@@ -110,7 +158,7 @@ const EarningsUpdated = () => {
           ))}
         </View>
 
-        {activeTab !== "Lifetime" && (
+        {showNav && (
           <FlexText style={styles.navRow}>
             <ArrowButton direction="left" onPress={() => shiftDate("prev")} />
             <Text style={styles.periodLabel}>{displayLabel}</Text>
@@ -119,29 +167,49 @@ const EarningsUpdated = () => {
         )}
       </View>
 
-      <FlatList
-        data={mockTransactions}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingBottom: 24 }}
-        renderItem={({ item }) => (
-          <View style={styles.transactionCard}>
-            <FlexText style={{ gap: 12 }}>
-              <View style={styles.iconWrapper}>
-                <Text style={{ color: "#115E59", fontWeight: "700" }}>₦</Text>
-              </View>
-              <View>
-                <HeaderDesign text={item.name} />
-                <TextSecondary text={moment(item.date).format("DD MMM YYYY")} />
-              </View>
-            </FlexText>
-            <TextPrimary
-              style={{ color: "#115E59", fontWeight: "700" }}
-              text={`+ ₦ ${item.amount.toLocaleString()}`}
+      {isLoading ? (
+        <ActivityIndicator style={{ marginTop: 24 }} />
+      ) : isError ? (
+        <TouchableOpacity onPress={() => refetch()} style={styles.errorBox}>
+          <Text style={styles.errorText}>
+            Unable to load earnings. Tap to retry.
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <FlatList
+          data={earnings}
+          keyExtractor={(item) => item._id}
+          refreshing={isFetching}
+          onRefresh={refetch}
+          contentContainerStyle={{ paddingBottom: 24 }}
+          renderItem={({ item }) => (
+            <View style={styles.transactionCard}>
+              <FlexText style={{ gap: 12 }}>
+                <View style={styles.iconWrapper}>
+                  <Text style={{ color: "#115E59", fontWeight: "700" }}>₦</Text>
+                </View>
+                <View>
+                  <HeaderDesign text={item.taskTitle} />
+                  <TextSecondary
+                    text={moment(item.updatedAt).format("DD MMM YYYY")}
+                  />
+                </View>
+              </FlexText>
+              <TextPrimary
+                style={{ color: "#115E59", fontWeight: "700" }}
+                text={`+ ₦ ${item.amount.toLocaleString()}`}
+              />
+            </View>
+          )}
+          ListEmptyComponent={
+            <TextSecondary
+              style={{ textAlign: "center", marginTop: 20 }}
+              text="No transactions found for this range."
             />
-          </View>
-        )}
-        ListFooterComponent={<View style={{ height: 20 }} />}
-      />
+          }
+          ListFooterComponent={<View style={{ height: 20 }} />}
+        />
+      )}
     </SafeAreaProviderNoScroll>
   );
 };
@@ -225,5 +293,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6F4F1",
     alignItems: "center",
     justifyContent: "center",
+  },
+  errorBox: {
+    marginTop: 24,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: "#FEF2F2",
+  },
+  errorText: {
+    color: "#991B1B",
+    textAlign: "center",
+    fontWeight: "600",
   },
 });

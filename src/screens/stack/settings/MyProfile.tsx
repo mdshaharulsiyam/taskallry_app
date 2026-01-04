@@ -20,6 +20,7 @@ import { ImgUrl } from "../../../redux/baseApi";
 
 const MyProfile = () => {
   const { data } = useGetMyProfileQuery();
+  console.log("data", data);
   const [fiels, setFiels] = useState<any | null>(null);
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const [formState, setFormState] = useState({

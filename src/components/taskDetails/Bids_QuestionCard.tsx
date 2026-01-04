@@ -19,7 +19,6 @@ import {
   useUpdateBidMutation,
 } from "../../redux/apis";
 import { Navigation } from "../../utils/Navigate";
-import ScreenSize from "../../utils/ScreenSize";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
 import ImageFlex from "../shered/ImageFlex";
@@ -48,7 +47,6 @@ const Bids_QuestionCard = ({
   question?: Question;
   customer?: string;
 }) => {
-  const { height, width } = ScreenSize();
   const [open, setOpen] = useState(false);
   const [acceptModalOpen, setAcceptModalOpen] = useState(false);
   const [price, setPrice] = useState(item?.price ? String(item.price) : "");

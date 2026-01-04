@@ -26,7 +26,6 @@ const QuestionForm = ({ taskId }: { taskId: string }) => {
       task: taskId,
       details: trimmed,
     };
-    console.log(data);
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
     formData.append("question_image", files[files.length - 1]);

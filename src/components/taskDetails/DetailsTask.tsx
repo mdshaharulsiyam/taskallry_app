@@ -19,7 +19,8 @@ import {
   useGetMyProfileQuery,
   useGetSingleTaskQuery,
 } from "../../redux/apis";
-import { ImgUrl } from "../../redux/baseApi";
+import { baseApi, ImgUrl } from "../../redux/baseApi";
+import { useAppDispatch } from "../../redux/hooks";
 import Navigate from "../../utils/Navigate";
 import BackButton from "../shered/BackButton";
 import FlexText from "../shered/FlexText";
@@ -72,6 +73,7 @@ const DetailsTask = ({
   id: string;
 }) => {
   const { role } = useGlobalContext();
+  const dispatch = useAppDispatch();
   const { data, isLoading, isFetching, refetch } = useGetSingleTaskQuery(id);
   const { data: profileData } = useGetMyProfileQuery();
   const [deleteTask, { isLoading: isDeleting }] = useDeleteTaskMutation();
@@ -389,8 +391,18 @@ const DetailsTask = ({
     ),
   ];
   const onRefresh = () => {
-    refetch()
-  }
+    refetch();
+    dispatch(
+      baseApi.util.invalidateTags([
+        { type: "Task", id },
+        "Task",
+        "Bid",
+        "Question",
+        "Extension",
+        "Cancel",
+      ])
+    );
+  };
   if (isLoading) {
     return <Loader />;
   }

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // export const url = "https://rnj64vmh-9000.inc1.devtunnels.ms";
 export const url = "http://10.10.20.9:9050";
+export const website_home = "https://taskalley-deploy-5lzv.vercel.app/success?trxref=fdjl1fp7pb&reference=fdjl1fp7pb"
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({

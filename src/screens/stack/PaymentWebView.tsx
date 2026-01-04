@@ -1,8 +1,11 @@
 import { useRoute } from "@react-navigation/native";
 import React, { useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import WebView from "react-native-webview";
+import BackButton from '../../components/shered/BackButton';
 import SafeAreaProviderNoScroll from "../../providers/SafeAreaProviderNoScroll";
+import { website_home } from "../../redux/baseApi";
 import Navigate from "../../utils/Navigate";
 
 const PaymentWebView = () => {
@@ -14,11 +17,11 @@ const PaymentWebView = () => {
       title?: string;
     };
   };
-
+  const { top, bottom } = useSafeAreaInsets();
 
   const [isLoading, setIsLoading] = useState(true);
   const navigate = Navigate();
-  const TARGET_URL = "https://taskalley-deploy-5lzv.vercel.app/";
+  const TARGET_URL = website_home ?? "https://taskalley-deploy-5lzv.vercel.app/";
 
   const normalizeUrl = (value: string) => value.replace(/\/+$/, "");
 
@@ -50,18 +53,22 @@ const PaymentWebView = () => {
     if (
       normalizeUrl(currentUrl) === normalizeUrl(TARGET_URL)
     ) {
-      navigate("Task");
+      navigate("TabLayout", { screen: "Home" });
       return;
     }
-
     if (currentUrl.includes("success")) {
-      // setPaymentStatus('success');
-    } else if (currentUrl.includes("cancel")) {
-      // setPaymentStatus('cancel');
+      navigate("TabLayout", { screen: "Home" });
     }
+
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {
+      paddingTop: top,
+      paddingBottom: bottom,
+    }]}>
+      <View style={{ paddingHorizontal: 20 }}>
+        <BackButton text='Payment' />
+      </View>
       {isLoading && <LoaderOverlay />}
       <WebView
         originWhitelist={["*"]}

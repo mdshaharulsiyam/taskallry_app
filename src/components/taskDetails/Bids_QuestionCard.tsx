@@ -70,8 +70,9 @@ const Bids_QuestionCard = ({
     targetProvider?.email,
   ]);
   const [updateBid, { isLoading: isUpdating }] = useUpdateBidMutation();
-  const [acceptOffer, { isLoading: isAccepting }] =
-    useAcceptByCustomerMutation();
+  const [acceptOffer] = useAcceptByCustomerMutation();
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+  const [isAcceptingDirect, setIsAcceptingDirect] = useState(false);
   const { data } = useGetMyProfileQuery();
   const { role } = useGlobalContext();
   const handleOpenUpdate = () => {
@@ -82,8 +83,14 @@ const Bids_QuestionCard = ({
     setOpen(true);
   };
 
-  const handleAcceptOffer = async (code?: string) => {
+  const handleAcceptOffer = async (
+    code?: string,
+    mode: "promo" | "direct" = "direct"
+  ) => {
     if (!item?._id || !item?.task) return;
+    const setLoading =
+      mode === "promo" ? setIsApplyingPromo : setIsAcceptingDirect;
+    setLoading(true);
     try {
       const body: { bidID: string; promoCode?: string } = {
         bidID: item._id,
@@ -117,6 +124,8 @@ const Bids_QuestionCard = ({
         text1: "Failed to accept offer",
         text2: error?.data?.message || "Please try again later.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,7 +139,7 @@ const Bids_QuestionCard = ({
       });
       return;
     }
-    handleAcceptOffer(trimmed);
+    handleAcceptOffer(trimmed, "promo");
   };
 
   const handleUpdateSubmit = () => {
@@ -198,7 +207,7 @@ const Bids_QuestionCard = ({
                 }}
                 text={
                   role == "user"
-                    ? isAccepting
+                    ? isAcceptingDirect || isApplyingPromo
                       ? "Accepting..."
                       : "Accept"
                     : "Update Offer"
@@ -305,18 +314,20 @@ const Bids_QuestionCard = ({
                 />
 
                 <ButtonBG
-                  text={isAccepting ? "Applying..." : "Apply Promo & Accept"}
+                  text={isApplyingPromo ? "Applying..." : "Apply Promo & Accept"}
                   handler={handlePromoAccept}
                   style={{ marginTop: 16 }}
-                  disabled={isAccepting}
+                  disabled={isApplyingPromo || isAcceptingDirect}
                 />
                 <ButtonBG
                   text={
-                    isAccepting ? "Accepting..." : "Accept without Promo Code"
+                    isAcceptingDirect
+                      ? "Accepting..."
+                      : "Accept without Promo Code"
                   }
-                  handler={() => handleAcceptOffer()}
+                  handler={() => handleAcceptOffer(undefined, "direct")}
                   style={{ marginTop: 10, backgroundColor: "#0EA5E9" }}
-                  disabled={isAccepting}
+                  disabled={isAcceptingDirect || isApplyingPromo}
                 />
               </View>
             </TouchableWithoutFeedback>

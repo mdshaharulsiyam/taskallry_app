@@ -15,11 +15,14 @@ const Onboarding = () => {
       const role = await AsyncStorage.getItem("role");
       const isAddressProvided = await AsyncStorage.getItem("isAddressProvided");
       const isBankNumberVerified = await AsyncStorage.getItem("isBankNumberVerified");
+      const isIdentificationDocumentVerified = await AsyncStorage.getItem("isIdentificationDocumentVerified");
       if (role) {
         if (isAddressProvided) {
           navigation.navigate("ServiceSignUp", { screen: "Address" });
         } else if (isBankNumberVerified && role === "service") {
           navigation.navigate("ServiceSignUp", { screen: "BVN" });
+        } else if (isIdentificationDocumentVerified && role === "service") {
+          navigation.navigate("ServiceSignUp", { screen: "Identity" });
         } else {
           setRole(role as "user" | "service" | null);
           // navigate("TabLayout");

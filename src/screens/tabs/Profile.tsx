@@ -74,9 +74,18 @@ const Profile = () => {
           navigation.navigate("ServiceSignUp", { screen: "BVN" });
           return;
         }
+        if (!payload.isIdentificationDocumentVerified) {
+          await AsyncStorage.setItem("isIdentificationDocumentVerified", "false");
+          dispatch(setToken(payload.accessToken));
+          setRole(nextRole);
+          navigation.navigate("ServiceSignUp", { screen: "Identity" });
+          return;
+        }
         if (!payload.isAddressProvided) {
           navigation.navigate("ServiceSignUp", { screen: "Address" });
           await AsyncStorage.setItem("isAddressProvided", "false");
+          dispatch(setToken(payload.accessToken));
+          setRole(nextRole);
           return;
         }
         RNRestart.restart();

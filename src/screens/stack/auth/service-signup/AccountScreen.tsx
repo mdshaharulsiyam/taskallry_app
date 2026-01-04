@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import HeaderDesign from "../../../../components/shered/HeaderDesign";
@@ -98,7 +99,10 @@ const AccountScreen = () => {
 
     register(payload)
       .unwrap()
-      .then((res: any) => {
+      .then(async (res: any) => {
+        await AsyncStorage.setItem("isBankNumberVerified", "false");
+        await AsyncStorage.setItem("isAddressProvided", "false");
+        await AsyncStorage.setItem("isIdentificationDocumentVerified", "false");
         void sucessNavigate(navigation, payload.email);
       })
       .catch(() => { });

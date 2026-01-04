@@ -18,13 +18,10 @@ const Notifications = () => {
   const { data, isLoading } = useGetNotificationQuery();
   // useReadAllMutation
   const [readAllMutation, { isLoading: isReadingAll }] = useReadAllMutation();
-  console.log("Notifications data:", data);
   const readAll = async () => {
     try {
       const res = await readAllMutation().unwrap();
-      console.log("Read all API Response:", res);
     } catch (err) {
-      console.log("Read all error:", err);
     }
   };
 

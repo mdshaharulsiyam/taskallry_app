@@ -3,8 +3,7 @@ import {
   Dimensions,
   ImageSourcePropType,
   ScrollView,
-  StyleSheet,
-  View,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import HeaderDesign from "../../../components/shered/HeaderDesign";
@@ -53,5 +52,3 @@ const ChooseSignUp = () => {
 };
 
 export default React.memo(ChooseSignUp);
-
-const styles = StyleSheet.create({});

@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useMemo } from "react";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import SafeAreaProviderNoScroll from "../../../providers/SafeAreaProviderNoScroll";
 import { useGetBankQuery } from "../../../redux/apis/profileItemApi";
 import Navigate from "../../../utils/Navigate";
@@ -7,39 +7,53 @@ import Navigate from "../../../utils/Navigate";
 const SavedAccount = () => {
   const navigate = Navigate();
   const { data, isLoading } = useGetBankQuery();
-  console.log("Bank data:", data);
+  const hasBankDetails = useMemo(
+    () => !!data?.data?.bankAccountNumber && !!data?.data?.bankName,
+    [data?.data?.bankAccountNumber, data?.data?.bankName]
+  );
+  const handleManageBank = () => {
+    navigate("UpdateBankAccount");
+  };
   return (
     <SafeAreaProviderNoScroll backButtonText="Saved Account">
       <View style={styles.card}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Saved Account</Text>
-          <TouchableOpacity
-            onPress={() =>
-              navigate("ServiceSignUp", {
-                screen: "BVN",
-                params: { from: "SavedAccount" },
-              })
-            }
-            style={styles.updateBtn}
-          >
-            <Text style={styles.updateBtnText}>Update</Text>
+          <TouchableOpacity onPress={handleManageBank} style={styles.updateBtn}>
+            <Text style={styles.updateBtnText}>
+              {hasBankDetails ? "Update" : "Add"}
+            </Text>
           </TouchableOpacity>
         </View>
-
-        {/* Row 1 */}
-        <View style={styles.row}>
-          <Text style={styles.label}>Bank Name</Text>
-          <View style={styles.divider} />
-          <Text style={styles.value}>{data?.data?.bankName}</Text>
-        </View>
-
-        {/* Row 2 */}
-        <View style={[styles.row, { borderBottomWidth: 0 }]}>
-          <Text style={styles.label}>Account No</Text>
-          <View style={styles.divider} />
-          <Text style={styles.value}>{data?.data?.bankVerificationNumber}</Text>
-        </View>
+        {isLoading ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator />
+            <Text style={styles.loadingText}>Loading bank details...</Text>
+          </View>
+        ) : hasBankDetails ? (
+          <>
+            <View style={styles.row}>
+              <Text style={styles.label}>Bank Name</Text>
+              <View style={styles.divider} />
+              <Text style={styles.value}>{data?.data?.bankName}</Text>
+            </View>
+            <View style={[styles.row, { borderBottomWidth: 0 }]}>
+              <Text style={styles.label}>Account No</Text>
+              <View style={styles.divider} />
+              <Text style={styles.value}>
+                {data?.data?.bankAccountNumber}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyTitle}>No bank account saved</Text>
+            <Text style={styles.emptyDescription}>
+              Tap the {`"${"Add"}"`} button above to add your bank details.
+            </Text>
+          </View>
+        )}
       </View>
     </SafeAreaProviderNoScroll>
   );
@@ -105,5 +119,29 @@ const styles = StyleSheet.create({
     flex: 2,
     fontSize: 13,
     color: "#333",
+  },
+  loaderContainer: {
+    paddingVertical: 20,
+    alignItems: "center",
+    gap: 6,
+  },
+  loadingText: {
+    fontSize: 12,
+    color: "#555",
+  },
+  emptyState: {
+    padding: 16,
+    alignItems: "center",
+    gap: 6,
+  },
+  emptyTitle: {
+    fontWeight: "600",
+    fontSize: 14,
+    color: "#333",
+  },
+  emptyDescription: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
   },
 });

@@ -7,7 +7,11 @@ import ProviderCard from "../shered/ProviderCard";
 import SectionHeading from "../shered/SectionHeading";
 
 const PopularTaskProvider = () => {
-  const { data, refetch, isLoading, isFetching } = useGetAllServicesQuery({ page: 1, limit: 10 });
+  const { data, refetch, isLoading, isFetching } = useGetAllServicesQuery({
+    page: 1,
+    limit: 10,
+    popular: true,
+  });
   const navigate = Navigate();
   const items = data?.data?.result || [];
   return (
@@ -16,6 +20,7 @@ const PopularTaskProvider = () => {
         handler={() =>
           navigate("Search", {
             type: "Provider",
+            popular: true,
           })
         }
         color="#115E59"

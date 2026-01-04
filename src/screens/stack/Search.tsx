@@ -12,9 +12,9 @@ import { selectFilters, setSearchType } from "../../redux/slices/filterSlice";
 
 const Search = () => {
   const {
-    params: { category_id, search, type },
+    params: { category_id, search, type, popular },
   } = useRoute() as {
-    params: { category_id: string; search: string; type?: "Task" | "Provider" };
+    params: { category_id: string; search: string; type?: "Task" | "Provider", popular?: boolean };
   };
   const { role } = useGlobalContext();
   const dispatch = useAppDispatch();
@@ -36,7 +36,7 @@ const Search = () => {
       />,
       combinedType === "Provider"
         ? (
-          <FilteredProvider key={3} search={searchText} />
+          <FilteredProvider key={3} search={searchText} popular={popular} />
         )
         : filterState?.viewMode === "map"
           ? (

@@ -5,11 +5,11 @@ import { useAppSelector } from "../../redux/hooks";
 import EmptyList from "../shered/EmptyList";
 import ProviderCard from "../shered/ProviderCard";
 
-const FilteredProvider = ({ search }: { search: string }) => {
+const FilteredProvider = ({ search, popular }: { search: string, popular?: boolean }) => {
   const [limit, setLimit] = useState(20);
   const { category, sort } = useAppSelector((state) => state.filter);
 
-  const { data, isFetching, isLoading, refetch } = useGetAllServicesQuery({ page: 1, limit });
+  const { data, isFetching, isLoading, refetch } = useGetAllServicesQuery({ page: 1, limit, ...(popular ? { popular } : { popular: false }) });
 
   const services = data?.data?.result || [];
   const filteredServices = useMemo(() => {

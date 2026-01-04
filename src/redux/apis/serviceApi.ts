@@ -108,14 +108,15 @@ export const serviceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllServices: builder.query<
       GetAllServicesResponse,
-      { page?: number; limit?: number }
+      { page?: number; limit?: number, popular?: boolean }
     >({
-      query: ({ page = 1, limit = 10 }) => ({
+      query: ({ page = 1, limit = 10, popular }) => ({
         url: "/service/all-service",
         method: "GET",
         params: {
           page,
           limit,
+          ...(popular && { popular }),
         },
       }),
       providesTags: ["Service"],

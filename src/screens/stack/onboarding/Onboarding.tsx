@@ -21,7 +21,8 @@ const Onboarding = () => {
           navigation.navigate("ServiceSignUp", { screen: "Address" });
         } else if (isBankNumberVerified && role === "service") {
           navigation.navigate("ServiceSignUp", { screen: "BVN" });
-        } else if (isIdentificationDocumentVerified && role === "service") {
+        }
+        else if (isIdentificationDocumentVerified && role === "service") {
           navigation.navigate("ServiceSignUp", { screen: "Identity" });
         } else {
           setRole(role as "user" | "service" | null);

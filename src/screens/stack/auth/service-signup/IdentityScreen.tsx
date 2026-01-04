@@ -32,10 +32,10 @@ const IdentityScreen = () => {
 
   const documentOptions = useMemo(
     () => [
-      { label: "National Identification Number (NIN)", value: "NIN" },
-      { label: "Voter’s Card", value: "voters_card" },
-      { label: "International Passport", value: "international_passport" },
-      { label: "Driver’s License", value: "drivers_license" },
+      { label: "National Identification Number (NIN)", value: "NATIONAL_ID" },
+      { label: "Voter’s Card", value: "VOTER_ID" },
+      { label: "International Passport", value: "PASSPORT" },
+      { label: "Driver’s License", value: "DRIVER_LICENSE" },
     ],
     []
   );
@@ -89,6 +89,7 @@ const IdentityScreen = () => {
         Toast.show({ type: "success", text1: "Verification successful", text2: "Redirecting to next step" });
       })
       .catch((err: any) => {
+        console.log(err);
         Toast.show({ type: "error", text1: "Verification failed", text2: err?.data?.message || "Please try again" });
       });
   };

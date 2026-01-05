@@ -49,18 +49,18 @@ const Input = ({
       <TextInput
         onBlur={() => onBlur?.(value + "")}
         value={value}
+        placeholderTextColor="#9CA3AF"
         style={{
           backgroundColor: "#E6F4F1",
           color: "#000000",
-          lineHeight: 26,
           padding: 15,
           paddingVertical: 12,
           borderRadius: 8,
           ...(error
             ? {
-                borderColor: "red",
-                borderWidth: 1,
-              }
+              borderColor: "red",
+              borderWidth: 1,
+            }
             : {}),
           ...inputStyle,
         }}

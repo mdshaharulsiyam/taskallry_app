@@ -30,10 +30,14 @@ const Profile = () => {
   const [upgradeAccount, { isLoading: isSwitching }] = useUpgradeAccountMutation();
   const handleLogout = useCallback(async () => {
     setRole(null);
-    await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("role");
-    await AsyncStorage.removeItem("isAddressProvided")
-    await AsyncStorage.removeItem("isBankNumberVerified")
+    await Promise.all([
+      AsyncStorage.removeItem("token"),
+      AsyncStorage.removeItem("role"),
+      AsyncStorage.removeItem("isAddressProvided"),
+      AsyncStorage.removeItem("isBankNumberVerified"),
+      AsyncStorage.removeItem("isIdentificationDocumentVerified"),
+    ]);
+    dispatch(clearToken());
     dispatch(clearToken());
     try {
       RNRestart.restart();
@@ -71,18 +75,30 @@ const Profile = () => {
           await AsyncStorage.setItem("isBankNumberVerified", "false");
           dispatch(setToken(payload.accessToken));
           setRole(nextRole);
-          navigation.navigate("ServiceSignUp", { screen: "BVN" });
+          // navigation.navigate("ServiceSignUp", { screen: "BVN" });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'ServiceSignUp', params: { screen: 'BVN' } }],
+          });
           return;
         }
         if (!payload.isIdentificationDocumentVerified) {
           await AsyncStorage.setItem("isIdentificationDocumentVerified", "false");
           dispatch(setToken(payload.accessToken));
           setRole(nextRole);
-          navigation.navigate("ServiceSignUp", { screen: "Identity" });
+          // navigation.navigate("ServiceSignUp", { screen: "Identity" });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'ServiceSignUp', params: { screen: 'Identity' } }],
+          });
           return;
         }
         if (!payload.isAddressProvided) {
-          navigation.navigate("ServiceSignUp", { screen: "Address" });
+          // navigation.navigate("ServiceSignUp", { screen: "Address" });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'ServiceSignUp', params: { screen: 'Address' } }],
+          });
           await AsyncStorage.setItem("isAddressProvided", "false");
           dispatch(setToken(payload.accessToken));
           setRole(nextRole);

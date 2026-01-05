@@ -51,6 +51,7 @@ const PasswordInput = ({
         text={label}
       />
       <TextInput
+        placeholderTextColor="#9CA3AF"
         secureTextEntry={show}
         value={value}
         style={{
@@ -58,13 +59,12 @@ const PasswordInput = ({
           padding: 15,
           paddingVertical: 12,
           borderRadius: 8,
-          lineHeight: 26,
           color: "#111827",
           ...(error
             ? {
-                borderColor: "red",
-                borderWidth: 1,
-              }
+              borderColor: "red",
+              borderWidth: 1,
+            }
             : {}),
           ...inputStyle,
         }}

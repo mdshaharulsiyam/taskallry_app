@@ -154,7 +154,7 @@ const IdentityScreen = () => {
         <ImageUploader setFiels={setFiels} />
       </View>
       <ButtonBG
-        style={{ marginTop: 12 }}
+        style={{ marginTop: 12, marginBottom: 160 }}
         text="Continue"
         disabled={isLoading}
         loading={isLoading}

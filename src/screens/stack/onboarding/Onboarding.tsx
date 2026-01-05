@@ -2,12 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Suspense, useEffect } from "react";
 import { Image, View } from "react-native";
 import { useGlobalContext } from '../../../providers/GlobalContextProvider';
-import Navigate, { Navigation } from '../../../utils/Navigate';
+import { Navigation } from '../../../utils/Navigate';
 
 const Onboarding = () => {
   const [loading, setLoading] = React.useState(true);
   const { setRole } = useGlobalContext();
-  const navigate = Navigate();
   const navigation = Navigation();
   useEffect(() => {
     setLoading(true);
@@ -18,12 +17,22 @@ const Onboarding = () => {
       const isIdentificationDocumentVerified = await AsyncStorage.getItem("isIdentificationDocumentVerified");
       if (role) {
         if (isAddressProvided) {
-          navigation.navigate("ServiceSignUp", { screen: "Address" });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'ServiceSignUp', params: { screen: 'Address' } }],
+          });
         } else if (isBankNumberVerified && role === "service") {
-          navigation.navigate("ServiceSignUp", { screen: "BVN" });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'ServiceSignUp', params: { screen: 'BVN' } }],
+          });
         }
         else if (isIdentificationDocumentVerified && role === "service") {
-          navigation.navigate("ServiceSignUp", { screen: "Identity" });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'ServiceSignUp', params: { screen: 'Identity' } }],
+          });
+          // navigation.navigate("ServiceSignUp", { screen: "Identity" });
         } else {
           setRole(role as "user" | "service" | null);
           // navigate("TabLayout");
@@ -41,7 +50,10 @@ const Onboarding = () => {
         // navigate("Login");
       }
     };
-    getRole().then(() => setLoading(false));
+    const timer = setTimeout(() => {
+      getRole().then(() => setLoading(false));
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (

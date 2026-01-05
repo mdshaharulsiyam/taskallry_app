@@ -98,15 +98,14 @@ const TimePicker = ({
         <Text
           style={{
             backgroundColor: "#E6F4F1",
-            lineHeight: 26,
             padding: 15,
             paddingVertical: 12,
             borderRadius: 8,
             ...(error
               ? {
-                  borderColor: "red",
-                  borderWidth: 1,
-                }
+                borderColor: "red",
+                borderWidth: 1,
+              }
               : {}),
             ...inputStyle,
           }}
@@ -114,8 +113,8 @@ const TimePicker = ({
           {value && value.length > 0
             ? value
             : picked
-            ? formatTime(date)
-            : placeHolder}
+              ? formatTime(date)
+              : placeHolder}
         </Text>
       </TouchableOpacity>
       {show && (

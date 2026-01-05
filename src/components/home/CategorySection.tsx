@@ -13,7 +13,7 @@ const CategorySection = () => {
   const navigate = Navigate();
   return (
     <View style={{ marginTop: 10 }}>
-      <SectionHeading text="Category" handler={() => navigate("Category")} />
+      <SectionHeading text="Categories" handler={() => navigate("Category")} />
       <FlatList
         data={data?.data?.result || []}
         numColumns={4}

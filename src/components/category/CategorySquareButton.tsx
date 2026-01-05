@@ -68,7 +68,7 @@ const CategorySquareButton = ({
             }}
           />
         </View>
-        <TextPrimary style={{ fontWeight: 700 }} text={name} />
+        <TextPrimary style={{ fontWeight: 700, textAlign: "center", paddingHorizontal: 5 }} text={name} />
         <TextSecondary
           style={{
             marginTop: -6,

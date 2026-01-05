@@ -132,6 +132,7 @@ const PhoneInput = ({
           ]}
         >
           <TextInput
+            placeholderTextColor="#9CA3AF"
             value={number}
             style={styles.input}
             placeholder={placeholder}

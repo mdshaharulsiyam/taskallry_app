@@ -45,11 +45,12 @@ const TextArea = ({
       )}
 
       <TextInput
+        placeholderTextColor="#9CA3AF"
         value={value}
         multiline
         style={{
           backgroundColor: "#E6F4F1",
-          lineHeight: 26,
+
           padding: 15,
           paddingVertical: 12,
           color: "#000000",
@@ -58,9 +59,9 @@ const TextArea = ({
           textAlignVertical: "top",
           ...(error
             ? {
-                borderColor: "red",
-                borderWidth: 1,
-              }
+              borderColor: "red",
+              borderWidth: 1,
+            }
             : {}),
           ...inputStyle,
         }}

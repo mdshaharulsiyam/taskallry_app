@@ -94,7 +94,6 @@ const DatePicker = ({
         <Text
           style={{
             backgroundColor: "#E6F4F1",
-            lineHeight: 26,
             padding: 15,
             paddingVertical: 12,
             borderRadius: 8,

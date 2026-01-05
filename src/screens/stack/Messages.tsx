@@ -184,7 +184,7 @@ const Messages = () => {
           }}
         >
           <ChatHeader
-            show={true}
+            show={false}
             imageSource={otherIcons.ChatBlock as ImageSourcePropType}
             name={name}
             email={email}

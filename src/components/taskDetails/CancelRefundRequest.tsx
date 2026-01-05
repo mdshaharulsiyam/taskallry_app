@@ -19,7 +19,7 @@ import {
   useAcceptCancelRequestMutation,
   useAcceptRejectExtensionRequestMutation,
   useMakeExtensionDisputeMutation,
-  useRejectCancelRequestMutation,
+  useRejectCancelRequestMutation
 } from "../../redux/apis";
 import FlexText from "../shered/FlexText";
 import HeaderSecondary from "../shered/HeaderSecondary";
@@ -89,6 +89,7 @@ const CancelRefundRequest = ({
   const [currentCancelAction, setCurrentCancelAction] = useState<
     "accept" | "reject" | null
   >(null);
+
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectDetails, setRejectDetails] = useState("");
   const [rejectEvidence, setRejectEvidence] = useState<{
@@ -473,7 +474,7 @@ const CancelRefundRequest = ({
           )}
         </FlexText>
       )}
-      {isExtension && statusUpper === "REJECTED" && (
+      {isExtension && statusUpper === "REJECTED" && isRequesterMe && (
         <>
           <GreenLine />
           <ButtonBG

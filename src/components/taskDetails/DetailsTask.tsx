@@ -406,11 +406,12 @@ const DetailsTask = ({
   if (isLoading) {
     return <Loader />;
   }
+  console.log(data?.data)
   return (
     <SafeAreaProviderNoScroll>
       <BackButton
         text={heading}
-        show={data?.data?.status == "IN_PROGRESS"}
+        show={data?.data?.status == "IN_PROGRESS" && data?.data?.scheduleType != "FLEXIBLE"}
         handler={() => navigate("RegulationsCenter", { id: data?.data?._id })}
       />
       <FlatList

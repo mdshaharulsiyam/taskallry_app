@@ -102,7 +102,7 @@ const PostTaskFields = () => {
       placeHolder: "How much are you offering?",
       label: "How much are you offering?",
       error: false,
-      value: "1000",
+      value: "",
       required: true,
       keyboard: KeyboardType.NUMERIC,
     },

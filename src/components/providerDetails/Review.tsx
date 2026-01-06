@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Service, useGetMyFeedbackQuery } from "../../redux/apis";
 import FlexText from "../shered/FlexText";
 import HeaderDesign from "../shered/HeaderDesign";
@@ -50,4 +50,3 @@ const Review = ({ service }: { service?: Service }) => {
 
 export default Review;
 
-const styles = StyleSheet.create({});

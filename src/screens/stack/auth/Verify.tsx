@@ -55,7 +55,7 @@ const Verify = () => {
                   "phone": targetEmail,
                   "resetCode": Number(code)
                 }).unwrap().then((res: any) => {
-                  navigate("ResetPassword");
+                  navigate("ResetPassword", { params: { phoneNumber: targetEmail } });
                 }).catch((err: any) => {
                   Toast.show({ type: "error", text1: "Verification failed", text2: err?.data?.message || "Invalid code" });
                 });

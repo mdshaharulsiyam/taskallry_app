@@ -96,7 +96,7 @@ interface ForgetPasswordResponse {
 }
 
 interface ResetPasswordRequest {
-  email: string;
+  phone: string;
   password: string;
   confirmPassword: string;
 }

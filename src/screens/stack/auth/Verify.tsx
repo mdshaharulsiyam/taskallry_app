@@ -9,7 +9,7 @@ import HeaderDesign from "../../../components/shered/HeaderDesign";
 import TextSecondary from "../../../components/shered/TextSecondary";
 import ButtonBG from "../../../components/ui/buttons/ButtonBG";
 import SafeAreaProvider from "../../../providers/SafeAreaProvider";
-import { useVerifyCodeMutation } from "../../../redux/apis";
+import { useVerifyCodeMutation, useVerifyResetOtpMutation } from "../../../redux/apis";
 import Navigate from "../../../utils/Navigate";
 
 const Verify = () => {
@@ -21,6 +21,8 @@ const Verify = () => {
   const navigate = Navigate();
   const [code, setCode] = React.useState<string>("");
   const [verifyCode, { isLoading }] = useVerifyCodeMutation();
+  const [verifyCodePhone, { isLoading: isLoadingPhone }] = useVerifyResetOtpMutation();
+  const isSubmitting = from === "forget" ? isLoadingPhone : isLoading;
   return (
     <SafeAreaProvider backButtonText="Verify Otp">
       <ScrollView showsVerticalScrollIndicator={false} style={{}}>
@@ -40,53 +42,69 @@ const Verify = () => {
               marginTop: 10,
             }}
             text="Confirm"
-            disabled={isLoading}
-            loading={isLoading}
+            disabled={isSubmitting}
+            loading={isSubmitting}
             handler={() => {
-              const targetEmail = (email || "").trim();
-              if (!targetEmail) {
-                Toast.show({ type: "error", text1: "Missing email", text2: "Email required for verification" });
-                return;
-              }
-              verifyCode({ email: targetEmail, verifyCode: Number(code) })
-                .unwrap()
-                .then(async (res: any) => {
-                  Toast.show({ type: "success", text1: "Verified", text2: res?.message || "OTP verified successfully" });
-                  if (from === "forget") {
-                    navigate("ResetPassword");
-                    return;
-                  }
-                  await AsyncStorage.setItem("token", res?.data?.accessToken);
-                  await AsyncStorage.setItem(
-                    "role",
-                    res?.data?.role === "customer" ? "user" : "service"
-                  );
-                  const d = res?.data || {};
-                  const role = d?.role as "provider" | "customer" | undefined;
-                  if (role === "provider") {
-                    if (!d?.isBankNumberVerified) {
-                      navigate("ServiceSignUp", { screen: "BVN" });
-                    } else if (!d?.isIdentificationDocumentVerified) {
-                      navigate("ServiceSignUp", { screen: "Identity" });
-                    } else if (!d?.isAddressProvided) {
-                      navigate("ServiceSignUp", { screen: "Address" });
-                    } else {
-                      navigate("TabLayout");
-                    }
-                  } else if (role === "customer") {
-                    if (!d?.isAddressProvided) {
-                      navigate("CustomerSignUp", { screen: "CustomerAddress" });
-                    } else {
-                      navigate("TabLayout");
-                    }
-                  } else {
-                    // Fallback if role missing
-                    navigate("TabLayout");
-                  }
-                })
-                .catch((err: any) => {
+              if (from === "forget") {
+                const targetEmail = (phoneNumber || "").trim();
+                if (!targetEmail) {
+                  Toast.show({ type: "error", text1: "Missing phone number", text2: "Phone number required for verification" });
+                  return;
+                }
+                verifyCodePhone({
+                  "phone": targetEmail,
+                  "resetCode": Number(code)
+                }).unwrap().then((res: any) => {
+                  navigate("ResetPassword");
+                }).catch((err: any) => {
                   Toast.show({ type: "error", text1: "Verification failed", text2: err?.data?.message || "Invalid code" });
                 });
+                return;
+              } else {
+
+                const targetEmail = (email || "").trim();
+                if (!targetEmail) {
+                  Toast.show({ type: "error", text1: "Missing email", text2: "Email required for verification" });
+                  return;
+                }
+                verifyCode({ email: targetEmail, verifyCode: Number(code) })
+                  .unwrap()
+                  .then(async (res: any) => {
+                    Toast.show({ type: "success", text1: "Verified", text2: res?.message || "OTP verified successfully" });
+
+                    await AsyncStorage.setItem("token", res?.data?.accessToken);
+                    await AsyncStorage.setItem(
+                      "role",
+                      res?.data?.role === "customer" ? "user" : "service"
+                    );
+                    const d = res?.data || {};
+                    const role = d?.role as "provider" | "customer" | undefined;
+                    if (role === "provider") {
+                      if (!d?.isBankNumberVerified) {
+                        navigate("ServiceSignUp", { screen: "BVN" });
+                      } else if (!d?.isIdentificationDocumentVerified) {
+                        navigate("ServiceSignUp", { screen: "Identity" });
+                      } else if (!d?.isAddressProvided) {
+                        navigate("ServiceSignUp", { screen: "Address" });
+                      } else {
+                        navigate("TabLayout");
+                      }
+                    } else if (role === "customer") {
+                      if (!d?.isAddressProvided) {
+                        navigate("CustomerSignUp", { screen: "CustomerAddress" });
+                      } else {
+                        navigate("TabLayout");
+                      }
+                    } else {
+                      // Fallback if role missing
+                      navigate("TabLayout");
+                    }
+                  })
+                  .catch((err: any) => {
+                    Toast.show({ type: "error", text1: "Verification failed", text2: err?.data?.message || "Invalid code" });
+                  });
+
+              }
             }}
           />
         </View>

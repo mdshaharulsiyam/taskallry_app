@@ -87,7 +87,7 @@ interface ChangePasswordResponse {
 }
 
 interface ForgetPasswordRequest {
-  email: string;
+  phone: string;
 }
 
 interface ForgetPasswordResponse {
@@ -107,7 +107,7 @@ interface ResetPasswordResponse {
 }
 
 interface VerifyResetOtpRequest {
-  email: string;
+  phone: string;
   resetCode: number;
 }
 

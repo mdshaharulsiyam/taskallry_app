@@ -9,9 +9,9 @@ const ForgetPasswordFields = () => {
       placeHolder: "Enter Phone Number",
       label: "Phone Number",
       error: false,
-      value: "+8801566026301",
+      value: "",
       required: true,
-      keyboard: KeyboardType.NUMERIC,
+      keyboard: KeyboardType.NUMBER_PAD,
     },
   ]);
   return { fields, setFields };
